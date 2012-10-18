@@ -1,0 +1,30 @@
+### INTRO ###
+
+This is my package distrubtion system to build source package and to build packages for varius ways of distrubtion
+
+
+
+
+### STRUCTURE ###
+
+#### VARIABLES #####
+PROJECT_INFO:
+PROJECT_NAME			# Name of the project
+SOURCE_DIST			# Distrubtion dir for source distrubtion
+SOURCE_DIR 			# Root dir of source files (usally src or something)
+ARCHIVE_ENDING			# Ending of source file
+BUILD_FOLDER			# Folder Name of Folder inside source archive usally $PROJECT_NAME-$VER
+DIST_FILES			# Files that are inclued in source distrubtion
+#### FILES #####
+dist/dist_clean			# clear files in dist/*/clean_list before building source package see below what clean_list is
+dist/*/clean_list			# list with files that are not port of the source that need to remove before building source package (eg. distrubtion packages or files that where generated while building them)
+dist/*				# folders with various ways of distrubtion
+dist_system/lib/update_source 	# script to update distrubtion sources with the latest package from source/${PROJECT_NAME}_latest${ARCHIVE_ENDING:-.tar.gz} ( distrubtion inpendent part, that will be called by update_pkg_ressources) 
+dist/*/update_pkg_ressources	# script to update distrubtion sources with the latest package from source/${PROJECT_NAME}_latest${ARCHIVE_ENDING:-.tar.gz} ( distrubtion dependet part)
+dist_system/bin/build_all_pkgs	# builds all distrubtions that have build_pkg and update_pkg_ressources in dist/*/
+dist/build_app			# script to build application in distrubtion systems (or directly in build_pkg)
+dist/*/build_pkg		# build distrubtion package (optimal)
+dist/source/build_src.sh	# script to build source file
+dist/source/source_clean	# script with instructions to clean source (required, used by build_src.sh)
+build_src.sh			# simlink to dist/source/build_src.sh
+	

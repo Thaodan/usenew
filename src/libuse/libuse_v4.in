@@ -1,0 +1,140 @@
+#!/bin/sh
+# core functions of usenew
+# NOTE; libuse v3 for integration of win32 applications unix systems
+# functions for managing wine programs and their data
+#
+# Copyright (C) 2012  Björn Bidar
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+# functions that were used from other sh-libs:
+# d_msg - display messages and ask for input
+#
+# variables
+# ver=3.0
+# shared_dir=/usr/share/libuse_v3/
+U_REV=810
+
+if [ -z "$libsh_ver" ] ; then
+  . ${libdir:-@prefix@/lib}/libsh || exit
+fi
+ 
+
+
+### functions for that are only in use with wine
+
+check_prefix () {  # check if  $1 is a prefix
+  if [ ! -f "${WINEPREFIX_PATH:=$HOME/.}/$1" ]; then # if all is right do this
+    if [ !  -e "${WINEPREFIX_PATH:=$HOME/.}/$1/system.reg" ]; then
+      return 1
+    fi
+  else
+    return 1
+  fi  
+} 
+
+
+
+
+set_wine_db () { # set wine debug
+  if [ -z $WINEDEBUG ]; then
+    export WINEDEBUG=${WDEBUG:=fixme-all}
+  #else
+  #  export WINEDEBUG=$WDEBUG
+  fi
+}
+
+
+
+exec_exe () { # start wine with $exe
+  if [ ! -z "$1" ]; then
+    runed_exe="$1"
+    shift
+    ext=1
+    while test "$ext" != ""
+      do
+	"${WINE:-wine}" $wine_args "$runed_exe" "$@" ; return_stat=$?
+	ext=
+    done
+    return $return_stat
+  fi
+}
+
+prefix () { # set prefix var
+  if [ -z $1 ] ; then
+    export WINEPREFIX=${PREFIX:-$HOME/.wine}
+  else
+    export WINEPREFIX=$1
+  fi
+}
+
+
+
+
+### base functions 
+
+
+
+
+
+exec_cmd () {
+  #BIN=wineconsole
+  "${WINE:-wine}" cmd.exe /c "$1"
+}
+
+
+
+kill_exe () { # kill first *.exe of $exe 
+  pkill "$( basename $exe)"
+}
+
+
+
+
+
+
+
+# base part of libuse 
+if [ ! -z "$backup" ] ; then
+  import libuse.backup
+fi
+
+  if [ ! -z "$WINEPATH" ]; then
+    import libuse.wine_misc
+    check_wineserver || exit 1
+    set_wine_ver "$WINEPATH"	
+
+  fi
+
+
+if [ $1 = \app1 -o $1 = -n ] > /dev/null 2>&1 ; then
+  import libuse.input
+  set_wine_db
+  if [ ! -z "$APPPATH" ]; then
+    cd "$APPPATH"
+  fi
+
+  if [  $1 = -n ]  > /dev/null 2>&1  ; then # || #[ $n $lu_c ] ;  > /dev/null 2>&1 ; then
+    compat_input
+  fi
+fi
+# default script with use of base functions to run if $n is not zero
+
+if [ ! -z $n ]; then
+  prefix
+  set_wine_db
+  exec_exe "$exe"
+fi
+

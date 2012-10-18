@@ -1,0 +1,6 @@
+#!/bin/sh
+
+. ../../dist_system/lib/update_source
+
+sed -i -e '/^md5sum/d' -e "s/^source.*$/&\n$(makepkg -g)/" PKGBUILD # update checksums in PKGBUILD
+

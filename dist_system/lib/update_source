@@ -1,0 +1,11 @@
+ #!/bin/sh
+
+PROJECT_INFO_FILE=../../PROJECT_INFO
+
+####################################
+
+. $PROJECT_INFO_FILE
+SOURCE_FILE=../source/${PROJECT_NAME}_latest.tar.gz
+
+cp $(dirname $SOURCE_FILE )/$( readlink $SOURCE_FILE ) $PWD/. # get real name of $SOURCE_FILE and copy it to $PWD
+

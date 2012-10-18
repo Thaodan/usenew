@@ -1,0 +1,76 @@
+NAME libuse sh library  to work with wine in shell scripts
+
+
+
+SYNOPSIS
+      
+    . @PREFIX@/libuse/libuse [PARAMETER]
+
+
+  
+
+DESCRIPTION
+    This collection of functions has some functions that make it easy to work with win32 executables
+    in shell scripts. It has several functions to parse input, backup data and handle some wine specific
+    problems.
+
+    NOTE: This functions are now seperated in different files, libuse will handle this in most part but handle with care
+    Lists of Functions:
+
+      Function 		Description
+    ---------------------------------------
+      check_prefix	check if prefix exits, if prefix exits return 1
+      check_winesever	check if a wineserver is running and ask for kill wineserver
+      set_wine_ver	set winever to wine given by $1 we set wine elf-exuctable given by in WINE 
+      set_wine_db	set wine debug output
+      exec_exe		exec windows excutable in a loop
+      prefix		set WINEPREFIX
+      test_input	test if input is long as we need
+      input_check 	parse input	
+      backup_data	backup data
+      restore_data	restore data that was backuped by backup_data
+      
+
+
+    Parameters:
+        Parameter	Description
+    ---------------------------------------
+      app1		set app level to 1 cd to $APPPATH and detect if WINEPATH its set and use
+			it if true
+    
+
+    
+
+
+FUNCTIONS SEPERATED IN FILES
+
+@PREFIX@/libuse/libuse:
+check_prefix () {  # check if  $1 is a prefix
+set_wine_db () { # set wine debug
+exec_exe () { # start wine with $exe
+prefix () { # set prefix var
+exec_cmd () {
+kill_exe () { # kill first *.exe of $exe 
+
+@PREFIX@/libuse/libuse.backup:
+backup_data () { # backup application data
+restore_backup () { # restore backup archive that is made by backup_data
+
+@PREFIX@/libuse/libuse.input:
+test_input () { # test if input is right 
+input_check () { # builtin input test 
+compat_input () { # function if libuse file uses old input check variables
+display_help () {
+  
+@PREFIX@/libuse/libuse_v4:
+kill_exe () { # kill first *.exe of $exe 
+prepare() { # init vars that will exported from wine to the shell
+check_wineserver() {
+set_wine_ver () { # no comment
+find_wine () {
+set_dll_override() # taken from winetricks
+link_user_data() {
+:link_system() {
+  
+
+

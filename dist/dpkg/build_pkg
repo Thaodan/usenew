@@ -1,0 +1,6 @@
+#!/bin/sh
+. ../../src/sh_makefile
+tar -xaf usenew_$VER.orig.tar.gz
+cd usenew-$VER
+tar -xaf ../usenew.debian
+dpkg-buildpackage -d

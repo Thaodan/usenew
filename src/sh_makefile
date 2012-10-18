@@ -1,0 +1,64 @@
+# usenew makefile for building with sh_make
+
+DESTDIR=/
+PREFIX=${DESTDIR}usr
+APPNAME=usenew
+VER=0.1
+install_prefix=/usr
+install=/usr/bin/install
+#sh_make=./sh_make_pkg
+default() {
+	usenew
+}
+
+prepare() {
+ mkdir -p $PREFIX/bin
+}
+
+usenew() {
+  usenew_real
+  libuse
+  restore
+}
+
+
+usenew_real() {
+	shpp prefix=$PREFIX usenew.in -o usenew
+}
+
+libuse() {
+	sh_make -f libuse/sh_makefile PREFIX=$PREFIX
+}
+
+restore() {
+	shpp prefix=$PREFIX restore.in -o restore
+}
+install()  {
+	prepare
+	usenew_real_install
+	libuse_install
+	restore_install
+}
+
+usenew_real_install() {
+	$install usenew $PREFIX/bin/usenew
+}
+
+libuse_install(){
+		sh_make -f libuse/sh_makefile PREFIX=../$PREFIX install
+}
+
+restore_install() {
+	$install restore $PREFIX/bin/restore
+}
+clean()  {
+  sh  -c 'cd libuse; . $PWD/sh_makefile; clean'
+  rm -rf usenew
+  rm -rf restore
+  
+}
+installer() {
+  load_module configure
+  load_module make_installer
+  gen_installer > ../install.sh
+}

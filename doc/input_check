@@ -1,0 +1,36 @@
+NAME input_check check input for parameters 
+
+ 
+SYNOPSIS
+      
+    . ${libdir:-$HOME/.local/lib}/libuse.input
+
+    commands_l=( game launcher help end) # set needed input vars 
+    commands_s=( g l h e ) # set input vars for long and short options
+    exe=( game.exe launcher.exe display_help kill_exe ) # set excutables that where executed if right input is given 
+    # the lenght of all three arrays must be equal
+
+    input_check $@ # parse input of script to function
+  
+
+DESCRIPTION
+
+    input_check uses three arrays that are discribed at the top. These arrays are to set input
+    parameters and excutables. The lenght of these arrays must be equal. 
+    input_check checks file type of runneed var in $exe and executes the right interpreter.
+    To force input_check to use a special interpreter you can use FORCE_RUN. 
+
+      Example:
+	
+      exe=( test.exe net_exe.exe ) 	# make exe arrays with 2 elemets
+      FORCE_RUN[1]=exec_exe 		# set exec_exe as interpreter for elemet 1
+  
+      
+
+    default_exe	set the default_exe that is executed if no input is given.
+
+    FORCE_RUN_default	set interpreter for $default_exe
+
+  
+    nw_input	sets message that is displayed if no input is given and $default_exe not set.
+		(default message is: No or wrong input given

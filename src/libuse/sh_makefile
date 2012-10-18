@@ -1,0 +1,52 @@
+DESTDIR=/
+PREFIX=${DESTDIR}usr
+APPNAME=usenew
+VER=0.1
+prefix=/usr
+install_prefix=$prefix
+install=/usr/bin/install
+
+
+
+default() {
+	libuse
+}
+
+prepare() {
+	mkdir -p $PREFIX/lib/libuse
+}
+libuse() {
+	libuse_real
+}
+
+
+
+libuse_real() {
+	shpp prefix=$PREFIX libuse.backup.in  -o libuse.backup
+	shpp libuse.winix_app.in -o libuse.winix_app
+	shpp libuse.wine_misc.in -o libuse.wine_misc
+	shpp prefix=$PREFIX libuse.input.in -o libuse.input
+	shpp prefix=$PREFIX libuse_v4.in -o libuse_v4
+}
+
+install() {
+	prepare			
+	install_libuse
+}
+install_libuse() {
+	$install libuse.backup $PREFIX/lib/libuse/libuse.backup
+	$install libuse.winix_app $PREFIX/lib/libuse/libuse.winix_app
+	$install libuse.wine_misc $PREFIX/lib/libuse/libuse.wine_misc
+	$install libuse.input	$PREFIX/lib/libuse/libuse.input
+	$install libuse_v4 	$PREFIX/lib/libuse/libuse_v4
+	ln -s libuse_v4		$PREFIX/lib/libuse/libuse
+}
+
+clean() {
+	rm -rf libuse.backup
+	rm -rf libuse.winix_app
+	rm -rf libuse.wine_misc
+	rm -rf libuse.input
+	rm -rf libuse_v4
+
+}

@@ -1,0 +1,4 @@
+usenew-*/
+*.deb
+*.dsc
+*.changes

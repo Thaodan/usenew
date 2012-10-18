@@ -1,0 +1,116 @@
+#!/bin/bash
+ 
+if [ -z "$libsh_ver" ] ; then
+  . ${libdir:-@prefix@/lib}/libsh || exit
+fi
+ 
+
+LIBUSE_INPUT_REV=135
+###############################################
+# input_check()
+# 	added parameter  support for $exe
+#       (dont works full now)
+###############################################
+
+
+test_input () { # test if input is right 
+  if [ -n "${err_input_messages[$#]}" ] ; then
+    d_msg ! 'wrong input' "${err_input_messages[$#]}"
+    if [ ! -n $# ]; then
+      return ${#:=1}
+    else
+      return 
+    fi
+  fi
+}
+
+
+input_check () { # builtin input test 
+###########################################
+# commands_s  = short input options like -h
+# commands_l  = long input options like --help
+# exe         = names of file/commands that were runed
+#		by input check for commands_s[l] entry like display_help for -h 
+# FORCE_RUN   = force input_check to use $FORCE_RUN as interpreter 
+#		( if not set input_check detects interpreter per `file -b $exe`
+# default_exe   (optional) file that were runed if no input is given
+# 		if not set $nw_input_msg were echoed
+# FORCE_RUN_default force input_check to use $FORCE_RUN_default as interpreter for $default_exe
+# nw _input 	sets message that input_check displays if $default_exe is not set and no input given
+###########################################
+  #import ${libdir:=$HOME/bin}/libsh 
+
+  DMSG_DIALOG_DISABLED=true
+
+  if [ ! ${#commands_s[*]} = ${#commands_l[*]} ] ; then
+    echo "${#commands_s[*]} not = ${#commands_l[*]}"
+    return $(( ${#commands_s[*]} + ${#commands_l[*]} ))
+  else
+   if [ $backup = 1 ] > /dev/null 2>&1 ; then
+      local backup_test=backup_data
+      import libuse.backup
+    fi
+    for (( run=0; run < ${#commands_l[*]}; run++)) ; do
+      if [ $1 = --${commands_l[$run]} -o $1 = -${commands_s[$run]} ]  > /dev/null 2>&1 ; then
+	if [ -z ${FORCE_RUN[$run]} ] ; then 
+	  case "`file -b "${exe[$run]%\ *}"`" in
+	    "PE32 executable for MS Windows (GUI) Intel 80386 32-bit"| PE32\ executable\ *) $backup_test ;exec_exe ${exe[$run]%\ *} ${exe[$run]#*\ }  ; return ;;
+	    "PE32 executable for MS Windows (GUI) Intel 80386 32-bit Mono/.Net assembly") $backup_test ; mono ${exe[$run]%\ *} ${exe[$run]#*\ } ; return ;; 
+	    "ASCII text, with CRLF line terminators"|"DOS batch file text") $backup_test ;${exe[$run]%\ *} ${exe[$run]#*\ }  ; return  ;;
+	    "POSIX shell script text executable") $backup_test ; sh ${exe[$run]%\ *} ${exe[$run]/* /} ; return  ;;
+	    "Bourne-Again shell script text executable") $backup_test ; bash ${exe[$run]%\ *} ${exe[$run]#*\ } ;return ;;
+	    *) ${exe[$run]%\ *} ${exe[$run]/* /}  ; return ;;
+	  esac
+	else
+	 $backup_test ; ${FORCE_RUN[$run]} "${exe[run]}" ; return 
+	fi
+      fi 
+
+    done 
+#     if [ "$1" = - ] ; then 
+#       d_msg ! input "${w_input_msg:=Wrong input given}" || return 1
+#     fi
+    if [ ! -z "$default_exe" ]  > /dev/null 2>&1 ; then
+      	if [ -z ${FORCE_RUN_default} ] ; then 
+	  case "`file -b ${default_exe%\ *}`" in # remove all arguments from $default_exe and run file on it
+	    PE32\ executable\ \(GUI\)\ *|PE32\ executable\ *) $backup_test  ; exec_exe ${default_exe%\ *} ${default_exe#*\ };;
+	    "PE32 executable for MS Windows (GUI) Intel 80386 32-bit Mono/.Net assembly") $backup_test ; mono ${default_exe%\ *} ${default_exe#*\ };; 
+	    "POSIX shell script text executable")  $backup_test ; sh ${default_exe%\ *} ${default_exe#*\ } ;;
+	    "Bourne-Again shell script text executable") $backup_test ; bash ${default_exe%\ *} ${default_exe#*\ } ;;
+	    *) ${default_exe%\ *} ${default_exe/* /} ;; 
+	  esac
+	else
+	 $backup_test ; ${FORCE_RUN_default} "$default_exe" ; return 
+	fi
+    else
+      d_msg ! input "${nw_input_msg:-No or wrong input given}"
+    fi
+  fi
+
+}
+
+compat_input () { # function if libuse file uses old input check variables
+  commands_s=( g "$second_option_s" "$third_option_s"  e h )
+  commands_l=( game "$second_option_l" "$third_option_l" end help )
+  exe=( "$exe" "$second_exe" "$third_exe" kill_exe display_help )
+}
+
+
+
+display_help () {
+ #import ${libdir:=$HOME/bin}/libsh #test -z $libsh_ver ||
+ if [ ! -z "$help_msg" ] ; then
+d_msg help "`cat << _EOF
+$help_msg
+_EOF`"
+ else
+   d_msg help "`cat << _EOF # display an builtin help message if $help_mgs is empty
+-$commands_s --$commands_l $exe
+-${commands_s[1]} --${commands_l[1]} ${exe[1]}
+-${commands_s[2]} --${commands_l[2]} ${exe[2]}
+-${commands_s[3]} --${commands_l[3]} ${exe[3]}
+_EOF`"
+fi
+}
+
+

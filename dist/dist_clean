@@ -1,0 +1,8 @@
+#!/bin/sh
+
+
+for dist in *  ; do
+  if [ -d $dist ] && [ -e $dist/clean_list ] ; then
+    sh -c "cd $dist; rm -rf \$( cat clean_list )" 
+  fi
+done

@@ -1,0 +1,15 @@
+### INTRO ###
+
+This a wrapper script that handles wine prefixes when running programms in/on them and inclues a library to write scripts that start wine programms. 
+For more info see doc/ 
+
+## DEPENCIES ##
+
+ - posix compilant /bin/sh and for some parts of the library bash
+ - posix compilant: sed, grep, sort, cat, basename, dirname and file
+ - wine 
+## BUILD AND INSTALL ## 
+
+See INSTALL.
+
+

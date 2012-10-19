@@ -1,4 +1,10 @@
+#\\rem use dash as shebang if use_dash is defined
+#\\ifdef use_dash
+#!/bin/dash
+#\\else
 #!/bin/sh
+#\\endif
+
 # wine prefix chooser and manager
 #
 # Copyright (C) 2012  Björn Bidar

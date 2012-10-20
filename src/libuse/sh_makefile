@@ -5,7 +5,7 @@ VER=0.1
 prefix=/usr
 install_prefix=$prefix
 install=/usr/bin/install
-git_rev=$(../tools/git_refgen )
+git_rev=$(./../../tools/git_revgen )
 
 
 default() {

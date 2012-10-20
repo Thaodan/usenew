@@ -3,7 +3,7 @@
 DESTDIR=/
 PREFIX=${DESTDIR}usr
 APPNAME=usenew
-VER=0.1
+VER=3.0
 install_prefix=/usr
 install=/usr/bin/install
 #sh_make=./sh_make_pkg
@@ -23,7 +23,7 @@ usenew() {
 
 
 usenew_real() {
-	shpp git_rev=$(../tools/git_refgen ) prefix=$PREFIX usenew.in -o usenew
+	shpp git_rev=$(./../tools/git_revgen ) prefix=$PREFIX usenew.in -o usenew
 }
 
 libuse() {
@@ -31,7 +31,7 @@ libuse() {
 }
 
 restore() {
-	shpp git_rev=$(../tools/git_refgen ) prefix=$PREFIX restore.in -o restore
+	shpp git_rev=$(./../tools/git_revgen ) prefix=$PREFIX restore.in -o restore
 }
 install()  {
 	prepare

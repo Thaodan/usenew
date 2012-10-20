@@ -25,7 +25,8 @@
 # variables
 # ver=3.0
 # shared_dir=/usr/share/libuse_v3/
-U_REV=810
+USE_REV=@git_rev@
+
 
 if [ -z "$libsh_ver" ] ; then
   . ${libdir:-@prefix@/lib}/libsh || exit

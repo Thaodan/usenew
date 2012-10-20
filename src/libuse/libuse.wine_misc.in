@@ -1,5 +1,6 @@
 #!/bin/sh 
-
+USE_REV=@git_rev@
+ 
 prepare() { # init vars that will exported from wine to the shell
   userprofile=`${WINE:=wine} cmd.exe /c echo %userprofile%`
   appdata=` ${WINE:=wine} cmd.exe /c echo %APPDATA%`

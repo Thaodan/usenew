@@ -1,4 +1,6 @@
 #!/bin/sh
+USE_REV=@git_rev@
+
 if [ -z "$libsh_ver" ] ; then
   echo "libsh not imported"
   exit 1

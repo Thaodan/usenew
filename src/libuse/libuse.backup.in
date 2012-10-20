@@ -1,4 +1,5 @@
 #!/bin/bash
+USE_REV=@git_rev@
 
 if [ -z "$libsh_ver" ] ; then
   . ${libdir:-@prefix@/lib}/libsh || exit

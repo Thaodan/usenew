@@ -5,12 +5,13 @@ VER=0.1
 prefix=/usr
 install_prefix=$prefix
 install=/usr/bin/install
-
+git_rev=$(../tools/git_refgen )
 
 
 default() {
 	libuse
 }
+
 
 prepare() {
 	mkdir -p $PREFIX/lib/libuse
@@ -22,11 +23,11 @@ libuse() {
 
 
 libuse_real() {
-	shpp prefix=$PREFIX libuse.backup.in  -o libuse.backup
-	shpp libuse.winix_app.in -o libuse.winix_app
-	shpp libuse.wine_misc.in -o libuse.wine_misc
-	shpp prefix=$PREFIX libuse.input.in -o libuse.input
-	shpp prefix=$PREFIX libuse_v4.in -o libuse_v4
+	shpp git_rev=$git_rev prefix=$PREFIX libuse.backup.in  -o libuse.backup
+	shpp git_rev=$git_rev libuse.winix_app.in -o libuse.winix_app
+	shpp git_rev=$git_rev libuse.wine_misc.in -o libuse.wine_misc
+	shpp git_rev=$git_rev prefix=$PREFIX libuse.input.in -o libuse.input
+	shpp git_rev=$git_rev prefix=$PREFIX libuse_v4.in -o libuse_v4
 }
 
 install() {

@@ -211,6 +211,7 @@ while test "$ext" != "" # main loop
 	  continue
 	  ;;
 	-v|--verbose)  	set -o verbose  ; shift ; continue ;;
+	--revision)	d_msg revision "$U_REV" ;;
 	--version) 	d_msg version "$ver" ;;
 	-g) 		DMSG_GUI=1 ; shift ; continue ;; # display msg in gui
 	*)

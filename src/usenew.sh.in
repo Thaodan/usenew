@@ -1,4 +1,4 @@
-#\\rem use dash as shebang if use_dash is defined
+#\\rem #!/bin/sh use dash as shebang if use_dash is defined
 #\\ifdef use_dash
 #!/bin/dash
 #\\else

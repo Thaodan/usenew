@@ -7,7 +7,7 @@ arch=('any')
 license=('GPL2')
 depends=('sh' 'bash' 'coreutils' 'sed' 'wine' 'libsh')
 source=("${pkgname}-${pkgver}.tar.gz")
-md5sums=('9b32ea388f5c59ba5dc231fbad34e66d')
+md5sums=('b92d7910bc4316f41dfb2a965be69e17')
 
 makedepends=('sh-make-tools')
 

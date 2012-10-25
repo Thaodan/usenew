@@ -2,5 +2,5 @@
 . ../../src/sh_makefile
 tar -xaf usenew_$VER.orig.tar.gz
 cd usenew-$VER
-tar -xaf ../usenew.debian
+cp -a ../debian debian
 dpkg-buildpackage -d

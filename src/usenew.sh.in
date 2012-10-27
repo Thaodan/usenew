@@ -263,8 +263,12 @@ while test "$ext" != "" # main loop
   # 	      $run_i
   # 	      IFS=:
   #	    done
+	  else
+	    false
 	  fi
 	  ;;
     esac
+    error_status=$?
     ext=
 done
+exit $error_status

@@ -232,8 +232,8 @@ if [ ! $# = 0  ] ; then
 	      continue
 	      ;;
 	    -v|--verbose) set -o verbose  ; shift ; continue ;;
-	    --revision)	d_msg revision "$USE_REV" ;;
-	    -V|--version) 	d_msg version "$USE_REV" ;;
+	    --revision)	d_msg revision "$USE_REV" ; shift ;;
+	    -V|--version) 	d_msg version "$USE_REV" ; shift ;;
 	    -g|--gui) 	DMSG_GUI=1 ; shift ; continue ;; # display msg in gui	  	
 	#    --) shift; break ;; # if [ $1 =  -- ] ; then no more options in input  
 	    *) 

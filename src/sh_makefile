@@ -23,7 +23,7 @@ usenew() {
 
 
 usenew_real() {
-	shpp git_rev=$(./../tools/git_revgen ) prefix=$PREFIX usenew.sh.in -o usenew
+	shpp git_rev=$(./../tools/git_revgen ) use_ver=${VER} prefix=$PREFIX usenew.sh.in -o usenew
 }
 
 libuse() {

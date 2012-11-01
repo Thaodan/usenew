@@ -27,7 +27,7 @@
 # variables
 #  version vars:
 ############################################
-ver=3.0
+USE_VER=@use_ver@
 USE_REV=@git_rev@
 
 # settings
@@ -58,20 +58,28 @@ _HELP`"
 }
 
 u_long_help () { # display long help
-d_msg 'help' "`cat <<_LONGHELP
-Usage: $appname wineprefix command/file options
-supported files: *.exe;*.bat;*.cmd;*.reg;*.dll
+d_msg 'help' "\
+Usage: $appname wineprefix command/file options 
+supported files: *.exe;*.bat;*.cmd;*.reg;*.dll 
 
-  syntax: $appname [options] [prefix] [command/file] [start taget options]
+  syntax: $appname [options] [prefix] [command/file] [start taget options] 
+  
 
+general options:
+  -g	--gui			enable gui output
+  -h	--help			show help
+  -H	--long-help		show this text, long help
+  -V	--version		show version
+	--revision		show revision
+  -v	--verbose		be more verbose
+	--debug			help us in debuging
+  
 options:
-  -b 	<binpath> --binpath=<binpath>   define in wich path $appname will
-					search for wine and CO
-  -r    	-run-debug  		don't set WINEDEBUG to ${default_w_db:='default \\$WINEDBUG not set'}  (\\\$default_w_db)
-  -d 		--desktop    		start file/command in virtual desktop 
-  -D 		--directory  		tell $appname to change directory to started file
-  -p    	--prefix     		replacement for prefix, $appname will ask for prefix is this option is given ( usefull to start Windows programms out of file manager)
-
+  -b	--binpath <binpath>	define in wich path $appname will search for wine and CO
+  -r    -run-debug		don't set WINEDEBUG to ${default_w_db:='default $WINEDBUG not set'}  (\$default_w_db)
+  -d 	--desktop    		start file/command in virtual desktop 
+  -D 	--directory  		tell $appname to change directory to started file
+  -p    --prefix     		replacement for prefix, $appname will ask for prefix is this option is given ( usefull to start Windows programms out of file manager)
   commands:
     winefile open winefilebrowser
     winecfg  open winecontrol
@@ -96,8 +104,8 @@ ENVIRONMENT
     WINEPATH		
       set path where $appname searchs for wine
     WINEPREFIX_PATH
-      path where $appname searchs for wineprefixs default is \\\$HOME
-_LONGHELP`"
+      path where $appname searchs for wineprefixs, default is \$HOME
+"
 }
 
 
@@ -199,36 +207,39 @@ if [  $TERM = dumb ] ; then # test if is usenew runned outside from terminal and
   DMSG_GUI=1
 fi
 
-ext=1
-while test "$ext" != "" # main loop
-  do
-    case $1 in
-	--help|-h) u_help ;;
-	--long-help|-H|-HL) u_long_help ;;
-	--debug) 
-	  set -o verbose
-	  set -o xtrace
-	  shift
-	  continue
-	  ;;
-	-v|--verbose)  	set -o verbose  ; shift ; continue ;;
-	--revision)	d_msg revision "$USE_REV" ;;
-	--version) 	d_msg version "$ver" ;;
-	-g) 		DMSG_GUI=1 ; shift ; continue ;; # display msg in gui
-	*)
-	  if test_input $@ ; then # if input is right do this
-	    posixly=$POSIXLY_CORRECT
-	    export POSIXLY_CORRECT=1 # set POSIXLY_CORRECT to true cause we want that getopt stops after first non option  input to prevent that it parses the arguments of $runed_exe
-	    run_int=set_wine_db
-	    u_optspec=rb:dp #-: # short options
-	    u_optspec_long=run-debug,binpath:,desktop,prefix # long options
-	    PROCESSED_OPTSPEC=`getopt -qo $u_optspec --long $u_optspec_long \
-	    -n $appname -- "$@"` || d_msg ! error  "$( read_farray "$err_input_messages" 2 )" || exit 1 # parsed optspec
-	    eval set -- "$PROCESSED_OPTSPEC"
-	    export POSIXLY_CORRECT=$posixly
-	    unset posixly
-	    while [ $? = 0 ] ; do # TODO: improve this with getopt
-	      case "$1" in
+if [ ! $# = 0  ] ; then
+  ext=1
+  while test "$ext" != "" # main loop
+    do	
+	posixly=$POSIXLY_CORRECT
+	export POSIXLY_CORRECT=1 # set POSIXLY_CORRECT to true cause we want that getopt stops after first non option  input to prevent that it parses the arguments of $runed_exe
+	run_int=set_wine_db
+	u_optspec=rb:dphHvVg #-: # short options
+	u_optspec_long=run-debug,binpath:,desktop,prefix,help,long-help,verbose,debug,revision,gui,version # long options
+	PROCESSED_OPTSPEC=$( getopt -o $u_optspec --long $u_optspec_long \
+	-n $appname  -- "$@")  || d_msg ! error  "$( read_farray "$err_input_messages" 2 )" || exit 1 # parsed optspec
+	eval set -- "$PROCESSED_OPTSPEC"
+	export POSIXLY_CORRECT=$posixly
+	unset posixly
+	while [ ! $# = 0 ] ; do # TODO: improve this with getopt
+	  case "$1" in
+	    -h|--help) u_help ; shift ;;
+	    --long-help|-H|-HL) u_long_help ; shift ;;
+	    --debug) 
+	      set -o verbose
+	      set -o xtrace
+	      shift
+	      continue
+	      ;;
+	    -v|--verbose) set -o verbose  ; shift ; continue ;;
+	    --revision)	d_msg revision "$USE_REV" ;;
+	    -V|--version) 	d_msg version "$USE_REV" ;;
+	    -g|--gui) 	DMSG_GUI=1 ; shift ; continue ;; # display msg in gui	  	
+	#    --) shift; break ;; # if [ $1 =  -- ] ; then no more options in input  
+	    *) 
+	    if ( [  ! $1 = -- ]  || [ $# -ge 3 ] ) && test_input $@ ; then
+	      run_main=true
+	      case $1 in 
 		-r|--run-debug) skip_run set_wine_db ; shift ;; 
 		-b|--binpath) 	import libuse.wine_misc ; set_wine_ver "$2" ; shift 2 ;;  # set which wine version usenew should use
 		-d|--desktop) 	wine_args="explorer /desktop=`echo "${4}" | sed 's/.exe//g'`,800x600" ; shift ;; 
@@ -246,29 +257,36 @@ while test "$ext" != "" # main loop
 		;;
 		--) shift; break ;; # if [ $1 =  -- ] ; then no more options in input  
 	      esac
-	    done
-	      old_ifs=$IFS
-	      IFS=:
-	      for run_i in $run_int ; do
-		IFS=$old_ifs
-		$run_i
-		IFS=:
-	      done
-	      IFS=$old_ifs
-	      main $prefix "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9"
-  # 	    old_ifs=$IFS
-  # 	    IFS=:
-  # 	    for run_i in $run_int_p ; do
-  # 	      IFS=$old_ifs
-  # 	      $run_i
-  # 	      IFS=:
-  #	    done
-	  else
-	    false
-	  fi
-	  ;;
-    esac
-    error_status=$?
+	   else
+	     shift $#
+	    fi
+	    ;;
+	  esac
+	done
+	error_status=$? # save error status if we don't run main()
+	if [ $run_main  ] ; then
+	  old_ifs=$IFS
+	  IFS=:
+	  for run_i in $run_int ; do
+	    IFS=$old_ifs
+	    $run_i
+	    IFS=:
+	  done
+	  IFS=$old_ifs
+	  main $prefix "$1" "$2" "$3" "$4" "$5" "$6" "$7" "$8" "$9"
+	  # 	    old_ifs=$IFS
+	  # 	    IFS=:
+	  # 	    for run_i in $run_int_p ; do
+	  # 	      IFS=$old_ifs
+	  # 	      $run_i
+	  # 	      IFS=:
+	  #	    done
+	  error_status=$? # save it when we done it
+	fi
     ext=
-done
+  done
+else
+  echo $(read_farray "$err_input_messages" 1) 
+  false
+fi
 exit $error_status

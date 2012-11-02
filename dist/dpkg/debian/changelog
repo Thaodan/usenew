@@ -1,0 +1,5 @@
+usenew (3.1-1) stable; urgency=low
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- Bjoern Bidar <bidar@unknown>  Sun, 09 Sep 2012 01:34:29 +0200

@@ -1,0 +1,7 @@
+pkg/usr/bin/usenew 	usr/bin
+pkg/usr/lib/libuse	usr/lib
+pkg/usr/lib/libuse/libuse.backup usr/lib/libuse
+pkg/usr/lib/libuse/libuse.input usr/lib/libuse
+pkg/usr/lib/libuse/libuse.wine_misc usr/lib/libuse
+pkg/usr/lib/libuse/libuse_v4  usr/lib/libuse
+pkg/usr/lib/libuse/libuse  usr/lib/libuse

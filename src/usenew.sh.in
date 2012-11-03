@@ -237,7 +237,7 @@ if [ ! $# = 0  ] ; then
 	    -g|--gui) 	DMSG_GUI=1 ; shift ; continue ;; # display msg in gui	  	
 	#    --) shift; break ;; # if [ $1 =  -- ] ; then no more options in input  
 	    *) 
-	    if ( [  ! $1 = -- ]  || [ $# -ge 3 ] ) && test_input $@ ; then
+	    if ( [  $1 = -- ]  || [ $# -ge 3 ] ) && test_input $@ ; then
 	      run_main=true
 	      case $1 in 
 		-r|--run-debug) skip_run set_wine_db ; shift ;; 
@@ -259,6 +259,7 @@ if [ ! $# = 0  ] ; then
 	      esac
 	   else
 	     shift $#
+	     false
 	    fi
 	    ;;
 	  esac

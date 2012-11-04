@@ -235,11 +235,11 @@ if [ ! $# = 0  ] ; then
 	    --revision)	d_msg revision "$USE_REV" ; shift ;;
 	    -V|--version) 	d_msg version "$USE_VER" ; shift ;;
 	    -g|--gui) 	DMSG_GUI=1 ; shift ; continue ;; # display msg in gui	  	
-	#    --) shift; break ;; # if [ $1 =  -- ] ; then no more options in input  
-	    *) 
-	    if [  $1 = -* ]  || [ $# -ge 2 ]  ; then
-	      run_main=true
-	      case $1 in 
+# 	#    --) shift; break ;; # if [ $1 =  -- ] ; then no more options in input  
+# 	    *) 
+# 	    if [  $1 = -* ]  || [ $# -ge 2 ]  ; then
+# 	      run_main=true
+# 	      case $1 in 
 		-r|--run-debug) skip_run set_wine_db ; shift ;; 
 		-b|--binpath) 	import libuse.wine_misc ; set_wine_ver "$2" ; shift 2 ;;  # set which wine version usenew should use
 		-d|--desktop) 	wine_args="explorer /desktop=`echo "${4}" | sed 's/.exe//g'`,800x600" ; shift ;; 
@@ -256,19 +256,19 @@ if [ ! $# = 0  ] ; then
 		  shift
 		;;
 		--) shift; break ;; # if [ $1 =  -- ] ; then no more options in input  
-	      esac
-	   elif [ $1 = -- ] && [ $# = 1 ] ; then
-	      shift $#
-	   else
-	     shift $#
-	     echo $(read_farray "$err_input_messages" 2) 
-	     false
-	    fi
-	    ;;
+# 	      esac
+# 	   elif [ $1 = -- ] && [ $# = 1 ] ; then
+# 	      shift $#
+# 	   else
+# 	     shift $#
+# 	     echo $(read_farray "$err_input_messages" 2) 
+# 	     false
+# 	    fi
+# 	    ;;
 	  esac
 	done
-	error_status=$? # save error status if we don't run main()
-	if [ $run_main  ] ; then
+	
+	if test_input $@ $prefix  ; then
 	  old_ifs=$IFS
 	  IFS=:
 	  for run_i in $run_int ; do
@@ -285,8 +285,10 @@ if [ ! $# = 0  ] ; then
 	  # 	      $run_i
 	  # 	      IFS=:
 	  #	    done
-	  error_status=$? # save it when we done it
+	else
+	  false
 	fi
+	error_status=$? 
     ext=
   done
 else

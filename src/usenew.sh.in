@@ -237,7 +237,7 @@ if [ ! $# = 0  ] ; then
 	    -g|--gui) 	DMSG_GUI=1 ; shift ; continue ;; # display msg in gui	  	
 	#    --) shift; break ;; # if [ $1 =  -- ] ; then no more options in input  
 	    *) 
-	    if ( [  $1 = -- ]  || [ $# -ge 3 ] ) && test_input $@ ; then
+	    if [  $1 = -* ]  || [ $# -ge 2 ]  ; then
 	      run_main=true
 	      case $1 in 
 		-r|--run-debug) skip_run set_wine_db ; shift ;; 
@@ -257,8 +257,11 @@ if [ ! $# = 0  ] ; then
 		;;
 		--) shift; break ;; # if [ $1 =  -- ] ; then no more options in input  
 	      esac
+	   elif [ $1 = -- ] && [ $# = 1 ] ; then
+	      shift $#
 	   else
 	     shift $#
+	     echo $(read_farray "$err_input_messages" 2) 
 	     false
 	    fi
 	    ;;

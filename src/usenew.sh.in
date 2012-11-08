@@ -267,8 +267,9 @@ if [ ! $# = 0  ] ; then
 # 	    ;;
 	  esac
 	done
-	
-	if test_input $@ $prefix  ; then
+	if [ $# = 0 ] ; then 
+	  true
+	elif test_input $@ $prefix  ; then
 	  old_ifs=$IFS
 	  IFS=:
 	  for run_i in $run_int ; do

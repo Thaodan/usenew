@@ -214,8 +214,8 @@ if [ ! $# = 0  ] ; then
 	posixly=$POSIXLY_CORRECT
 	export POSIXLY_CORRECT=1 # set POSIXLY_CORRECT to true cause we want that getopt stops after first non option  input to prevent that it parses the arguments of $runed_exe
 	run_int=set_wine_db
-	u_optspec=rb:dp:hHvVg #-: # short options
-	u_optspec_long=run-debug,binpath:,desktop,prefix:,help,long-help,verbose,debug,revision,gui,version # long options
+	u_optspec=rb:dphHvVg #-: # short options
+	u_optspec_long=run-debug,binpath:,desktop,prefix,help,long-help,verbose,debug,revision,gui,version # long options
 	PROCESSED_OPTSPEC=$( getopt -o $u_optspec --long $u_optspec_long \
 	-n $appname  -- "$@")  || d_msg ! error  "$( read_farray "$err_input_messages" 2 )" || exit 1 # parsed optspec
 	eval set -- "$PROCESSED_OPTSPEC"
@@ -244,7 +244,7 @@ if [ ! $# = 0  ] ; then
 		-b|--binpath) 	import libuse.wine_misc ; set_wine_ver "$2" ; shift 2 ;;  # set which wine version usenew should use
 		-d|--desktop) 	wine_args="explorer /desktop=`echo "${4}" | sed 's/.exe//g'`,800x600" ; shift ;; 
 		-p|--prefix) 
-		  file=`basename $2`
+		  file=`basename $3`
 		  case $DMSG_GUI in
 		    1|true) prefix="`d_msg i 'enter prefix' "Please enter prefix to start $file"`";;
 		    *)

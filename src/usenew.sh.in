@@ -242,9 +242,11 @@ if [ ! $# = 0  ] ; then
 # 	      case $1 in 
 		-r|--run-debug) skip_run set_wine_db ; shift ;; 
 		-b|--binpath) 	import libuse.wine_misc ; set_wine_ver "$2" ; shift 2 ;;  # set which wine version usenew should use
-		-d|--desktop) 	wine_args="explorer /desktop=`echo "${4}" | sed 's/.exe//g'`,800x600" ; shift ;; 
+		-d|--desktop) 	argument_d=$(echo eval echo \$$#); wine_args="explorer /desktop=`eval $argument_d | sed 's/.exe//g'`,800x600" ; unset argument_d ;shift ;; 
 		-p|--prefix) 
-		  file=`basename $3`
+		  argument_p=$( echo eval echo \$$# )
+		  argument_p=$( $argument_p )
+		  file=`basename $argument_p`
 		  case $DMSG_GUI in
 		    1|true) prefix="`d_msg i 'enter prefix' "Please enter prefix to start $file"`";;
 		    *)
@@ -253,6 +255,7 @@ if [ ! $# = 0  ] ; then
 		      test ! -z $prefix 
 		      ;;
 		  esac  || exit 1 # || d_msg ! input 'no input given, abort'
+		  unset argument_p file
 		  shift
 		;;
 		--) shift; break ;; # if [ $1 =  -- ] ; then no more options in input  

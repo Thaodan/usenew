@@ -121,7 +121,8 @@ fi
 
 
 if [ $1 = \app1 -o $1 = -n ] > /dev/null 2>&1 ; then
-  import libuse.input
+  import libuse.input_old
+  echo "Warning:  using the old libuse.input (now libuse.input_old) is deprcated, it will removed in near future" 
   set_wine_db
   if [ ! -z "$APPPATH" ]; then
     cd "$APPPATH"

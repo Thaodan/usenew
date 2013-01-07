@@ -26,7 +26,7 @@ libuse_real() {
 	shpp git_rev=$git_rev prefix=$PREFIX libuse.backup.in  -o libuse.backup
 	shpp git_rev=$git_rev libuse.winix_app.in -o libuse.winix_app
 	shpp git_rev=$git_rev libuse.wine_misc.in -o libuse.wine_misc
-	shpp git_rev=$git_rev prefix=$PREFIX libuse.input.in -o libuse.input
+	shpp git_rev=$git_rev prefix=$PREFIX libuse.input_old.in -o libuse.input
 	shpp git_rev=$git_rev prefix=$PREFIX libuse_v4.in -o libuse_v4
 }
 

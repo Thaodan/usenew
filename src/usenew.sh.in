@@ -242,7 +242,7 @@ if [ ! $# = 0  ] ; then
 # 	      case $1 in 
 		-r|--run-debug) skip_run set_wine_db ; shift ;; 
 		-b|--binpath) 	import libuse.wine_misc ; set_wine_ver "$2" ; shift 2 ;;  # set which wine version usenew should use
-		-d|--desktop) 	argument_d=$(echo eval echo \$$#); wine_args="explorer /desktop=`eval $argument_d | sed 's/.exe//g'`,800x600" ; unset argument_d ;shift ;; 
+		-d|--desktop) 	argument_d=$(echo eval echo \$$#);  wine_args="explorer /desktop=$( basename $( $argument_d ) | sed 's/.exe//g'),800x600" ; unset argument_d ;shift ;; 
 		-p|--prefix) 
 		  argument_p=$( echo eval echo \$$# )
 		  argument_p=$( $argument_p )

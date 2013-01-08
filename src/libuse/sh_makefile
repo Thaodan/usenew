@@ -7,6 +7,11 @@ install_prefix=$prefix
 install=/usr/bin/install
 git_rev=$(./../../tools/git_revgen )
 
+# option vars for libuse.input.parse_input()
+LIBUSE_INPUT_PARSER_STD_LONG=stub
+LIBUSE_INPUT_PARSER_STD_SHORT=stub
+LIBUSE_INPUT_PARSER_STD_EXEC=stub
+
 
 default() {
 	libuse
@@ -26,7 +31,13 @@ libuse_real() {
 	shpp git_rev=$git_rev prefix=$PREFIX libuse.backup.in  -o libuse.backup
 	shpp git_rev=$git_rev libuse.winix_app.in -o libuse.winix_app
 	shpp git_rev=$git_rev libuse.wine_misc.in -o libuse.wine_misc
-	shpp git_rev=$git_rev prefix=$PREFIX libuse.input_old.in -o libuse.input
+	if [ $LIBUSE_INPUT_NEW ] ; then
+		shpp git_rev=$git_rev prefix=$PREFIX DEFAULT_STD_OPTIONS_LONG=$LIBUSE_INPUT_PARSER_STD_LONG \
+		DEFAULT_STD_OPTIONS_SHORT=$LIBUSE_INPUT_PARSER_STD_SHORT DEFAULT_STD_OPTIONS_EXEC=$LIBUSE_INPUT_PARSER_STD_EXEC \
+  		libuse.input.in -o libuse.input
+	else
+		shpp git_rev=$git_rev prefix=$PREFIX libuse.input_old.in -o libuse.input_old
+	fi
 	shpp git_rev=$git_rev prefix=$PREFIX libuse_v4.in -o libuse_v4
 }
 
@@ -47,6 +58,7 @@ clean() {
 	rm -rf libuse.backup
 	rm -rf libuse.winix_app
 	rm -rf libuse.wine_misc
+	rm -rf libuse.input_old
 	rm -rf libuse.input
 	rm -rf libuse_v4
 

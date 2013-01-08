@@ -27,6 +27,13 @@
 # shared_dir=/usr/share/libuse_v3/
 USE_REV=@git_rev@
 
+#\\rem if we have NYI stuff  enable stub
+#\\ifdef NYI_STUFF_THERE 
+stub() {
+    echo stub
+}
+
+#\\endif
 
 if [ -z "$libsh_ver" ] ; then
   . ${libdir:-@prefix@/lib}/libsh || exit

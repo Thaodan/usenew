@@ -39,12 +39,17 @@ WDEBUG=fixme-all  # define wich wine debug out will shown in if $WINEDEBUG is no
 default_win_arch=win32 # define the default wine architecture
 err_input_messages="no options given run $appname -h for help, or -H for long help:wrong options or only prefix given run $appname -h for help, or -H for long help" # err messages for test_input
 export WINE_PREFIXES="$WINEPREFIX_PATH" # for winetricks
+#\\ifdef ENABLE_USER_RC 
+. @USER_RC_FILE@
+#\\endif
 
-
+#\\ifdef ENABLE_SYSTEM_RC
+. @SYSTEM_RC_FILE@
+#\\endif 
 #############################################
 
 
-. ${libdir:-/usr/lib}/libuse/libuse #|| echo "libuse not found" ;  exit 1
+. ${libdir:-@prefix@/lib}/libuse/libuse #|| echo "libuse not found" ;  exit 1
 
 u_help () { # display short help
 d_msg 'help' "`cat <<_HELP
@@ -149,14 +154,10 @@ add_run() {
   done
 }
 
-# kill_attached_exe() {
-#   kill $exe_pid
-# }
 
 # main function
 
 main () {
-#       trap 'kill_attached_exe' SIGKILL SIGTERM
       if check_prefix "$1" || u_create_prefix "$1"   ; then
 	prefix ${WINEPREFIX_PATH:-$HOME/.}/"$1"
       else
@@ -200,7 +201,6 @@ main () {
 	    ;;
 	  *) sh -c  "exec "$runed_exe" $@"  ;; #we use exec cause its safer cause "$runed_exe" cant be a internal function
       esac
-#       exe_pid=$!
 }
 
 if [  $TERM = dumb ] ; then # test if is usenew runned outside from terminal and use DMSG_GUI=true to get gui output from d_msg if outsite of terminal

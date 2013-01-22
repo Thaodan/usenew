@@ -7,6 +7,10 @@ VER=3.1
 install_prefix=/usr
 install=/usr/bin/install
 #sh_make=./sh_make_pkg
+
+USER_RC_FILE=\${XDG_CONFIG_HOME:-\$HOME}/usenewrc
+SYSTEM_RC_FILE=/etc/usenewrc
+
 default() {
 	usenew
 }
@@ -23,7 +27,7 @@ usenew() {
 
 
 usenew_real() {
-	shpp git_rev=$(./../tools/git_revgen ) use_ver=${VER} prefix=$PREFIX usenew.sh.in -o usenew
+	shpp USER_RC_FILE="$USER_RC_FILE" SYSTEM_RC_FILE="$SYSTEM_RC_FILE" git_rev=$(./../tools/git_revgen ) use_ver=${VER} prefix=$PREFIX usenew.sh.in -o usenew
 }
 
 libuse() {

@@ -1,4 +1,4 @@
-# usenew makefile for building with sh_make
+## usenew makefile for building with sh_make
 
 DESTDIR=/
 PREFIX=${DESTDIR}usr
@@ -18,6 +18,14 @@ default() {
 prepare() {
  mkdir -p $PREFIX/bin
 }
+
+configure() {
+	for option in use_dash ENABLE_USER_RC ENABLE_SYSTEM_RC ; do
+		if [ $( eval $option ) = true ] ; then 
+			echo "#\\define $option" >> buildconfig
+		fi
+	done
+}  
 
 usenew() {
   usenew_real

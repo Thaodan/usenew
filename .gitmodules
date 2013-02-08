@@ -1,0 +1,3 @@
+[submodule "sh-make-tools"]
+	path = sh-make-tools
+	url = https://code.google.com/p/sh-make-tools

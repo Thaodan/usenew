@@ -1,0 +1,15 @@
+#\\macro <std/import>
+#\\macro <SHMK/input>
+#\\macro <usenew/libuse_app>
+#\\import <usenew/libuse>
+
+#\\if LIBUSE_APPLVL == 3 
+#\\import <usenew/libuse.input>
+#\\endif
+ 
+#\\if LIBUSE_APPLVL == 2 || LIBUSE_APPLVL == 3 
+#\\gen_input_parser
+#\\else
+#\\libuse.input.genvars
+#\\endif
+

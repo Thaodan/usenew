@@ -1,0 +1,10 @@
+#!/bin/sh
+
+while [ ! $# = 0 ] ; do
+    case $1 in
+	--shpp) shpp=$2; shift 2;;
+	*) target_file=$1 ; shift $#;;
+    esac
+done
+[ -z $shpp ]  && shpp=$( which shpp )
+$shpp -I/usr/lib/libuse/SHMK_local/include -M/usr/lib/sh_make/modules/macros -M/usr/lib/libuse/SHMK_local/macros $1 -o $( echo $target_file | cut -d '.' -f1 ) 

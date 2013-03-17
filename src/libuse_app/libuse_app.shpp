@@ -1,0 +1,12 @@
+#!/bin/sh
+libuse_genvars() {
+  cat <<GEN_LIBUSE_INPUT_VARS
+  commands_l=( $( echo "$defined_SHMK_INPUT_COMMANDS_L"  | sed 's|:| |') )
+  commands_s=( $( echo "$defined_SHMK_INPUT_COMMANDS_S"  | sed 's|:| |') )
+  exe=( $(echo "$defined_SHMK_INPUT_COMMANDS_RUN" | sed 's|:| |') )
+GEN_LIBUSE_INPUT_VARS >> "$1"
+  
+}
+
+
+register_external --runner libuse_genvars

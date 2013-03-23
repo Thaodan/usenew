@@ -21,24 +21,21 @@ default() {
 prepare() {
 	mkdir -p $PREFIX/lib/libuse
 }
+
+
+
 libuse() {
-	libuse_real
-}
-
-
-
-libuse_real() {
-	shpp git_rev=$git_rev prefix=$PREFIX libuse.backup.in  -o libuse.backup
-	shpp git_rev=$git_rev libuse.winix_app.in -o libuse.winix_app
-	shpp git_rev=$git_rev libuse.wine_misc.in -o libuse.wine_misc
+	shpp -Dgit_rev=$git_rev -Dprefix=$PREFIX libuse.backup.in  -o libuse.backup
+	shpp -Dgit_rev=$git_rev libuse.winix_app.in -o libuse.winix_app
+	shpp -Dgit_rev=$git_rev libuse.wine_misc.in -o libuse.wine_misc
 	if [ $LIBUSE_INPUT_NEW ] ; then
-		shpp git_rev=$git_rev prefix=$PREFIX DEFAULT_STD_OPTIONS_LONG=$LIBUSE_INPUT_PARSER_STD_LONG \
-		DEFAULT_STD_OPTIONS_SHORT=$LIBUSE_INPUT_PARSER_STD_SHORT DEFAULT_STD_OPTIONS_EXEC=$LIBUSE_INPUT_PARSER_STD_EXEC \
-  		libuse.input.in -o libuse.input
+		shpp -Dgit_rev=$git_rev -Dprefix=$PREFIX -DDEFAULT_STD_OPTIONS_LONG=$LIBUSE_INPUT_PARSER_STD_LONG \
+		-DDEFAULT_STD_OPTIONS_SHORT=$LIBUSE_INPUT_PARSER_STD_SHORT -DDEFAULT_STD_OPTIONS_EXEC=$LIBUSE_INPUT_PARSER_STD_EXEC \
+		libuse.input.in -o libuse.input
 	else
-		shpp git_rev=$git_rev prefix=$PREFIX libuse.input_old.in -o libuse.input_old
+		shpp -Dgit_rev=$git_rev -Dprefix=$PREFIX libuse.input_old.in -o libuse.input_old
 	fi
-	shpp git_rev=$git_rev prefix=$PREFIX libuse_v4.in -o libuse_v4
+	shpp -Dgit_rev=$git_rev -Dprefix=$PREFIX libuse_v4.in -o libuse_v4
 }
 
 install() {

@@ -1,10 +1,12 @@
 #!/bin/sh
 libuse_genvars() {
-  cat <<GEN_LIBUSE_INPUT_VARS
+  cat >>$tmp_dir/includes/libuse_input_$$ <<GEN_LIBUSE_INPUT_VARS
   commands_l=( $( echo "$defined_SHMK_INPUT_COMMANDS_L"  | sed 's|:| |') )
   commands_s=( $( echo "$defined_SHMK_INPUT_COMMANDS_S"  | sed 's|:| |') )
   exe=( $(echo "$defined_SHMK_INPUT_COMMANDS_RUN" | sed 's|:| |') )
-GEN_LIBUSE_INPUT_VARS >> "$1"
+GEN_LIBUSE_INPUT_VARS 
+
+include "$tmp_dir/includes/libuse_input_$$" noparse
   
 }
 

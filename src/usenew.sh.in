@@ -1,6 +1,6 @@
 #\\rem #!/bin/sh
 #\\rem load buildconfig where we define build options
-# #\\include buildconfig
+#\\rem  #\\include buildconfig
 #\\rem  use dash as shebang if use_dash is defined
 #\\ifdef use_dash
 #!/bin/dash
@@ -41,12 +41,12 @@ WDEBUG=fixme-all  # define wich wine debug out will shown in if $WINEDEBUG is no
 default_win_arch=win32 # define the default wine architecture
 err_input_messages="no options given run $appname -h for help, or -H for long help:wrong options or only prefix given run $appname -h for help, or -H for long help" # err messages for test_input
 export WINE_PREFIXES="$WINEPREFIX_PATH" # for winetricks
-#\\ifdef ENABLE_USER_RC 
-. @USER_RC_FILE@
+#\\ifdef USER_RC 
+. @USER_RC@
 #\\endif
 
-#\\ifdef ENABLE_SYSTEM_RC
-. @SYSTEM_RC_FILE@
+#\\ifdef SYSTEM_RC
+. @SYSTEM_RC@
 #\\endif 
 #############################################
 
@@ -185,10 +185,6 @@ main () {
 	      esac
 	      ;;
 	  *.msi) wine "$BINPATH"msiexec.exe /i "$runed_exe" "$@" ;;
-	  winetricks)
-	    # export WINE=""$BINPATH"wine $wine_args" depreacted libuse supports it now
-	    winetricks  $@ 
-	    ;;
 # built in commands
 ##############
 	  appconf|uninstaller)  "$BINPATH"wine $wine_args uninstaller.exe $@ ;;
@@ -205,7 +201,7 @@ main () {
       esac
 }
 
-if [  $TERM = dumb ] ; then # test if is usenew runned outside from terminal and use DMSG_GUI=true to get gui output from d_msg if outsite of terminal
+if [  -t 1 ] ; then # test if is usenew runned outside from terminal and use DMSG_GUI=true to get gui output from d_msg if outsite of terminal
   DMSG_GUI=1
 fi
 
@@ -237,11 +233,6 @@ if [ ! $# = 0  ] ; then
 	    --revision)	d_msg revision "$USE_REV" ; shift ;;
 	    -V|--version) 	d_msg version "$USE_VER" ; shift ;;
 	    -g|--gui) 	DMSG_GUI=1 ; shift ; continue ;; # display msg in gui	  	
-# 	#    --) shift; break ;; # if [ $1 =  -- ] ; then no more options in input  
-# 	    *) 
-# 	    if [  $1 = -* ]  || [ $# -ge 2 ]  ; then
-# 	      run_main=true
-# 	      case $1 in 
 		-r|--run-debug) skip_run set_wine_db ; shift ;; 
 		-b|--binpath) 	import libuse.wine_misc ; set_wine_ver "$2" ; shift 2 ;;  # set which wine version usenew should use
 		-d|--desktop) 	argument_d=$(echo eval echo \$$#);  wine_args="explorer /desktop=$( basename $( $argument_d ) | sed 's/.exe//g'),800x600" ; unset argument_d ;shift ;; 
@@ -256,20 +247,11 @@ if [ ! $# = 0  ] ; then
 		      read prefix
 		      test ! -z $prefix 
 		      ;;
-		  esac  || exit 1 # || d_msg ! input 'no input given, abort'
+		  esac  || exit 1 
 		  unset argument_p file
 		  shift
 		;;
 		--) shift; break ;; # if [ $1 =  -- ] ; then no more options in input  
-# 	      esac
-# 	   elif [ $1 = -- ] && [ $# = 1 ] ; then
-# 	      shift $#
-# 	   else
-# 	     shift $#
-# 	     echo $(read_farray "$err_input_messages" 2) 
-# 	     false
-# 	    fi
-# 	    ;;
 	  esac
 	done
 	if [ $# = 0 ] ; then 
@@ -302,4 +284,3 @@ else
   false
 fi
 exit $error_status
-#

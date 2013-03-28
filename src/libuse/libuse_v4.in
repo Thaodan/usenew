@@ -124,8 +124,7 @@ if [ $LIBUSE_APPLVL -ge 1 ] ; then
     case $LIBUSEAPP_LVL in
 	1)  exec_exe "$exe"
 	    ;;
-	2)  echo "Warning:  using the old libuse.input (now libuse.input_old) is deprcated, it will removed in near future"
-	    import libuse.input_old
+	2)  import libuse.input_old
 	    input_check
 	    ;;
     esac

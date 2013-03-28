@@ -57,7 +57,7 @@ input_check () { # builtin input test
 		    $__runner ${exe[$run]%\ *} ${exe[$run]#*\ }
 
 		else
-		    ${FORCE_RUN[$run]} "${exe[run]}" ; return 
+		    ${FORCE_RUN[$run]} "${exe[run]}" 
 		fi
 	    else 
 		false

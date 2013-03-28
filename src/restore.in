@@ -1,4 +1,5 @@
 #!/bin/bash  
+#\\include config.shh
 U_VER=0.5
 U_REV=@git_rev@
 err_input_messages='No input given'

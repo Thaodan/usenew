@@ -1,6 +1,6 @@
 #\\rem #!/bin/sh
 #\\rem load buildconfig where we define build options
-#\\rem  #\\include buildconfig
+#\\include config.shh
 #\\rem  use dash as shebang if use_dash is defined
 #\\ifdef use_dash
 #!/bin/dash
@@ -41,12 +41,12 @@ WDEBUG=fixme-all  # define wich wine debug out will shown in if $WINEDEBUG is no
 default_win_arch=win32 # define the default wine architecture
 err_input_messages="no options given run $appname -h for help, or -H for long help:wrong options or only prefix given run $appname -h for help, or -H for long help" # err messages for test_input
 export WINE_PREFIXES="$WINEPREFIX_PATH" # for winetricks
-#\\ifdef USER_RC 
-. @USER_RC@
+#\\ifdef USERRC 
+. @USERRC@
 #\\endif
 
-#\\ifdef SYSTEM_RC
-. @SYSTEM_RC@
+#\\ifdef SYSTEMRC
+. @SYSTEMRC@
 #\\endif 
 #############################################
 

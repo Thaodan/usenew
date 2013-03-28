@@ -1,3 +1,4 @@
+#!/bin/sh
 ## usenew makefile for building with sh_make
 
 DESTDIR=/
@@ -8,30 +9,39 @@ install_prefix=/usr
 INSTALL=/usr/bin/install
 #sh_make=./sh_make_pkg
 
-USER_RC=\${XDG_CONFIG_HOME:-\$HOME}/usenewrc
-SYSTEM_RC=/etc/usenewrc
+DEFAULT_USERRC=\${XDG_CONFIG_HOME:-\$HOME}/usenewrc
+DEFAULT_SYSTEMRC=/etc/usenewrc
 
 default() {
+	configure
 	libuse
 	usenew
 	restore
 }
 
-prepare() {
- mkdir -p $PREFIX/bin
-}
+
 
 configure() {
-	for option in use_dash ENABLE_USER_RC ENABLE_SYSTEM_RC ; do
-		if [ $( eval $option ) = true ] ; then 
-			echo "#\\define $option" >> buildconfig
-		fi
-	done
+	if [ "$SYSTEMRC" = 1 ] || [ "$SYSTEMRC" = true ] ; then
+		SYSTEMRC=$DEFAULT_SYSTEMRC 
+	fi
+	if [ ! -z "$SYSTEMRC" ] ; then
+		echo "#\\\\define SYSTEMRC $SYSTEMRC" >> config.shh
+	fi
+	if [ "$USERRC" = 1 ] || [ "$USERRC" = true ] ; then
+		USERRC=$DEFAULT_USERRC 
+	fi
+	if [ ! -z "$USERRC" ] ; then
+		echo "#\\\\define SYSTEMRC $USERRC" >> config.shh
+	fi
+	echo "#\\\\define use_ver $VER" >> config.shh
+	echo "#\\\\define prefix $PREFIX" >> config.shh
+	echo "#\\\\define git_rev $(./../tools/git_revgen)" >> config.shh
 }  
 
 
 usenew() {
-	shpp -DUSER_RC="$USER_RC" -DSYSTEM_RC="$SYSTEM_RC" -Dgit_rev=$(./../tools/git_revgen ) -Duse_ver=${VER} -Dprefix=$PREFIX usenew.sh.in -o usenew
+	shpp  usenew.sh.in -o usenew
 }
 
 libuse() {
@@ -42,7 +52,7 @@ restore() {
 	shpp git_rev=$(./../tools/git_revgen ) prefix=$PREFIX restore.in -o restore
 }
 install()  {
-	prepare
+	mkdir -p $PREFIX/bin
 	usenew_install
 	libuse_install
 	restore_install
@@ -61,6 +71,7 @@ restore_install() {
 }
 clean()  {
 	sh  -c 'cd libuse; . $PWD/sh_makefile; clean'
+	rm -rf config.shh
 	rm -rf usenew
 	rm -rf restore
 }

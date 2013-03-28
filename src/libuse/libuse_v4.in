@@ -44,12 +44,8 @@ fi
 ### functions for that are only in use with wine
 
 check_prefix () {  # check if  $1 is a prefix
-  if [ ! -f "${WINEPREFIX_PATH:=$HOME/.}/$1" ]; then # if all is right do this
-    if [ !  -e "${WINEPREFIX_PATH:=$HOME/.}/$1/system.reg" ]; then
+  if [ -f "${WINEPREFIX_PATH:=$HOME/.}/$1" ] && [ -e "${WINEPREFIX_PATH:=$HOME/.}/$1/system.reg" ]; then
       return 1
-    fi
-  else
-    return 1
   fi  
 } 
 
@@ -57,10 +53,8 @@ check_prefix () {  # check if  $1 is a prefix
 
 
 set_wine_db () { # set wine debug
-  if [ -z $WINEDEBUG ]; then
+  if [ -z $WINEDEBUG ]; then 
     export WINEDEBUG=${WDEBUG:=fixme-all}
-  #else
-  #  export WINEDEBUG=$WDEBUG
   fi
 }
 
@@ -81,11 +75,7 @@ exec_exe () { # start wine with $exe
 }
 
 prefix () { # set prefix var
-  if [ -z $1 ] ; then
-    export WINEPREFIX=${PREFIX:-$HOME/.wine}
-  else
-    export WINEPREFIX=$1
-  fi
+    export WINEPREFIX=${1:-${PREFIX:-$HOME/.wine}}
 }
 
 
@@ -112,38 +102,34 @@ kill_exe () { # kill first *.exe of $exe
 
 
 
-
-
-# base part of libuse 
-if [ ! -z "$backup" ] ; then
-  import libuse.backup
+if [ ! -z "$LIBUSE_BACKUP" ] ; then
+    import libuse.backup
 fi
 
-  if [ ! -z "$WINEPATH" ]; then
+if [ ! -z "$WINEPATH" ]; then
     import libuse.wine_misc
     check_wineserver || exit 1
     set_wine_ver "$WINEPATH"	
-
-  fi
-
-
-if [ $1 = \app1 -o $1 = -n ] > /dev/null 2>&1 ; then
-  import libuse.input_old
-  echo "Warning:  using the old libuse.input (now libuse.input_old) is deprcated, it will removed in near future" 
-  set_wine_db
-  if [ ! -z "$APPPATH" ]; then
-    cd "$APPPATH"
-  fi
-
-  if [  $1 = -n ]  > /dev/null 2>&1  ; then # || #[ $n $lu_c ] ;  > /dev/null 2>&1 ; then
-    compat_input
-  fi
 fi
-# default script with use of base functions to run if $n is not zero
 
-if [ ! -z $n ]; then
-  prefix
-  set_wine_db
-  exec_exe "$exe"
+
+if [ "$1" = app1 ] ; then
+    LIBUSE_APPLVL=2
 fi
+ 
+if [ $LIBUSE_APPLVL -ge 1 ] ; then 
+    set_wine_db
+    prefix
+    ${APPPATH:+cd} "$APPPATH"
+    case $LIBUSEAPP_LVL in
+	1)  exec_exe "$exe"
+	    ;;
+	2)  echo "Warning:  using the old libuse.input (now libuse.input_old) is deprcated, it will removed in near future"
+	    import libuse.input_old
+	    input_check
+	    ;;
+    esac
+fi
+   
+
 

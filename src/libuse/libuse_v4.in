@@ -103,11 +103,11 @@ kill_exe () { # kill first *.exe of $exe
 
 
 if [ ! -z "$LIBUSE_BACKUP" ] ; then
-    import libuse.backup
+    import libuse/libuse.backup
 fi
 
 if [ ! -z "$WINEPATH" ]; then
-    import libuse.wine_misc
+    import libuse/libuse.wine_misc
     check_wineserver || exit 1
     set_wine_ver "$WINEPATH"	
 fi
@@ -124,7 +124,7 @@ if [ $LIBUSE_APPLVL -ge 1 ] ; then
     case $LIBUSEAPP_LVL in
 	1)  exec_exe "$exe"
 	    ;;
-	2)  import libuse.input_old
+	2)  import libuse/libuse.input_old
 	    input_check
 	    ;;
     esac

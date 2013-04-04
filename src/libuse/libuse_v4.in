@@ -117,7 +117,7 @@ if [ "$1" = app1 ] ; then
     LIBUSEAPP_LVL=2
 fi
  
-if [ $LIBUSE_APPLVL -ge 1 ] ; then 
+if [ "$LIBUSEAPP_LVL" -ge 1 ] ; then 
     set_wine_db
     prefix
     ${APPPATH:+cd} "$APPPATH"

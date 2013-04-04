@@ -4,7 +4,7 @@ APPNAME=usenew
 VER=0.1
 prefix=/usr
 install_prefix=$prefix
-install=/usr/bin/install
+INSTALL=/usr/bin/install
 git_rev=$(./../../tools/git_revgen )
 
 # option vars for libuse.input.parse_input()
@@ -43,11 +43,11 @@ install() {
 	install_libuse
 }
 install_libuse() {
-	$install libuse.backup $PREFIX/lib/libuse/libuse.backup
-	$install libuse.winix_app $PREFIX/lib/libuse/libuse.winix_app
-	$install libuse.wine_misc $PREFIX/lib/libuse/libuse.wine_misc
-	$install libuse.input	$PREFIX/lib/libuse/libuse.input
-	$install libuse_v4 	$PREFIX/lib/libuse/libuse_v4
+	$INSTALL libuse.backup $PREFIX/lib/libuse/libuse.backup
+	$INSTALL libuse.winix_app $PREFIX/lib/libuse/libuse.winix_app
+	$INSTALL libuse.wine_misc $PREFIX/lib/libuse/libuse.wine_misc
+	$INSTALL libuse.input_old $PREFIX/lib/libuse/libuse.input_old
+	$INSTALL libuse_v4 	$PREFIX/lib/libuse/libuse_v4
 	ln -s libuse_v4		$PREFIX/lib/libuse/libuse
 }
 

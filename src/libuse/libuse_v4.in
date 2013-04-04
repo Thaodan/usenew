@@ -114,7 +114,7 @@ fi
 
 
 if [ "$1" = app1 ] ; then
-    LIBUSE_APPLVL=2
+    LIBUSEAPP_LVL=2
 fi
  
 if [ $LIBUSE_APPLVL -ge 1 ] ; then 

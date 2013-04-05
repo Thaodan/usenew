@@ -55,12 +55,14 @@ input_check () { # builtin input test
 	  		"POSIX shell script text executable") __runner=sh ;;
 			"Bourne-Again shell script text executable") __runner=bash;; 
 		    esac
-		    
-		    $__runner ${default_exe%\ *} ${default_exe#*\ } 
+	         
 		else
-		    ${FORCE_RUN_default} "${default_exe}"
-		    
+		    __runner=${FORCE_RUN_default}		    
 		fi
+		case ${default_exe} in
+		    *\ *) $__runner $__runner ${default_exe%\ *} ;;
+		    *) $__runner ${default_exe%\ *} ${default_exe#*\ } ;;
+		esac
 	    else
 		d_msg ! input "${NINPUT_MSG:-No input given}"
 	    fi
@@ -75,14 +77,14 @@ input_check () { # builtin input test
 	  		    "POSIX shell script text executable") __runner=sh ;;
 			    "Bourne-Again shell script text executable") __runner=bash;; 
 			esac
-			
-			$__runner ${exe[$run]%\ *} ${exe[$run]#*\ }
-			
 		    else
-			${FORCE_RUN[$run]} ${exe[$run]#*\ } 
+			__runner=${FORCE_RUN[$run]}
 		    fi
-		else 
-		    false
+		    case ${exe[$run]} in
+			    *\ *) $__runner ${exe[$run]%\ *} ${exe[$run]#*\ } ;;
+			    *) $__runner ${exe[$run]%\ *} ;;
+		    esac
+		    break
 		fi	
 	    done 
 	fi

@@ -125,7 +125,7 @@ if [ "$LIBUSEAPP_LVL" -ge 1 ] ; then
 	1)  exec_exe "$exe"
 	    ;;
 	2)  import libuse/libuse.input_old
-	    input_check
+	    input_check $@
 	    ;;
     esac
 fi

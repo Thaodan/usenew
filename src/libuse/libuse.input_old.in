@@ -59,9 +59,9 @@ input_check () { # builtin input test
 		else
 		    __runner=${FORCE_RUN_default}		    
 		fi
-		case ${default_exe} in
-		    *\ *) $__runner $__runner ${default_exe%\ *} ;;
-		    *) $__runner ${default_exe%\ *} ${default_exe#*\ } ;;
+		case "${default_exe}" in  
+			*\ * )  $__runner ${default_exe%\ *} ${default_exe#*\ } ;;
+			    *)  $__runner ${default_exe%\ *} ;;
 		esac
 	    else
 		d_msg ! input "${NINPUT_MSG:-No input given}"
@@ -79,9 +79,9 @@ input_check () { # builtin input test
 			esac
 		    else
 			__runner=${FORCE_RUN[$run]}
-		    fi
-		    case ${exe[$run]} in
-			    *\ *) $__runner ${exe[$run]%\ *} ${exe[$run]#*\ } ;;
+		    fi		 
+		    case "${exe[$run]}" in  
+			*\ * ) $__runner ${exe[$run]%\ *} ${exe[$run]#*\ }  ;;
 			    *) $__runner ${exe[$run]%\ *} ;;
 		    esac
 		    break

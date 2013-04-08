@@ -27,30 +27,71 @@
 # shared_dir=/usr/share/libuse_v3/
 USE_REV=@git_rev@
 
-. ${libdir:-@prefix@/lib}/libuse/base
+#\\rem if we have NYI stuff  enable stub
+#\\ifdef NYI_STUFF_THERE 
+stub() {
+    echo stub
+}
 
+#\\endif
 
-if [ ! -z "$LIBUSE_BACKUP" ] ; then
-    import libuse/libuse.backup
-fi
-
-
-if [ "$1" = app1 ] ; then
-    LIBUSEAPP_LVL=2
+if [ -z "$libsh_ver" ] ; then
+  . ${libdir:-@prefix@/lib}/libsh || exit
 fi
  
-if [ "${LIBUSEAPP_LVL:=0}" -ge 1 ] ; then 
-    set_wine_db
-    prefix
-    ${APPPATH:+cd} "$APPPATH"
-    case $LIBUSEAPP_LVL in
-	1)  exec_exe "$exe"
-	    ;;
-	2)  import libuse/libuse.input_old
-	    input_check $@
-	    ;;
-    esac
+
+
+### functions for that are only in use with wine
+
+check_prefix () {  # check if  $1 is a prefix
+  if [ -f "${WINEPREFIX_PATH:=$HOME/.}/$1" ] && [ -e "${WINEPREFIX_PATH:=$HOME/.}/$1/system.reg" ]; then
+      return 1
+  fi  
+} 
+
+
+
+
+set_wine_db () { # set wine debug
+  if [ -z $WINEDEBUG ]; then 
+    export WINEDEBUG=${WDEBUG:=fixme-all}
+  fi
+}
+
+
+
+exec_exe () { # start wine with $exe
+  if [ ! -z "$1" ]; then
+    runed_exe="$1"
+    shift
+    ext=1
+    while test "$ext" != ""
+      do
+	"${WINE:-wine}" $wine_args "$runed_exe" $@ ; return_stat=$?
+	ext=
+    done
+    return $return_stat
+  fi
+}
+
+prefix () { # set prefix var
+    export WINEPREFIX=${1:-${PREFIX:-$HOME/.wine}}
+}
+
+
+
+
+### base functions 
+
+exec_cmd () {
+  #BIN=wineconsole
+  "${WINE:-wine}" cmd.exe /c "$1"
+}
+
+
+
+if [ ! -z "$WINEPATH" ]; then
+    import libuse/libuse.wine_misc
+    check_wineserver || exit 1
+    set_wine_ver "$WINEPATH"	
 fi
-   
-
-

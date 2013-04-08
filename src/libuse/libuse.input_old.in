@@ -64,7 +64,7 @@ input_check () { # builtin input test
 			    *)  $__runner ${default_exe%\ *} ;;
 		esac
 	    else
-		d_msg ! input "${NINPUT_MSG:-No input given}"
+	       echo "${NINPUT_MSG:-No input given}" >&2
 	    fi
 	else
 	    for (( run=0; run < ${#commands_l[*]}; run++)) ; do
@@ -96,17 +96,20 @@ input_check () { # builtin input test
 
 display_help () {
     if [ ! -z "$HELP_MSG" ] ; then
-	d_msg help "`cat << _EOF
+	d_msg help  << _EOF
 $help_msg
-_EOF`"
+_EOF
     else
-	d_msg help "`cat << _EOF # display an builtin help message if $help_mgs is empty
+	cat << _EOF # display an builtin help message if $help_mgs is empty
 -$commands_s --$commands_l $exe
 -${commands_s[1]} --${commands_l[1]} ${exe[1]}
 -${commands_s[2]} --${commands_l[2]} ${exe[2]}
 -${commands_s[3]} --${commands_l[3]} ${exe[3]}
-_EOF`"
+_EOF
     fi
 }
 
 
+kill_exe () { # kill first *.exe of $exe 
+  pkill "$( basename $exe)"
+}

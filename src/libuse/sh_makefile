@@ -18,12 +18,6 @@ default() {
 }
 
 
-prepare() {
-	mkdir -p $PREFIX/lib/libuse
-}
-
-
-
 libuse() {
 	shpp -Dgit_rev=$git_rev -Dprefix=$PREFIX libuse.backup.in  -o libuse.backup
 	shpp -Dgit_rev=$git_rev libuse.winix_app.in -o libuse.winix_app
@@ -32,14 +26,14 @@ libuse() {
 		shpp -Dgit_rev=$git_rev -Dprefix=$PREFIX -DDEFAULT_STD_OPTIONS_LONG=$LIBUSE_INPUT_PARSER_STD_LONG \
 		-DDEFAULT_STD_OPTIONS_SHORT=$LIBUSE_INPUT_PARSER_STD_SHORT -DDEFAULT_STD_OPTIONS_EXEC=$LIBUSE_INPUT_PARSER_STD_EXEC \
 		libuse.input.in -o libuse.input
-	else
-		shpp -Dgit_rev=$git_rev -Dprefix=$PREFIX libuse.input_old.in -o libuse.input_old
 	fi
+	shpp -Dgit_rev=$git_rev -Dprefix=$PREFIX libuse.input_old.in -o libuse.input_old
 	shpp -Dgit_rev=$git_rev -Dprefix=$PREFIX libuse_v4.in -o libuse_v4
+	shpp -Dgit_rev=$git_rev -Dprefix=$PREFIX base.in -o base
 }
 
 install() {
-	prepare			
+	mkdir -p $PREFIX/lib/libuse		
 	install_libuse
 }
 install_libuse() {
@@ -48,6 +42,7 @@ install_libuse() {
 	$INSTALL libuse.wine_misc $PREFIX/lib/libuse/libuse.wine_misc
 	$INSTALL libuse.input_old $PREFIX/lib/libuse/libuse.input_old
 	$INSTALL libuse_v4 	$PREFIX/lib/libuse/libuse_v4
+	$INSTALL base 		$PREFIX/lib/libuse/base
 	ln -s libuse_v4		$PREFIX/lib/libuse/libuse
 }
 

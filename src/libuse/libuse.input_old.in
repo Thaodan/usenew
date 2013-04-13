@@ -97,7 +97,7 @@ input_check () { # builtin input test
 display_help () {
     if [ ! -z "$HELP_MSG" ] ; then
 	d_msg help  << _EOF
-$help_msg
+$HELP_MSG
 _EOF
     else
 	cat << _EOF # display an builtin help message if $help_mgs is empty

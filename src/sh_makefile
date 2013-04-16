@@ -41,7 +41,7 @@ configure() {
 
 
 usenew() {
-	shpp  usenew.sh.in -o usenew
+	shpp  usenew.in.sh -o usenew
 }
 
 libuse() {

@@ -210,7 +210,7 @@ main () {
   esac
 }
 
-if [  -t 1 ] ; then # test if is usenew runned outside from terminal and use DMSG_GUI=true to get gui output from d_msg if outsite of terminal
+if [ ! -t 1 ] ; then # test if is usenew runned outside from terminal and use DMSG_GUI=true to get gui output from d_msg if outsite of terminal
   DMSG_GUI=1
 fi
 

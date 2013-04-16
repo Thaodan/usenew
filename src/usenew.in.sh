@@ -160,6 +160,7 @@ add_run() {
 # main function
 
 main () {
+    shload libuse/base
     old_ifs=$IFS
     IFS=:
     for run_i in $run_int ; do
@@ -167,7 +168,6 @@ main () {
 	$run_i
 	IFS=:
     done
-    shload libuse/base
 
     if check_prefix "$1" || u_create_prefix "$1"   ; then
 	prefix ${WINEPREFIX_PATH:-$HOME/.}/"$1"

@@ -49,7 +49,7 @@ libuse() {
 }
 
 restore() {
-	shpp restore.in -o restore
+	shpp restore.sh.in -o restore
 }
 install()  {
 	mkdir -p $PREFIX/bin

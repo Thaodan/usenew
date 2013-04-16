@@ -96,7 +96,7 @@ input_check () { # builtin input test
 
 display_help () {
     if [ ! -z "$HELP_MSG" ] ; then
-	d_msg help  << _EOF
+	cat << _EOF
 $HELP_MSG
 _EOF
     else

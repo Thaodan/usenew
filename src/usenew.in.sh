@@ -1,12 +1,5 @@
-#\\rem #!/bin/sh
-#\\rem load buildconfig where we define build options
 #\\include config.shh
-#\\rem  use dash as shebang if use_dash is defined
-#\\ifdef use_dash
-#!/bin/dash
-#\\else
-#!/bin/sh
-#\\endif
+#!/bin/@SHELL@
 
 # wine prefix chooser and manager
 #

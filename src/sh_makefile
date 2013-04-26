@@ -34,9 +34,12 @@ configure() {
 	if [ ! -z "$USERRC" ] ; then
 		echo "#\\\\define SYSTEMRC=$USERRC" >> config.shh
 	fi
-	echo "#\\\\define use_ver=$VER" >> config.shh
-	echo "#\\\\define prefix=$PREFIX" >> config.shh
-	echo "#\\\\define git_rev=$(./../tools/git_revgen)" >> config.shh
+	cat >> config.shh <<CONFIH_SHH
+#\\define use_ver=$VER
+#\\define prefix=$PREFIX
+#\\define git_rev=$(./../tools/git_revgen)" 
+#\\define SHELL=${USE_SHEL:-sh}
+CONFIG_SHH
 }  
 
 

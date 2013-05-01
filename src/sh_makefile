@@ -25,7 +25,7 @@ configure() {
     cat > config.shh <<CONFIG_SHH
 #\\\\define use_ver=$VER
 #\\\\define prefix=$PREFIX
-#\\\\define git_rev=$(./../tools/git_revgen)" 
+#\\\\define git_rev=$(./../tools/git_revgen)
 #\\\\define SHELL=${USE_SHELL:-sh}
 CONFIG_SHH
 

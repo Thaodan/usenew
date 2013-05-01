@@ -7,6 +7,7 @@ APPNAME=usenew
 VER=3.2
 install_prefix=/usr
 INSTALL=/usr/bin/install
+INSTALL_ARGS='-Dm755'
 #sh_make=./sh_make_pkg
 
 DEFAULT_USERRC=\${XDG_CONFIG_HOME:-\$HOME}/usenewrc
@@ -28,7 +29,6 @@ configure() {
 #\\\\define git_rev=$(./../tools/git_revgen)
 #\\\\define SHELL=${USE_SHELL:-sh}
 CONFIG_SHH
-
     if [ "$SYSTEMRC" = 1 ] || [ "$SYSTEMRC" = true ] ; then
 	SYSTEMRC=$DEFAULT_SYSTEMRC 
     fi
@@ -56,14 +56,13 @@ restore() {
     shpp restore.in.sh -o restore
 }
 install()  {
-    mkdir -p $PREFIX/bin
     usenew_install
     libuse_install
     restore_install
 }
 
 usenew_install() {
-    $INSTALL usenew $PREFIX/bin/usenew
+    $INSTALL $INSTALL_ARGS usenew $PREFIX/bin/usenew
 }
 
 libuse_install(){
@@ -71,7 +70,7 @@ libuse_install(){
 }
 
 restore_install() {
-    $INSTALL  restore $PREFIX/bin/restore
+    $INSTALL  $INSTALL_ARGS restore $PREFIX/bin/restore
 }
 clean()  {
     sh  -c 'cd libuse; . $PWD/sh_makefile; clean'

@@ -22,65 +22,66 @@ default() {
 
 
 configure() {
-	if [ "$SYSTEMRC" = 1 ] || [ "$SYSTEMRC" = true ] ; then
-		SYSTEMRC=$DEFAULT_SYSTEMRC 
-	fi
-	if [ ! -z "$SYSTEMRC" ] ; then
-		echo "#\\\\define SYSTEMRC=$SYSTEMRC" >> config.shh
-	fi
-	if [ "$USERRC" = 1 ] || [ "$USERRC" = true ] ; then
-		USERRC=$DEFAULT_USERRC 
-	fi
-	if [ ! -z "$USERRC" ] ; then
-		echo "#\\\\define SYSTEMRC=$USERRC" >> config.shh
-	fi
-	cat >> config.shh <<CONFIG_SHH
+    cat > config.shh <<CONFIG_SHH
 #\\\\define use_ver=$VER
 #\\\\define prefix=$PREFIX
 #\\\\define git_rev=$(./../tools/git_revgen)" 
-#\\\\define SHELL=${USE_SHEL:-sh}
+#\\\\define SHELL=${USE_SHELL:-sh}
 CONFIG_SHH
+
+    if [ "$SYSTEMRC" = 1 ] || [ "$SYSTEMRC" = true ] ; then
+	SYSTEMRC=$DEFAULT_SYSTEMRC 
+    fi
+    if [ ! -z "$SYSTEMRC" ] ; then
+	echo "#\\\\define SYSTEMRC=$SYSTEMRC" >> config.shh
+    fi
+    if [ "$USERRC" = 1 ] || [ "$USERRC" = true ] ; then
+	USERRC=$DEFAULT_USERRC 
+    fi
+    if [ ! -z "$USERRC" ] ; then
+	echo "#\\\\define SYSTEMRC=$USERRC" >> config.shh
+    fi
 }  
 
 
 usenew() {
-	shpp  usenew.in.sh -o usenew
+    shpp  usenew.in.sh -o usenew
 }
 
 libuse() {
-	sh_make -f libuse/sh_makefile PREFIX=$PREFIX
+    sh_make -f libuse/sh_makefile PREFIX=$PREFIX
 }
 
 restore() {
-	shpp restore.in.sh -o restore
+    shpp restore.in.sh -o restore
 }
 install()  {
-	mkdir -p $PREFIX/bin
-	usenew_install
-	libuse_install
-	restore_install
+    mkdir -p $PREFIX/bin
+    usenew_install
+    libuse_install
+    restore_install
 }
 
 usenew_install() {
-	$INSTALL usenew $PREFIX/bin/usenew
+    $INSTALL usenew $PREFIX/bin/usenew
 }
 
 libuse_install(){
-	sh_make -f libuse/sh_makefile PREFIX=../$PREFIX install
+    sh_make -f libuse/sh_makefile PREFIX=../$PREFIX install
 }
 
 restore_install() {
-	$INSTALL  restore $PREFIX/bin/restore
+    $INSTALL  restore $PREFIX/bin/restore
 }
 clean()  {
-	sh  -c 'cd libuse; . $PWD/sh_makefile; clean'
-	rm -rf config.shh
-	rm -rf usenew
-	rm -rf restore
+    sh  -c 'cd libuse; . $PWD/sh_makefile; clean'
+    rm -rf config.shh
+    rm -rf usenew
+    rm -rf restore
 }
 
 installer() {
-	load_module configure
-	load_module make_installer
-	gen_installer > ../install.sh
+    load_module configure
+    load_module make_installer
+    gen_installer > ../install.sh
 }

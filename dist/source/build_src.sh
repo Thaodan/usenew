@@ -8,7 +8,7 @@ SOURCE_PATH=src
 if [ ! -e $SOURCE_PATH ] ; then 
   cd ../.. # cd to source dir
 fi
-. $PWD/src/sh_makefile
+. $PWD/src/rules.shmk
 
 
 . $PWD/PROJECT_INFO

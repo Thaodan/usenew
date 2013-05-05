@@ -47,11 +47,11 @@ install_libuse() {
 }
 
 clean() {
-	rm -rf libuse.backup
-	rm -rf libuse.winix_app
-	rm -rf libuse.wine_misc
-	rm -rf libuse.input_old
-	rm -rf libuse.input
+	rm -rf backup
+	rm -rf winix_app
+	rm -rf wine_misc
+	rm -rf input_old
+	rm -rf input
 	rm -rf libuse_v4
 
 }

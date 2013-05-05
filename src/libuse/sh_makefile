@@ -1,12 +1,5 @@
-DESTDIR=/
-PREFIX=${DESTDIR}usr
-APPNAME=usenew
-VER=0.1
-prefix=/usr
-install_prefix=$prefix
-INSTALL=/usr/bin/install
-git_rev=$(./../../tools/git_revgen )
-
+#/bin/sh
+load ../rules.shmk
 # option vars for libuse.input.parse_input()
 LIBUSE_INPUT_PARSER_STD_LONG=stub
 LIBUSE_INPUT_PARSER_STD_SHORT=stub

@@ -1,0 +1,8 @@
+#!/bin/sh
+DESTDIR=/
+PREFIX=${DESTDIR}usr
+APPNAME=usenew
+VER=3.2
+install_prefix=/usr
+INSTALL=/usr/bin/install
+INSTALL_ARGS='-Dm755'

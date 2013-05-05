@@ -1,13 +1,8 @@
 #!/bin/sh
 ## usenew makefile for building with sh_make
 
-DESTDIR=/
-PREFIX=${DESTDIR}usr
-APPNAME=usenew
-VER=3.2
-install_prefix=/usr
-INSTALL=/usr/bin/install
-INSTALL_ARGS='-Dm755'
+load rules.shmk
+
 #sh_make=./sh_make_pkg
 
 DEFAULT_USERRC=\${XDG_CONFIG_HOME:-\$HOME}/usenewrc

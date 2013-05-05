@@ -37,10 +37,10 @@ install() {
 	install_libuse
 }
 install_libuse() {
-	$INSTALL libuse.backup $PREFIX/lib/libuse/libuse.backup
-	$INSTALL libuse.winix_app $PREFIX/lib/libuse/libuse.winix_app
-	$INSTALL libuse.wine_misc $PREFIX/lib/libuse/libuse.wine_misc
-	$INSTALL libuse.input_old $PREFIX/lib/libuse/libuse.input_old
+	$INSTALL backup $PREFIX/lib/libuse/backup
+	$INSTALL winix_app $PREFIX/lib/libuse/winix_app
+	$INSTALL wine_misc $PREFIX/lib/libuse/wine_misc
+	$INSTALL input_old $PREFIX/lib/libuse/input_old
 	$INSTALL libuse_v4 	$PREFIX/lib/libuse/libuse_v4
 	$INSTALL base 		$PREFIX/lib/libuse/base
 	ln -s libuse_v4		$PREFIX/lib/libuse/libuse

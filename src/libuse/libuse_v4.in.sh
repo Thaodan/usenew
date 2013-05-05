@@ -31,7 +31,7 @@ USE_REV=@git_rev@
 
 
 if [ ! -z "$LIBUSE_BACKUP" ] ; then
-    import libuse/libuse.backup
+    import libuse/backup
 fi
 
 
@@ -46,7 +46,7 @@ if [ "${LIBUSEAPP_LVL:=0}" -ge 1 ] ; then
     case $LIBUSEAPP_LVL in
 	1)  exec_exe "$exe"
 	    ;;
-	2)  import libuse/libuse.input_old
+	2)  import libuse/binput
 	    input_check $@
 	    ;;
     esac

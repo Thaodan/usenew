@@ -1,4 +1,4 @@
-#/bin/sh
+#!/bin/sh
 load ../rules.shmk
 # option vars for libuse.input.parse_input()
 LIBUSE_INPUT_PARSER_STD_LONG=stub
@@ -30,10 +30,10 @@ install() {
 	install_libuse
 }
 install_libuse() {
-	$INSTALL backup $PREFIX/lib/libuse/backup
-	$INSTALL winix_app $PREFIX/lib/libuse/winix_app
-	$INSTALL wine_misc $PREFIX/lib/libuse/wine_misc
-	$INSTALL input_old $PREFIX/lib/libuse/input_old
+	$INSTALL backup 	$PREFIX/lib/libuse/backup
+	$INSTALL winix_app 	$PREFIX/lib/libuse/winix_app
+	$INSTALL wine_misc 	$PREFIX/lib/libuse/wine_misc
+	$INSTALL binput 	$PREFIX/lib/libuse/binput
 	$INSTALL libuse_v4 	$PREFIX/lib/libuse/libuse_v4
 	$INSTALL base 		$PREFIX/lib/libuse/base
 	ln -s libuse_v4		$PREFIX/lib/libuse/libuse

@@ -161,7 +161,8 @@ main () {
 	$run_i
 	IFS=:
     done
-
+    IFS=$old_ifs
+    unset IFS
     if check_prefix "$1" || u_create_prefix "$1"   ; then
 	prefix ${WINEPREFIX_PATH:-$HOME/.}/"$1"
     else

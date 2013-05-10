@@ -6,7 +6,7 @@ USE_SHELL		= sh
 WSYSTEMRC		= 0
 SYSTEMRC		= /etc/$(APPNAME)rc
 WUSERRC			= 0
-GIT_REV=    		= $(shell ./../tools/git_revgen)
+GIT_REV    		= $(shell ./../tools/git_revgen)
 USERRC			= "$\{XDG_CONFIG_HOME\:-$HOME/.config}"
 SCRIPTS			= usenew\
 	 		  restore

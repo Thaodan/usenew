@@ -3,7 +3,9 @@
 This is my package distrubtion system to build source package and to build packages for varius ways of distrubtion
 
 
+### INSTAL ###
 
+See INSTAL
 
 ### STRUCTURE ###
 
@@ -19,12 +21,16 @@ DIST_FILES			# Files that are inclued in source distrubtion
 dist/dist_clean			# clear files in dist/*/clean_list before building source package see below what clean_list is
 dist/*/clean_list			# list with files that are not port of the source that need to remove before building source package (eg. distrubtion packages or files that where generated while building them)
 dist/*				# folders with various ways of distrubtion
-dist_system/lib/update_source 	# script to update distrubtion sources with the latest package from source/${PROJECT_NAME}_latest${ARCHIVE_ENDING:-.tar.gz} ( distrubtion inpendent part, that will be called by update_pkg_ressources) 
+dist_system/usr/lib/update_source 	# script to update distrubtion sources with the latest package from source/${PROJECT_NAME}_latest${ARCHIVE_ENDING:-.tar.gz} ( distrubtion inpendent part, that will be called by update_pkg_ressources) 
 dist/*/update_pkg_ressources	# script to update distrubtion sources with the latest package from source/${PROJECT_NAME}_latest${ARCHIVE_ENDING:-.tar.gz} ( distrubtion dependet part)
-dist_system/bin/build_all_pkgs	# builds all distrubtions that have build_pkg and update_pkg_ressources in dist/*/
+dist_system/usr/bin/build_all_pkgs	# builds all distrubtions that have build_pkg and update_pkg_ressources in dist/*/
 dist/build_app			# script to build application in distrubtion systems (or directly in build_pkg)
 dist/*/build_pkg		# build distrubtion package (optimal)
-dist/source/build_src.sh	# script to build source file
-dist/source/source_clean	# script with instructions to clean source (required, used by build_src.sh)
+dist_system/lib/build_src	# script to build source tarball that calls dist/source_clean to clean distrubtion directory 
+dist_system/etc/build_src.d/*.sh	# files that are executed by dist/source/build_src.sh to allow modifed dist clean process without modifing it
+dist/source/build_src.sh	# symlink to dist_system/usr/lib/build_src, may replaced with a modifed copy of the source, but only if needed
+dist/usr/lib/source_clean		# script with instructions to clean source (required, used by build_src.sh)
+dist/source/source_clean	# symlink to dist_system/usr/lib/source_clean, may replaced if realy needed
+dist_system/etc/source_clean.d/*.sh	# files that are executed by dist/source_clean to allow modifed dist clean process without modifing it
 build_src.sh			# simlink to dist/source/build_src.sh
 	

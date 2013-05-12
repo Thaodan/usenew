@@ -1,42 +1,51 @@
- #!/bin/sh -e
+#!/bin/sh -e
 
-# build src to build 
-SOURCE_PATH=src
-
+# dir of distubtion system (we assume $PWD is distrubtion root
+DIST_SYSTEM=dist_system
 #### Config ###
-
-if [ ! -e $SOURCE_PATH ] ; then 
-  cd ../.. # cd to source dir
-fi
-. $PWD/src/rules.shmk
-
-
-. $PWD/PROJECT_INFO
-
+while true ; do 
+  if [ -e $DIST_SYSTEM ] ;then 
+    break
+  else
+    cd ..
+  fi
+done
 
 
+. $DIST_SYSTEM/etc/PROJECT_INFO
 
-BUILD_FILE=$PROJECT_NAME-$VER${ARCHIVE_ENDING} # use projekt $VER when build src archive 
+
+
+
+BUILD_FILE=$PROJECT_NAME-$PROJECT_VER${ARCHIVE_ENDING} # use projekt $VER when build src archive 
 ######################
 ### excute part ###
 
 mkdir $BUILD_FOLDER
-sh -c ". $PWD/$SOURCE_DIST/source_clean"
-sh -c "cd $DIST_DIR; . \$PWD/dist_clean"
+if ls $DIST_SYSTEM/etc/source_clean.d/*.sh > /dev/null 2>&1 ; then
+        for script in $DIST_SYSTEM/etc/source_clean.d/*.sh ; do
+                sh $script
+        done
+fi
+
 # only list  directorys and files that are in root to copy them in to $BUILD_TMP and exclude backups (files with ~ at the end) #  -e 's/^.//' -e  's/^\///'
 for DIST_FILE in $DIST_FILES ; do  
   if [ -d $DIST_FILE ] ; then
-    for file in $( find $DIST_FILE ! -iname '*~' ! -name  '*.tar.*' ! -name 'dist/pacman/{src,pkg}' | sed -e '1 d' -e 's/^.\///') ; do 
+    for file in $( find $DIST_FILE ! -iname '*~' ! -name  '*.tar.*'  | sed -e '1 d' -e 's/^.\///') ; do 
       mkdir -p $BUILD_FOLDER/$( dirname $file ); 
-      if [ ! -d $file ] ; then
-	cp $file $BUILD_FOLDER/$file ;
+      if [ ! -d $file ] || [ -L $file ] ; then
+	cp -P $file $BUILD_FOLDER/$file ;
       fi 
     done
   else
-    cp $DIST_FILE $BUILD_FOLDER/.
+    cp -P $DIST_FILE $BUILD_FOLDER/.
   fi
-
 done
+if ls $DIST_SYSTEM/etc/build_src.d/*.sh > /dev/null 2>&1 ; then
+        for script in $DIST_SYSTEM/etc/build_src.d/*.sh ; do
+                sh $script
+        done
+fi
 # cd $BUILD_TMP
 # clean uneeeded archives in our source dist
 # rm -rf dist/pacman/*.tar.xz

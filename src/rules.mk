@@ -1,4 +1,4 @@
-SHPP=shpp
+SHPP	      = shpp
 DESTDIR       =
 PREFIX        = /usr/local 
 INSTALL       = /usr/bin/install -D

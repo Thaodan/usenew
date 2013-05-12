@@ -20,12 +20,12 @@ export DH_OPTIONS
 %:
 	dh $@ 
 
-override_dh_auto_clean:
-	sh -c "cd src; . `pwd`/src/sh_makefile; clean"
-	rm -rf pkg
+#override_dh_auto_clean:
+#	sh -c "cd src; . `pwd`/src/sh_makefile; clean"
+#	rm -rf pkg
 
-override_dh_auto_install:
-	sh  dist/build_app
-	mkdir -p debian/tmp/pkg
+#override_dh_auto_install:
+#	sh  dist/build_app
+#	mkdir -p debian/tmp/pkg
 	mv pkg/* debian/tmp/pkg/.
 

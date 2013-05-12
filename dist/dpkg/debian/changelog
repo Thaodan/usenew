@@ -1,15 +1,7 @@
-usenew (3.1.1-1) stable; urgency=low
+usenew (3.2-1) stable; urgency=low
 
 * new upstream release
 
--- Bjoern Bidar <bidar@unknown> Do, 8 Nov 2012 01:34:29 +0200
+-- Bjoern Bidar <bidar@theodorstormgrade@gmail.com> Do, 8 Nov 2012 01:34:29 +0200
 
-
-
-
-usenew (3.1-1) stable; urgency=low
-
-* Initial release
-
--- Bjoern Bidar <bidar@unknown> Sun, 09 Sep 2012 01:34:29 +0200
 

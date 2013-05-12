@@ -1,0 +1,38 @@
+#!/bin/sh -e
+
+DIST_BIN=etc
+
+while true ; do 
+  if [ -e dist_system/$DIST_CONV ] ;then 
+    break
+  else
+    cd ..
+  fi
+done
+. dist_system/usr/lib/dist_func/tools.sh
+INIT_FILES=$( cat dist_system/etc/init_files )
+INIT_FOLDERS=$( cat dist_system/etc/init_folders )
+
+. dist_system/etc/rc.conf
+
+init_stats
+
+
+
+for init_file in $INIT_FILES ; do
+  
+  if [ ! -e $init_file ] || [ ! $( readlink $init_file  ) = dist_system/usr/lib/$( basename $init_file ) ] ; then
+    rm $init_file
+    ln -s dist_system/usr/lib/$(basename $init_file ) $init_file
+    msg2 "updated symlink $init_file"
+  else 
+    msg2 "$init_file was modifed, skipping"
+  fi
+	
+done
+
+
+
+for init_folder in $INIT_FOLDERS ; do
+  mkdir -p $init_folder
+done 

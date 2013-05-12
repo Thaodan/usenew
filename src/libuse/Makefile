@@ -9,7 +9,7 @@ $(SCRIPTS): ${SCRIPTS:=.in.sh} ../config.shh
 
 
 ../config.shh:
-	make -C .. config.shh
+	$(MAKE) -C .. config.shh
 
 install: $(SCRIPTS)	
 	$(INSTALL) -dm755 $(libdir)/libuse

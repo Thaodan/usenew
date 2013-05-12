@@ -1,0 +1,25 @@
+#!/bin/sh
+
+while true ; do 
+  if [ -e dist_system/$DIST_CONV ] ;then 
+    break
+  else
+    cd ..
+  fi
+done
+. $PWD/dist_system/etc/PROJECT_INFO
+. $PWD/dist_system/etc/rc.conf
+. $PWD/dist_system/usr/lib/dist_func/tools.sh
+
+init_stats 
+
+for dist in $DIST_DIR/* ; do
+  if [ -e $dist/build_pkg ] && [ -x $dist/update_pkg_ressources ] ; then
+    ( cd $dist
+	./update_pkg_ressources
+	sh build_pkg   
+   ) || error error:return_stat  \
+	    "got error while building $dist"
+  fi
+done
+

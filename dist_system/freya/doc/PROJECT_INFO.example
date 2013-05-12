@@ -1,0 +1,10 @@
+# for info see dist_system/doc/README
+# example PROJECT_INFO from usenew
+PROJECT_NAME=usenew
+PROJECT_VER=3.0
+SOURCE_DIR=src
+SOURCE_DIST=dist/source
+DIST_DIR=dist
+BUILD_FOLDER=$PROJECT_NAME-$VER
+ARCHIVE_ENDING=.tar.gz
+DIST_FILES="dist dist_system src tools doc README INSTALL build_src.sh PROJECT_INFO"

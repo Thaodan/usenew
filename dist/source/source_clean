@@ -1,3 +1,0 @@
-#!/bin/sh -e
-
-sh_make -f src/sh_makefile  clean

@@ -1,0 +1,12 @@
+#!/bin/sh 
+Install() {
+  if [ ! -e "$2 " ] || [ ! "$(md5sum "$1" )" = "$( md5sum "$2" 2> /dev/null  )"  ] ; then 
+    if install $@ ; then  # return 1 if we updated a file
+			return 1
+		else
+			return 2
+		fi
+  else
+    return 0
+  fi 
+}

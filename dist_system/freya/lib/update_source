@@ -1,6 +1,6 @@
  #!/bin/sh
 
-PROJECT_INFO_FILE=../../PROJECT_INFO
+PROJECT_INFO_FILE=../../dist_system/etc/PROJECT_INFO
 
 ####################################
 

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-. ../../dist_system/lib/update_source
+. ../../dist_system/usr/lib/update_source
 cp PKGBUILD.in PKGBUILD
 makepkg -g >>  PKGBUILD # update checksums in PKGBUILD
 

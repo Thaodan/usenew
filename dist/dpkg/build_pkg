@@ -1,5 +1,5 @@
 #!/bin/sh
-. ../../src/sh_makefile
+. ../../src/rules.shmk
 tar -xaf usenew_$VER.orig.tar.gz
 cd usenew-$VER
 cp -a ../debian debian

@@ -1,6 +1,6 @@
 #!/bin/sh
 
 . ../../dist_system/lib/update_source
-. ../../src/sh_makefile
+. ../../src/rules.shmk
 rm usenew_$VER.orig.tar.gz
 ln -s $( readlink $SOURCE_FILE ) usenew_$VER.orig.tar.gz

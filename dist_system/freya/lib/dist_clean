@@ -4,6 +4,6 @@
 for dist in *  ; do
   if [ -d $dist ] && [ -e $dist/clean_list ] ; then
      (cd $dist
-      rm -rf "$( cat clean_list )")
+      rm -rf $( cat clean_list ))
   fi
 done

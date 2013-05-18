@@ -36,10 +36,13 @@ stub() {
 
 #\\endif
 
+#\\ifndef STATIC
 if [ -z "$libsh_ver" ] ; then
   . ${libdir:-@prefix@/lib}/libsh || exit
 fi
- 
+#\\else
+#\\include <libuse/wine_misc.in.sh>
+#\\endif
 
 
 ### functions for that are only in use with wine
@@ -92,7 +95,9 @@ exec_cmd () {
 
 
 if [ ! -z "$WINEPATH" ]; then
+#\\ifndef STATIC
     import libuse/libuse.wine_misc
     check_wineserver || exit 1
     set_wine_ver "$WINEPATH"	
+#\\endif
 fi

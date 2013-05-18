@@ -42,6 +42,7 @@ if [ -z "$libsh_ver" ] ; then
 fi
 #\\else
 #\\include <libuse/wine_misc.in.sh>
+
 #\\endif
 
 

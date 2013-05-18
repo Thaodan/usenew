@@ -1,3 +1,4 @@
+#\\ifndef STATIC
 #!/bin/sh
 # core functions of usenew
 # NOTE; libuse v3 for integration of win32 applications unix systems
@@ -26,7 +27,7 @@
 # ver=3.0
 # shared_dir=/usr/share/libuse_v3/
 USE_REV=@git_rev@
-
+#\\endif
 #\\rem if we have NYI stuff  enable stub
 #\\ifdef NYI_STUFF_THERE 
 stub() {

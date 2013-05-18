@@ -25,6 +25,14 @@
 USE_VER=@use_ver@
 USE_REV=@git_rev@
 
+#\\ifndef STATIC
+. ${LIBSH:-@prefix@/lib/libsh} 
+
+#\\else
+#\\   include ../sh-make-tools/external/libsh/src/d_msg.in.sh
+#\\   include libuse/base.in.sh
+#\\endif
+
 # settings
 ############################################ 
 
@@ -34,6 +42,7 @@ WDEBUG=fixme-all  # define wich wine debug out will shown in if $WINEDEBUG is no
 default_win_arch=win32 # define the default wine architecture
 err_input_messages="no options given run $appname -h for help, or -H for long help:wrong options or only prefix given run $appname -h for help, or -H for long help" # err messages for test_input
 export WINE_PREFIXES="$WINEPREFIX_PATH" # for winetricks
+
 #\\ifdef USERRC 
 . @USERRC@
 #\\endif
@@ -44,7 +53,6 @@ export WINE_PREFIXES="$WINEPREFIX_PATH" # for winetricks
 #############################################
 
 
-. ${LIBSH:-@prefix@/lib/libsh} 
 
 u_help () { # display short help
 d_msg 'help' "`cat <<_HELP
@@ -153,7 +161,9 @@ add_run() {
 # main function
 
 main () {
+#\\ifndef STATIC
     shload libuse/base
+#\\endif
     old_ifs=$IFS
     IFS=:
     for run_i in $run_int ; do

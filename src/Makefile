@@ -29,6 +29,9 @@ ifneq ($(WUSERRC),0)
 	@echo '#\\define USERRC=$(USERRC)' >> $@
 endif
 
+usenew_static: usenew.in.sh config.shh
+	$(SHPP) -DSTATIC='' $(<) -o $(@) 
+
 libuse: 
 	$(MAKE) -C libuse
 

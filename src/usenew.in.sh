@@ -257,7 +257,7 @@ if [ ! $# = 0  ] ; then
 		  argument_p=$( $argument_p )
 		  file=`basename $argument_p`
 		  case $DMSG_GUI in
-		    prefix="`d_msg i 'enter prefix' "Please enter prefix to start $file"`" #;;
+		    1|true) prefix="`d_msg i 'enter prefix' "Please enter prefix to start $file"`" #;;
 		    *)
  		      echo "Please enter prefix to start $file"
  		      read prefix

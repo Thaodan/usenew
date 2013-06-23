@@ -7,7 +7,7 @@ arch=('any')
 license=('GPL2')
 depends=('sh' 'bash' 'coreutils' 'sed' 'wine' 'libsh')
 source=("${pkgname}-${pkgver}.tar.gz")
-makedepends=('sh-make-tools')
+makedepends=('shpp')
 
 
 build() {

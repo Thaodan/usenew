@@ -97,7 +97,7 @@ exec_cmd () {
 
 if [ ! -z "$WINEPATH" ]; then
 #\\ifndef STATIC
-    import libuse/libuse.wine_misc
+    import libuse/wine_misc
 #\\endif
     check_wineserver || exit 1
     set_wine_ver "$WINEPATH"	

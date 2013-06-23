@@ -250,19 +250,19 @@ if [ ! $# = 0  ] ; then
 	    -V|--version) 	d_msg version "$USE_VER" ; shift ;;
 	    -g|--gui) 	DMSG_GUI=1 ; shift ; continue ;; # display msg in gui	  	
 		-r|--run-debug) skip_run set_wine_db ; shift ;; 
-		-b|--binpath) 	import libuse.wine_misc ; set_wine_ver "$2" ; shift 2 ;;  # set which wine version usenew should use
+		-b|--binpath) 	import libuse/wine_misc ; set_wine_ver "$2" ; shift 2 ;;  # set which wine version usenew should use
 		-d|--desktop) 	argument_d=$(echo eval echo \$$#);  wine_args="explorer /desktop=$( basename $( $argument_d ) | sed 's/.exe//g'),800x600" ; unset argument_d ;shift ;; 
 		-p|--prefix) 
 		  argument_p=$( echo eval echo \$$# )
 		  argument_p=$( $argument_p )
 		  file=`basename $argument_p`
 		  case $DMSG_GUI in
-		    1|true) prefix="`d_msg i 'enter prefix' "Please enter prefix to start $file"`";;
+		    prefix="`d_msg i 'enter prefix' "Please enter prefix to start $file"`" #;;
 		    *)
-		      echo "Please enter prefix to start $file"
-		      read prefix
-		      test ! -z $prefix 
-		      ;;
+ 		      echo "Please enter prefix to start $file"
+ 		      read prefix
+ 		      test ! -z $prefix 
+ 		      ;;
 		  esac  || exit 1 
 		  unset argument_p file
 		  shift

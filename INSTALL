@@ -1,19 +1,13 @@
  
-NOTE: To set install prefix add PREFIX=<your install prefix> as option when running sh_make
+NOTE: To set install prefix add PREFIX=<your install prefix> as option when running make
 ### BUILDING ###
 
 0 . cd $extract_root
 1 . cd src
-2 . sh_make -f sh_makefile
+2 . make
 
 
 ### INSTALLING ###
 
-1 . with installer
-  1. sh_make DESTDIR=../pkg -f sh_makefile install # set PREFIX if needed
-  3. sh_make -f sh_makefile installer
-  2. /bin/sh install.sh  --prefix <prefix> # replace prefix with your install prefix
-
-2. without
-  1. sh_make -f sh_makefile install
-  
+0. cd src
+1. make install 

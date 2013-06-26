@@ -1,5 +1,0 @@
-#!/bin/sh -e
-  
-  cd 	src
-  sh_make -f sh_makefile 
-  sh_make PREFIX=../pkg/usr -f sh_makefile install

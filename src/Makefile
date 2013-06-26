@@ -30,7 +30,7 @@ ifneq ($(WUSERRC),0)
 endif
 
 usenew_static: usenew.in.sh libuse/base.in.sh libuse/wine_misc.in.sh config.shh
-	$(SHPP) -DSTATIC='' -I./libuse $(<) -o $(@) 
+	$(SHPP) -DSTATIC -I./libuse $(<) -o $(@) 
 
 libuse: 
 	$(MAKE) -C libuse

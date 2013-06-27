@@ -273,15 +273,7 @@ if [ ! $# = 0  ] ; then
 	if [ $# = 0 ] ; then 
 	  true
 	elif test_input $@ $prefix  ; then
-	  IFS=$old_ifs
 	  main $prefix $@
-	  # 	    old_ifs=$IFS
-	  # 	    IFS=:
-	  # 	    for run_i in $run_int_p ; do
-	  # 	      IFS=$old_ifs
-	  # 	      $run_i
-	  # 	      IFS=:
-	  #	    done
 	else
 	  false
 	fi

@@ -18,7 +18,8 @@ install: $(ORG_FILES:.org=.1)
 	$(INSTALL) -dm755  $(mandir)/man1
 	$(INSTALL) -m755 $(^) $(mandir)/man1
 
-clean: $(ORG_FILES:.org=.1)
-	rm -f $(^)
-
+#clean: $(ORG_FILES:.org=.1)
+#	rm -f $(^)
+clean:
+	@printf -- ''
 .PHONY: clean install

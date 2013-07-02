@@ -15,7 +15,8 @@ done
 . $DIST_SYSTEM/etc/PROJECT_INFO
 
 
-
+sh -c "cd $DIST_DIR;. \$PWD/dist_clean"
+ 
 
 BUILD_FILE=$PROJECT_NAME-$PROJECT_VER${ARCHIVE_ENDING} # use projekt $VER when build src archive 
 ######################

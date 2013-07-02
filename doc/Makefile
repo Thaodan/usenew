@@ -7,7 +7,7 @@ ORG_FILES		= usenew.org\
 			  libuse.org
 
 all: $(ORG_FILES:.org=.1)
-libuse.org: libuse.org.in 
+libuse.org: libuse.in.org
 	sed "s|@libdir@|$(libdir)|" $< > $@
 $(ORG_FILES:.org=.1): $(ORG_FILES)
 	$(EMACS) $(EMACS_ARGS)

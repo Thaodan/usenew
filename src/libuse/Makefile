@@ -1,4 +1,4 @@
-include ../rules.mk
+include ../../rules.mk
 
 SCRIPTS 	= backup winix_app wine_misc base libuse binput
 GIT_REV      	= $(shell ./../../tools/git_revgen)

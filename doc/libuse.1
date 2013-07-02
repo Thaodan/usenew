@@ -1,0 +1,96 @@
+.TH "libuse" "1" 
+.SH "SYNOPSIS"
+.PP
+. /usr/lib/libuse/libuse 
+
+
+
+.SH "DESCRIPTION"
+.PP
+This collection of functions has some functions that make it easy to work with win32 executables
+in shell scripts. It has several functions to parse input, backup data and handle some wine specific
+problems.
+.SH "FILES"
+.PP
+NOTE: Files with (b) need bash.
+
+.SS "libuse/libuse"
+.SS "DESCRIPTION"
+.PP
+Just a wrapper to to do what LIBUSE\d\s-2APPLVL\s+2\u says.
+
+.SS "VARS"
+.PP
+LIBUSE\d\s-2BACKUP\s+2\u if set we import libuse/backup
+LIBUSEAPP\d\s-2LVL\s+2\u set applevel to tell libuse what it has todo 
+(1: just exec $exe,2: import libuse/binput and run input\d\s-2check\s+2\u with$@
+
+.SS "FUNCTIONS"
+.PP
+None
+.SS "libuse/libuse.backup(b)"
+.SS "DESCRIPRION"
+.PP
+Load to backup and restore data in $user\d\s-2data\s+2\u/$backup\d\s-2option\s+2\u 
+
+.SS "VARS"
+.PP
+user\d\s-2data\s+2\u set location of user data where we save (we save backup in $user\d\s-2data\s+2\u/backup)
+backup\d\s-2option\s+2\u set subfolder in $user\d\s-2data\s+2\u where we find our data to backup
+
+.SS "FUNCTIONS"
+.PP
+backup\d\s-2data\s+2\u () { # backup application data
+restore\d\s-2backup\s+2\u () { # restore backup archive that is made by backup\d\s-2data\s+2\u
+.SS "libuse/binput(b)"
+.SS "DESCRIPTION"
+.PP
+Mostly an input parser with and its helper functions.
+
+.SS "VARS"
+.PP
+U\d\s-2TESTINPUT\s+2\u\d\s-2MSGS\s+2\u inout msgs for test\d\s-2input\s+2\u (array, one item, one msg)
+commands\d\s-2s[i]\s+2\u short option for item i 
+commands\d\s-2l[i]\s+2\u long option for item i
+exe[i] executable for item i
+default\d\s-2exe\s+2\u set default executable to run
+FORCE\d\s-2RUN[i]\s+2\u force to input\d\s-2check\s+2\u to use the  runner instead of detecting it
+FORCE\d\s-2RUN\s+2\u\d\s-2default\s+2\u same for default\d\s-2exe\s+2\u
+NINPUT\d\s-2MSG\s+2\u sets message that input\d\s-2check\s+2\u displays if $default\d\s-2exe\s+2\u is not set and no input given
+
+.SS "FUNCTIONS"
+.PP
+test\d\s-2input\s+2\u () { # test if input is greater the size of U\d\s-2TESTINPUT\s+2\u\d\s-2MSGS\s+2\u
+input\d\s-2check\s+2\u () { # builtin input test
+kill\d\s-2exe\s+2\u () { # kill first *.exe of $exe 
+display\d\s-2help\s+2\u () { # mostly just a wrapper for HELP\d\s-2MSG\s+2\u or when its empty a displayer for test\d\s-2input\s+2\u vars
+.SS "libuse/base"
+.SS "DESCRIPTIONS"
+.PP
+Base part of libuse
+.SS "VARS"
+.PP
+WINEPATH load wine\d\s-2misc\s+2\u and run check\d\s-2wineserver\s+2\u && set\d\s-2wine\s+2\u\d\s-2ver\s+2\u with it if set
+WINEPREFIX\d\s-2PATH\s+2\u path where check\d\s-2prefix\s+2\u searches for wine prefixs else if not set it  will use $HOME/.
+
+.SS "FUNCTIONS"
+.PP
+check\d\s-2prefix\s+2\u () {  # check if  $1 is a prefix, else return 1
+set\d\s-2wine\s+2\u\d\s-2db\s+2\u () { # set $WINEDEBUG
+exec\d\s-2exe\s+2\u () { # start wine with $exe
+prefix () { # set $WINEPREFIX to var 
+exec\d\s-2cmd\s+2\u () { # run batch script
+
+.SS "libuse/wine\d\s-2misc\s+2\u"
+.SS "DESCRIPTION"
+.PP
+Some utility functions
+
+.SS "VARS"
+.PP
+None
+
+.SS "FUNCTIONS"
+.PP
+set\d\s-2wine\s+2\u\d\s-2ver\s+2\u # say wine to use the wine version in prefix is $1 
+check\d\s-2wineserver\s+2\u # check if wineserver is running and ask your user if we are allowed to kill it 

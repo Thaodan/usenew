@@ -1,0 +1,41 @@
+#+TITLE: usenew
+* SYNOPSIS
+  *usenew* /[options]/ /[prefix]/ <command/file> /[start taget options]/ 
+* OPTIONS
+** general options:
+  - -g    --gui         ::    enable gui output
+  - -h    --help        ::    show help
+  - -H    --long-help   ::    show this text, long help
+  - -V    --version     ::    show version
+  - --revision          ::    show revision
+  - -v --verbose        ::    be more verbose
+  - --debug             ::    help us in debuging
+  
+** options:
+  - -b    --binpath <binpath>  ::   define in wich path usenew will search for wine and CO
+  - -r    -run-debug           ::   don't set WINEDEBUG to default
+  - -d    --desktop            ::   start file/command in virtual desktop 
+  - -D    --directory          ::   tell usenew to change directory to started file
+  - -p    --prefix             ::   replacement for prefix, usenew will ask for prefix is this option is given ( usefull to start Windows programms out of file manager)
+*** commands:
+    - winefile :: open winefilebrowser
+    - winecfg  :: open winecontrol
+    - appconf  :: control the software of the chosen prefix
+    - control  :: open control
+    - cmd      :: open winecommandline
+    - open     :: open prefix directory with xdg-open
+
+** file specific  options:
+
+***  *.bat/*.cmd file 
+       - -w, --window :: open file in new window
+*** *.reg file 
+      - -i :: import regefile
+      - -e :: export the given part of registry to file
+              syntax for export to regfile :
+              usenew [prefix] [regfilename.reg] -e [regpath]
+	 
+* ENVIRONMENT
+
+    - WINEPATH :: set path where usenew searchs for wine
+    - WINEPREFIX_PATH :: path where usenew searchs for wineprefixs, default is $HOME

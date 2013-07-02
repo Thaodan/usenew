@@ -1,4 +1,4 @@
-include rules.mk
+include ../rules.mk
 # app config
 APPNAME			= usenew
 USE_VER	     	 	= 3.2

@@ -1,6 +1,6 @@
 include ../rules.mk
 EMACS 			= emacs
-EMACS_EXPORT_SCRIPT 	= ../tools/man_export.el
+EMACS_EXPORT_SCRIPT 	= ../tools/emacs_jorg.el
 EMACS_ARGS		= --batch --script $(EMACS_EXPORT_SCRIPT)  \
 	--visit=$@ --funcall org-man-export-to-man
 ORG_FILES		= usenew.org\

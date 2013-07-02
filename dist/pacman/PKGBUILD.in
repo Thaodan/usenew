@@ -7,14 +7,15 @@ arch=('any')
 license=('GPL2')
 depends=('sh' 'bash' 'coreutils' 'sed' 'wine' 'libsh')
 source=("${pkgname}-${pkgver}.tar.gz")
+md5sums=('0f0248c96b9ad464b1c9bc31ee27eb91')
 makedepends=('shpp')
 
 
 build() {
-  cd $srcdir/$pkgname-$pkgver/src
+  cd $srcdir/$pkgname-$pkgver
   make PREFIX=/usr
 }	
 package() {
-  cd $srcdir/$pkgname-$pkgver/src
+  cd $srcdir/$pkgname-$pkgver
   make PREFIX=$pkgdir/usr install
 }

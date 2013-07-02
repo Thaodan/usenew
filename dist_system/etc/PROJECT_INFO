@@ -7,4 +7,4 @@ SOURCE_DIST=dist/source
 DIST_DIR=dist
 BUILD_FOLDER=$PROJECT_NAME-$PROJECT_VER
 ARCHIVE_ENDING=.tar.gz
-DIST_FILES="dist dist_system src tools doc README INSTALL build_src PROJECT_INFO"
+DIST_FILES="dist dist_system src tools doc rules.mk Makefile README INSTALL build_src PROJECT_INFO"

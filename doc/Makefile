@@ -15,8 +15,8 @@ $(ORG_FILES:.org=.1): $(ORG_FILES)
 
 
 install: $(ORG_FILES:.org=.1)
-	$(INSTALL) -dm755  $(mandir)
-	$(INSTALL) -m755 $(^) $(mandir)
+	$(INSTALL) -dm755  $(mandir)/man1
+	$(INSTALL) -m755 $(^) $(mandir)/man1
 
 clean: $(ORG_FILES:.org=.1)
 	rm -f $(^)

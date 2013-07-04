@@ -1,6 +1,6 @@
 #!/bin/bash  
 #\\include config.shh
-U_VER=0.5
+U_VER=0.6
 U_REV=@git_rev@
 err_input_messages='No input given'
 DMSG_DIALOG_DISABLED=true 
@@ -17,8 +17,8 @@ if test_input $@ ; then
 	--version|-V)  echo $U_VER:$U_REV;;
 	--revision) echo $U_REV ;;
 	--help|-h|-*) d_msg help "$appname usage: $appname [backup file]" ; shift ;;
-	--) shift ; ; break ;;
-	*) import libuse.backup ; restore_backup "$1"  ; shift ;;
+	--) shift; break ;;
+	*) import libuse/backup ; restore_backup "$1"  ; shift ;;
       esac
   done
 fi

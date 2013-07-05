@@ -2,12 +2,9 @@
 NOTE: To set install prefix add PREFIX=<your install prefix> as option when running make
 ### BUILDING ###
 
-0 . cd $extract_root
-1 . cd src
-2 . make
+make
 
 
 ### INSTALLING ###
 
-0. cd src
-1. make install 
+make install

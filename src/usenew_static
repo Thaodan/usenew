@@ -1,0 +1,612 @@
+#!/bin/sh
+
+# wine prefix chooser and manager
+#
+# Copyright (C) 2012  Björn Bidar
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+# variables
+#  version vars:
+############################################
+USE_VER=3.2
+USE_REV=3bba9b3312
+
+appname=$(basename $0)
+detectDE() 
+# detect which DE is running
+# taken from xdg-email script 
+{
+    if [ x"$KDE_FULL_SESSION" = x"true" ]; then 
+	DE=kde;
+    elif [ x"$GNOME_DESKTOP_SESSION_ID" != x"" ]; then 
+	DE=gnome;
+    elif `dbus-send --print-reply --dest=org.freedesktop.DBus /org/freedesktop/DBus org.freedesktop.DBus.GetNameOwner string:org.gnome.SessionManager > /dev/null 2>&1` ; then 
+	DE=gnome;
+    elif xprop -root _DT_SAVE_MODE 2> /dev/null | grep ' = \"xfce4\"$' >/dev/null 2>&1; then 
+	DE=xfce;
+    else 
+	DE=generic 
+    fi
+}
+
+
+d_msg() # display msgs and get input 
+#########################################################################################################################
+# NOTE: needs kdialog ( or zenity ) to display graphical messages and get input in gui					#
+#########################################################################################################################
+# usage:														#
+#  d_msg [modifer] topic msg												#
+#  modifers:														#
+#  ! msg is an error/faile message											#
+#  i msg is an msg/input ( work's not properly in cgi and with xmessage : terminal)					#
+#  f msg is an yes/no msg/test												#
+#  l msg is an list of items ( nyi in cgi: terminal)									#
+#    no modifer msg is an normal msg											#
+#########################################################################################################################
+#															#
+# vars:															#
+# DMSG_GUI_APP=`detectDE` (default)  	# d_msg detects wich DE is installed and uses the equal dialog for displaing	#
+# DMSG_GUI_APP=generic 			# only set if dialog for DE not found						#
+# DMSG_GUI_APP=gnome|xfce 		# with this you can force d_msg to use zenity					#
+# DMSG_GUI_APP=kde 			# with this you can force d_msg to use kdialog					#
+#															#
+# DMSG_GUI                      	# if not zero use graphical dialog, else cfg gui				#
+# DMSG_ICON				# icon that d_msg uses when is runned in gui mode if not set icon xorg is used 	#
+#															#
+#															#
+# DMSG_APP 				# say DMSG to use $DMSG_APP in cli possible vara are dialog and cgi_dialog	#  
+#															#
+#															#   
+#															#
+#															#
+#########################################################################################################################
+{
+    if [ ! $# -lt 2 ] ; then
+	unset dmsg_return_status
+	if [  "${DMSG_GUI}" = true ] || [ ! $DMSG_GUI = 0 ] ; then
+	    if [  -z "$DMSG_GUI_APP" ] ; then
+		detectDE
+		DMSG_GUI_APP=$DE
+	    case "$DMSG_GUI_APP" in 
+		kde)  
+		    which  kdialog  > /dev/null  || \
+			{ which > /dev/null  zenity  && DMSG_GUI_APP=gnome  || DMSG_GUI_APP=generic; }
+		    ;;
+		gnome|xfce) which zenity   > /dev/null   || \
+		   (  which  kdialog  > /dev/null  && DMSG_GUI_APP=kde || \
+		    DMSG_GUI_APP=generic );;
+		*)  which kdialog > /dev/null  && DMSG_GUI_APP=kde || { which zenity > /dev/null && DMSG_GUI_APP=zenity \
+		    || DMSG_GUI_APP=generic; }
+		    ;; 
+	    esac 
+	fi
+	    
+	    case $DMSG_GUI_APP in 
+		kde)
+		    case $1 in 
+		    !)  kdialog --icon ${DMSG_ICON:=xorg} --caption "${DMSG_APPNAME:=$appname}" --title "$2" --error "$3" 
+			dmsg_return_status=${DMSG_ERR_STAUS:=1}  
+			;;
+		    i) kdialog --icon ${DMSG_ICON:=xorg} --caption "${DMSG_APPNAME:=$appname}" --title "$2" --inputbox "$3" 
+			dmsg_return_status=$?
+			;;
+		    l)  kdialog --icon ${DMSG_ICON:=xorg} --caption "${DMSG_APPNAME:=$appname}" --title "$2" --menu \
+			"$3" "$4" "$5" "$6" "$7" "$8" "$9" 
+			shift ; dmsg_return_status=$? ;;
+		    f)  kdialog --icon ${DMSG_ICON:=xorg} --caption "${DMSG_APPNAME:=$appname}"  --title "$2" --yesno "$3" 
+			dmsg_return_status=$? ;;
+		    *)  kdialog --icon ${DMSG_ICON:=xorg} --caption "${DMSG_APPNAME:=$appname}"  --title "$1" --msgbox "$2" 
+			dmsg_return_status=$? ;;
+		    esac
+		    ;;
+	    xfce|gnome) #nyi impleted
+		    case $1 in 
+		    !) zenity --window-icon=${DMSG_ICON:=xorg}  --title="$2 - ${DMSG_APPNAME:=$appname}" --error --text="$3"
+			dmsg_return_status=${DMSG_ERR_STAUS:=1}   
+			;;
+		    i) zenity --window-icon=${DMSG_ICON:=xorg}  --title="$2 - ${DMSG_APPNAME:=$appname}" --entry --text="$3"
+			dmsg_return_status=$? 
+			;;
+		    l) zenity --window-icon=${DMSG_ICON:=xorg}  --title="$2  -${APPNAME:=$appname}" --column='' --text="$3"\
+                        --list 
+		       dmsg_return_status=$? 
+		       ;;
+		    f) zenity --window-icon=${DMSG_ICON:=xorg}  --title="$2  -${APPNAME:=$appname}" --question --text="$3" 
+			dmsg_return_status=$? 
+			;;
+		    *) zenity --window-icon=${DMSG_ICON:=xorg}  --title="$1  -${APPNAME:=$appname}" --info --text="$2" 
+			dmsg_return_status=$? ;;
+		esac
+		;;
+	 *)
+		    case $1 in
+		    !) xmessage -center -title "$2 - ${APPNAME:=$appname}" "err: "$3"" ;
+			dmsg_return_status=${DMSG_ERR_STAUS:=1} 
+			;;
+		    f) xmessage -center -title "$2  -${APPNAME:=$appname}" -buttons no:1,yes:0 "$3" 
+			dmsg_return_status=$? 
+			;;	
+		    i) 
+			if [ -z $buttons ] ; then
+			    DMSG_XBUTTONS='not:1,set:2'
+			fi
+			xmessage -center -title "$appname - "$2"" -print -buttons $buttons "$3"
+			dmsg_return_status=$?
+			;;
+		    l) xmessage -center -title "$2 - ${APPNAME:=$appname}" -print -buttons "$3","$4","$5","$6","$7","$8","$9" ; dmsg_return_status=$? ;;
+		    *) xmessage -center -title "$1 - ${APPNAME:=$appname}" "$2" ; dmsg_return_status=$? ;;
+		    esac
+		    ;;
+	    esac
+	else
+	      case ${DMSG_APP:-native} in
+	      dialog)
+		  case "$1" in 
+	              !) dialog --title "$2 -${APPNAME:=$appname}" --infobox "error:$3" 0 0 ; dmsg_return_status=${DMSG_ERR_STAUS:=1};;
+		      #!) cgi_dialog ! "$3" ; dmsg_return_status=${DMG_ERR_STAUS:=1}  ;;
+		      f) dialog --title "$2 - ${APPNAME:=$appname}" --yesno "$3"   0 0 
+			  dmsg_return_status=$?
+			  ;;
+		      i) dialog --title "$2 - ${APPNAME:=$appname}" --inputbox "$3" 0 0
+			  dmsg_return_status=$?		 
+			  ;;
+		      *) dialog --title "$1 -${APPNAME:=$appname}" --infobox "$2" 0 0  ;;
+		      #*) cgi_dialog "$2" ; dmsg_return_status=$? ;;
+		  esac
+		  ;;
+	      native)
+		  case "$1" in
+		      !) echo  "$3" ; dmsg_return_status=${DMSG_ERR_STAUS:=1} ;;
+		      f)  echo ""$3" y|n"
+			  read a 
+			  if [ ! $a = y ] ; then
+			      dmsg_return_status=1;
+			  fi
+			  ;;
+		      i) 
+			  echo "$3"
+			  read  a 
+			  if [ -z "$a" ] ; then
+			      dmsg_return_status=1;
+			  fi
+			  ;;
+		      *)  echo "$2"   ; dsmg_return_status=$? ;;
+		  esac
+		  ;;
+	      esac
+	      
+	fi
+    fi
+    return $dmsg_return_status
+}
+
+## functions for fake_arrays ########################################################################
+# fake arrays are array emulated by using : as $IFS
+#
+#
+#####################################################################################################
+# NOTE:
+# unlike arrays normal arrays the index of arrays starts with 1 instead of 0
+# if a fake_array function gets a 0 as index parameter all entrys in the array where selected 
+#
+# 	for example:
+#
+#		var=`read_farray fu:bar 0`
+#	       +var='fu bar'
+#####################################################################################################	
+
+get_farray_lenght() { # get lenght of fake array
+    if [ $# -ge 1 ] ; then 
+        LIBUSE_getf_old_ifs=$IFS
+	IFS=:
+	for var in $1 ; do
+	    get_farry_lenght_count=$(( $get_farry_lenght_count + 1 ))
+	done
+	IFS=$LIBUSE_getf_old_ifs=$IFS
+	echo  ${get_farry_lenght_count:-0}
+	unset get_farry_lenght_count var LIBUSE_getf_old_ifs
+    else
+	echo 0
+    fi
+}
+
+read_farray() { # read fake array
+    if [ $# = 2 ] ; then
+	LIBUSE_readf_old_ifs=$IFS
+	IFS=:
+	for var in  $1 ; do
+	    _read_farry_count=$(( $_read_farry_count + 1 ))
+	    if [ $2 -eq  $_read_farry_count ] || [ $2 -eq 0 ] ; then
+		if [ ! -z $var ] ; then
+		    echo $var
+		fi
+	    fi
+	done
+	IFS=$LIBUSE_readf_old_ifs
+    fi
+    unset _read_farry_count  var LIBUSE_readf_old_ifs
+}
+
+write_farray() {  # write fake array   
+    if [ $# -eq 3 ] ; then
+	farry_content=$( eval echo \$$1)
+	if [ ! -z "$farry_content" ] ; then 
+		    if [ $( get_farray_lenght "$farry_content") = $(( $2 - 1 )) ] ; then
+			eval $1=$farry_content:$3
+		    else
+			eval $( echo $1)=$( echo $farry_content | sed "s/$(read_farray $farry_content $2 )/$3/")
+		    fi
+	elif [ $2 = 1 ] ; then
+	    eval $1=$3
+	else
+	    return 1
+	fi
+    fi
+}
+
+
+# settings
+############################################ 
+test_input () { 
+  DMSG_test_input_N=$(( $# + 1 ))
+  DMSG_test_input_errmsg="$( read_farray "$err_input_messages" $DMSG_test_input_N)"
+  if [ -n "$DMSG_test_input_errmsg" ] ; then
+      d_msg ! 'wrong input' "$DMSG_test_input_errmsg"
+      if [   $# = 0   ]; then
+	return 1
+      else
+	  return 
+      fi
+  fi
+}
+DMSG_ICON=wine  # icon for gui d_msg output
+DMSG_DIALOG_DISABLED=true # we dont need dialog for cli so disable it
+
+#!/bin/sh 
+USE_REV=3bba9b3312
+ 
+prepare() { # init vars that will exported from wine to the shell
+  userprofile=`${WINE:=wine} cmd.exe /c echo %userprofile%`
+  appdata=` ${WINE:=wine} cmd.exe /c echo %APPDATA%`
+  system_drive=` ${WINE:=wine} cmd.exe /c echo %systemdrive%`
+  program_files=` ${WINE:=wine}  cmd.exe /c echo %programfiles%`
+  winsysdir=` ${WINE:=wine} cmd.exe /c echo %winsysdir%`
+  windir=` ${WINE:=wine} cmd.exe /c echo %windir%`
+  windir=`winepath  -u $windir`
+  winsysdir=`winepath -u $winsysdir`
+  userprofile=`winepath -u $userprofile`
+  appdata=`winepath -u $appdata`
+  system_drive=`winepath -u  $system_drive`
+  program_files=`winepath $program_files`
+}
+
+check_wineserver() {
+   if ps ax | grep wineserver | grep -vq grep ; then
+    if d_msg f 'other wineserver' "An other wineserver is running, kill him (any other procces that run on wineserver will killed too)?" ; then
+	  pkill wineserver  #--uid $(id -ru)  
+	  return 0
+    else
+      return $?
+    fi
+  fi
+}
+set_wine_ver () { # no comment
+
+if [ -z "$1" ] ; then # unset wine version
+  export LD_LIBRARY_PATH=
+  export WINESERVER=
+  export WINELOADER=
+  export WINEDLLPATH=
+  export BINPATH=
+else  # use wine version from path given by "$1"
+  export LD_LIBRARY_PATH="$1"/lib:$LD_LIBRARY_PATH
+  export WINSERVER="$1"/bin/wineserver
+  export WINELOADER="$1"/bin/wine
+  export WINEDLLPATH="$1"/lib/wine
+  export BINPATH="$1"/bin/
+fi
+
+WINE=$BINPATH/wine
+}
+
+
+### functions for that are only in use with wine
+
+check_prefix () {  # check if  $1 is a prefix
+  if ! ( [ -d "${WINEPREFIX_PATH:-$HOME/.}/$1" ] && [ -e "${WINEPREFIX_PATH:-$HOME/.}/$1/system.reg" ] ); then
+      return 1
+  fi  
+} 
+
+
+
+
+set_wine_db () { # set wine debug
+  if [ -z $WINEDEBUG ]; then 
+    export WINEDEBUG=${WDEBUG:=fixme-all}
+  fi
+}
+
+
+
+exec_exe () { # start wine with $exe
+  if [ ! -z "$1" ]; then
+    runed_exe="$1"
+    shift
+    ext=1
+    while test "$ext" != ""
+      do
+	"${WINE:-wine}" $wine_args "$runed_exe" $@ ; return_stat=$?
+	ext=
+    done
+    return $return_stat
+  fi
+}
+
+prefix () { # set prefix var
+    export WINEPREFIX=${1:-${PREFIX:-$HOME/.wine}}
+}
+
+
+
+
+### base functions 
+
+exec_cmd () {
+  #BIN=wineconsole
+  "${WINE:-wine}" cmd.exe /c "$1"
+}
+
+
+
+if [ ! -z "$WINEPATH" ]; then
+    check_wineserver || exit 1
+    set_wine_ver "$WINEPATH"	
+fi
+default_win_arch=win32 # define the default wine architecture
+err_input_messages="no options given run $appname -h for help, or -H for long help:wrong options or only prefix given run $appname -h for help, or -H for long help" # err messages for test_input
+export WINE_PREFIXES="$WINEPREFIX_PATH" # for winetricks
+
+
+#############################################
+
+
+
+u_help () { # display short help
+d_msg 'help' "`cat <<_HELP
+Usage: $appname wineprefix command/file options
+supported files: *.exe;*.bat;*.cmd;*.reg;*.dll
+
+  syntax: $appname [prefix] [command/file] [options]
+
+type $appname -H for long-help
+_HELP`"
+}
+
+u_long_help () { # display long help
+d_msg 'help' "\
+Usage: $appname wineprefix command/file options 
+supported files: *.exe;*.bat;*.cmd;*.reg;*.dll 
+
+  syntax: $appname [options] [prefix] [command/file] [start taget options] 
+  
+
+general options:
+  -g	--gui			enable gui output
+  -h	--help			show help
+  -H	--long-help		show this text, long help
+  -V	--version		show version
+	--revision		show revision
+  -v	--verbose		be more verbose
+	--debug			help us in debuging
+  
+options:
+  -b	--binpath <binpath>	define in wich path $appname will search for wine and CO
+  -r    -run-debug		don't set WINEDEBUG to ${default_w_db:='default $WINEDBUG not set'}  (\$default_w_db)
+  -d 	--desktop    		start file/command in virtual desktop 
+  -D 	--directory  		tell $appname to change directory to started file
+  -p    --prefix     		replacement for prefix, $appname will ask for prefix is this option is given ( usefull to start Windows programms out of file manager)
+  commands:
+    winefile open winefilebrowser
+    winecfg  open winecontrol
+    appconf  control the software of the chosen prefix
+    control  open control
+    cmd      open winecommandline
+    open     open prefix directory with xdg-open
+
+  file specific  options:
+
+    *.bat/*.cmd file:
+      -w, --window open file in new window
+
+    *.reg file:
+      -i import regefile
+      -e export the given part of registry to file
+	 syntax for export to regfile :
+	 $appname [prefix] [regfilename.reg] -e [regpath]
+
+ENVIRONMENT
+    
+    WINEPATH		
+      set path where $appname searchs for wine
+    WINEPREFIX_PATH
+      path where $appname searchs for wineprefixs, default is \$HOME
+"
+}
+
+
+# tools
+
+u_create_prefix () {
+  
+    if d_msg f prefix "prefix $1 don't exist, create it?" ; then  # if prefix doesn't exist create one yes or no?
+      if [ `uname -m` = x86_64 ]; then
+	 buttons='win32:1,win64:0'
+	 case $DMSG_GUI in
+	    1|true)	input=`d_msg i 'prefix select' "Which Windows architecture the prefix should support please enter win64(64bits) or win32(32bits), default $default_win_arch"`;;
+	    *)
+	      echo "Which Windows architecture the prefix should support please enter win64(64bits) or win32(32bits), default $default_win_arch"
+	      read input
+	      ;;
+	 esac
+	 case  "$input" in
+	   win32) export WINEARCH=win32 ;;
+	   win64) export WINEARCH=win64 ;;
+	   *) d_msg 'prefix arch' "$default_win_arch used" ; export WINEARCH=$default_win_arch ;;
+	 esac
+      fi
+    else
+      return 1
+    fi
+
+}
+
+skip_run() {
+  while [ ! $# -eq 0 ] ; do
+    run_int=`echo $run_int | sed "s/$1//"`
+    shift
+  done
+}
+
+add_run() {
+  while [ $# -gt 0 ] ; do
+    run_int=$run_int:$1
+    shift
+  done
+}
+
+
+# main function
+
+main () {
+    old_ifs=$IFS
+    IFS=:
+    for run_i in $run_int ; do
+	IFS=$old_ifs
+	$run_i
+	IFS=:
+    done
+    IFS=$old_ifs
+    unset IFS
+    if check_prefix "$1" || u_create_prefix "$1"   ; then
+	prefix ${WINEPREFIX_PATH:-$HOME/.}/"$1"
+    else
+	return 1
+    fi
+
+    runed_exe="$2"
+    shift 2 # shift $+1 to remove $1 from $@ that arguments go collected to started program # maybe replace file type detection by extension with detection through mime-type
+    case "$runed_exe" in # detect wich file or options given
+	*.EXE|*.exe|*.bin)	"${WINE:-wine}"$cmd $wine_args "$runed_exe" $@ ;; # exec executable file
+	*.dll|*.ax) "$BINPATH"regsvr32 $@ ;;
+	*.bat|*.BAT]|*.cmd|*.CMD) # exec bat/cmd file
+           case $runed_exe in
+	       -w|--window)  "$BINPATH"wineconsole --backend=user cmd.exe $1 $2  $3 ;; # if option -w (--window) start file in new window
+	       *)  "${WINE:-wine}" cmd.exe /c "$runed_exe $@" ;;
+	   esac
+	   ;;
+	   *.reg) # import regfile into prefix
+	   case $1 in
+	       -e)  "$BINPATH"regedit /e "$runed_exe" $2 ;;
+	       -i)  "$BINPATH"regedit "$runed_exe"    ;;
+	       *)  d_msg ! faile 'no option for import(-i) or export (-e) given' ;;
+	   esac
+	   ;;
+	   *.msi) wine "$BINPATH"msiexec.exe /i "$runed_exe" "$@" ;;
+# built in commands
+  ##############
+       appconf|uninstaller)  "$BINPATH"wine $wine_args uninstaller.exe $@ ;;
+       cmd)      "${WINE:-wine}" $wine_args cmd.exe "$@" ;; #console --backend=curses
+       control)  "${WINE:-wine}" $wine_args control.exe $@ ;;
+       open)  
+       if echo  "$1" | grep -q '[Aa-Zz]:' ; then
+	   xdg-open "$( winepath -u "$1" )"
+       else
+	   xdg-open "$WINEPREFIX"/"$1"  
+       fi
+       ;;
+       *) sh -c  "exec "$runed_exe" $@"  ;; #we use exec cause its safer cause "$runed_exe" cant be a internal function
+  esac
+}
+
+if [ ! -t 1 ] ; then # test if is usenew runned outside from terminal and use DMSG_GUI=true to get gui output from d_msg if outsite of terminal
+  DMSG_GUI=1
+fi
+
+if [ ! $# = 0  ] ; then
+  ext=1
+  while test "$ext" != "" # main loop
+    do	
+	posixly=$POSIXLY_CORRECT
+	export POSIXLY_CORRECT=1 # set POSIXLY_CORRECT to true cause we want that getopt stops after first non option  input to prevent that it parses the arguments of $runed_exe
+	run_int=set_wine_db
+	u_optspec=rb:dphHvVg #-: # short options
+	u_optspec_long=run-debug,binpath:,desktop,prefix,help,long-help,verbose,debug,revision,gui,version # long options
+	PROCESSED_OPTSPEC=$( getopt -o $u_optspec --long $u_optspec_long \
+	-n $appname  -- "$@")  || d_msg ! error  "$( read_farray "$err_input_messages" 2 )" || exit 1 # parsed optspec
+	eval set -- "$PROCESSED_OPTSPEC"
+	export POSIXLY_CORRECT=$posixly
+	unset posixly
+	while [ ! $# = 0 ] ; do # TODO: improve this with getopt
+	  case "$1" in
+	    -h|--help) u_help ; shift ;;
+	    --long-help|-H|-HL) u_long_help ; shift ;;
+	    --debug) 
+	      set -o verbose
+	      set -o xtrace
+	      shift
+	      continue
+	      ;;
+	    -v|--verbose) set -o verbose  ; shift ; continue ;;
+	    --revision)	d_msg revision "$USE_REV" ; shift ;;
+	    -V|--version) 	d_msg version "$USE_VER" ; shift ;;
+	    -g|--gui) 	DMSG_GUI=1 ; shift ; continue ;; # display msg in gui	  	
+		-r|--run-debug) skip_run set_wine_db ; shift ;; 
+		-b|--binpath) 	import libuse/wine_misc ; set_wine_ver "$2" ; shift 2 ;;  # set which wine version usenew should use
+		-d|--desktop) 	argument_d=$(echo eval echo \$$#);  wine_args="explorer /desktop=$( basename $( $argument_d ) | sed 's/.exe//g'),800x600" ; unset argument_d ;shift ;; 
+		-p|--prefix) 
+		  argument_p=$( echo eval echo \$$# )
+		  argument_p=$( $argument_p )
+		  file=`basename $argument_p`
+		  case $DMSG_GUI in
+		    1|true) prefix="`d_msg i 'enter prefix' "Please enter prefix to start $file"`" ;;
+		    *)
+ 		      echo "Please enter prefix to start $file"
+ 		      read prefix
+ 		      test ! -z $prefix 
+ 		      ;;
+		  esac  || exit 1 
+		  unset argument_p file
+		  shift
+		;;
+		--) shift; break ;; # if [ $1 =  -- ] ; then no more options in input  
+	  esac
+	done
+	if [ $# = 0 ] ; then 
+	  true
+	elif test_input $@ $prefix  ; then
+	  main $prefix $@
+	else
+	  false
+	fi
+	error_status=$? 
+    ext=
+  done
+else
+  echo $(read_farray "$err_input_messages" 1) 
+  false
+fi
+exit $error_status

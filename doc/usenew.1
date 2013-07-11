@@ -25,14 +25,14 @@ show revision
 be more verbose
 .TP
 \fB--debug            \fP
-help us in debuging
+help us in debuting
 .SS "options:"
 .TP
 \fB-b    --binpath <binpath> \fP
 define in wich path usenew will search for wine and CO
 .TP
 \fB-r    -run-debug          \fP
-don't set WINEDEBUG to default
+don't set WINEDEBUG to default (see \fIENVIRONMENT\fP)
 .TP
 \fB-d    --desktop           \fP
 start file/command in virtual desktop
@@ -82,4 +82,11 @@ usenew [prefix] [regfilename.reg] -e [regpath]
 set path where usenew searchs for wine
 .TP
 \fBWINEPREFIX\d\s-2PATH\s+2\u\fP
-path where usenew searchs for wineprefixs, default is $HOME
+path where usenew searches for wineprefixs, default is $HOME
+.TP
+\fBWINEDEBUG\fP
+we do nothing with it, will not overridden boy \fBusenew\fP if set
+
+.SH "SEE ALSO"
+.PP
+\fIwine\fP(1) \fIlibuse\fP(1)

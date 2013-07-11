@@ -160,63 +160,6 @@ add_run() {
   done
 }
 
-
-# main function
-
-main () {
-#\\ifndef STATIC
-    shload libuse/base
-#\\endif
-    old_ifs=$IFS
-    IFS=:
-    for run_i in $run_int ; do
-	IFS=$old_ifs
-	$run_i
-	IFS=:
-    done
-    IFS=$old_ifs
-    unset IFS
-    if check_prefix "$1" || u_create_prefix "$1"   ; then
-	prefix ${WINEPREFIX_PATH:-$HOME/.}/"$1"
-    else
-	return 1
-    fi
-
-    runed_exe="$2"
-    shift 2 # shift $+1 to remove $1 from $@ that arguments go collected to started program # maybe replace file type detection by extension with detection through mime-type
-    case "$runed_exe" in # detect wich file or options given
-	*.EXE|*.exe|*.bin)	"${WINE:-wine}"$cmd $wine_args "$runed_exe" $@ ;; # exec executable file
-	*.dll|*.ax) "$BINPATH"regsvr32 $@ ;;
-	*.bat|*.BAT]|*.cmd|*.CMD) # exec bat/cmd file
-           case $runed_exe in
-	       -w|--window)  "$BINPATH"wineconsole --backend=user cmd.exe $1 $2  $3 ;; # if option -w (--window) start file in new window
-	       *)  "${WINE:-wine}" cmd.exe /c "$runed_exe $@" ;;
-	   esac
-	   ;;
-	   *.reg) # import regfile into prefix
-	   case $1 in
-	       -e)  "$BINPATH"regedit /e "$runed_exe" $2 ;;
-	       -i)  "$BINPATH"regedit "$runed_exe"    ;;
-	       *)  d_msg ! faile 'no option for import(-i) or export (-e) given' ;;
-	   esac
-	   ;;
-	   *.msi) wine "$BINPATH"msiexec.exe /i "$runed_exe" "$@" ;;
-# built in commands
-  ##############
-       appconf|uninstaller)  "$BINPATH"wine $wine_args uninstaller.exe $@ ;;
-       cmd)      "${WINE:-wine}" $wine_args cmd.exe "$@" ;; #console --backend=curses
-       control)  "${WINE:-wine}" $wine_args control.exe $@ ;;
-       open)  
-       if echo  "$1" | grep -q '[Aa-Zz]:' ; then
-	   xdg-open "$( winepath -u "$1" )"
-       else
-	   xdg-open "$WINEPREFIX"/"$1"  
-       fi
-       ;;
-       *) sh -c  "exec "$runed_exe" $@"  ;; #we use exec cause its safer cause "$runed_exe" cant be a internal function
-  esac
-}
-
 if [ ! -t 1 ] ; then # test if is usenew runned outside from terminal and use DMSG_GUI=true to get gui output from d_msg if outsite of terminal
   DMSG_GUI=1
 fi
@@ -272,8 +215,62 @@ if [ ! $# = 0  ] ; then
 	done
 	if [ $# = 0 ] ; then 
 	  true
-	elif test_input $@ $prefix  ; then
-	  main $prefix $@
+	elif test_input $@ $prefix  ; then 
+#\\ifndef STATIC
+	    shload libuse/base
+#\\endif
+	    usenew_old_ifs=$IFS
+	    IFS=:
+	    for run_i in $run_int ; do
+		IFS=$old_ifs
+		$run_i
+		IFS=:
+	    done
+	    if [ -z $prefix ] ; then
+		prefix="$1"
+		shift
+	    fi
+	    IFS=$usenew_old_ifs
+	    unset IFS
+	    if check_prefix "$prefix" || u_create_prefix "$prefix"   ; then
+		prefix ${WINEPREFIX_PATH:-$HOME/.}/"$prefix"
+	    else
+		return 1
+	    fi
+	    
+	    runed_exe="$1"
+	    shift  # shift $+1 to remove $1 from $@ that arguments go collected to started program # maybe replace file type detection by extension with detection through mime-type
+	    case "$runed_exe" in # detect wich file or options given
+		*.EXE|*.exe|*.bin)	"${WINE:-wine}"$cmd $wine_args "$runed_exe" $@ ;; # exec executable file
+		*.dll|*.ax) "$BINPATH"regsvr32 $@ ;;
+		*.bat|*.BAT]|*.cmd|*.CMD) # exec bat/cmd file
+		    case $runed_exe in
+			-w|--window)  "$BINPATH"wineconsole --backend=user cmd.exe $1 $2  $3 ;; # if option -w (--window) start file in new window
+			*)  "${WINE:-wine}" cmd.exe /c "$runed_exe $@" ;;
+		    esac
+		    ;;
+		*.reg) # import regfile into prefix
+		    case $1 in
+			-e)  "$BINPATH"regedit /e "$runed_exe" $2 ;;
+			-i)  "$BINPATH"regedit "$runed_exe"    ;;
+			*)  d_msg ! faile 'no option for import(-i) or export (-e) given' ;;
+		    esac
+		    ;;
+		*.msi) wine "$BINPATH"msiexec.exe /i "$runed_exe" "$@" ;;
+		# built in commands
+		##############
+		appconf|uninstaller)  "$BINPATH"wine $wine_args uninstaller.exe $@ ;;
+		cmd)      "${WINE:-wine}" $wine_args cmd.exe "$@" ;; #console --backend=curses
+		control)  "${WINE:-wine}" $wine_args control.exe $@ ;;
+		open)  
+		    if echo  "$1" | grep -q '[Aa-Zz]:' ; then
+			xdg-open "$( winepath -u "$1" )"
+		    else
+			xdg-open "$WINEPREFIX"/"$1"  
+		    fi
+		    ;;
+		*) sh -c  "exec "$runed_exe" $@"  ;; #we use exec cause its safer cause "$runed_exe" cant be a internal function
+	    esac
 	else
 	  false
 	fi

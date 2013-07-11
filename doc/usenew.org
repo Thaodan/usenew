@@ -39,6 +39,6 @@
 
     - WINEPATH :: set path where usenew searchs for wine
     - WINEPREFIX_PATH :: path where usenew searches for wineprefixs, default is $HOME
-    - WINEDEBUG :: we do nothing with it, will not overridden boy *usenew* if set 
+    - WINEDEBUG :: we do nothing with it, will not overridden by *usenew* if set 
 * SEE ALSO
   [[wine]](1), [[libuse]](1)

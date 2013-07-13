@@ -235,7 +235,7 @@ if [ ! $# = 0  ] ; then
 	    if check_prefix "$prefix" || u_create_prefix "$prefix"   ; then
 		prefix ${WINEPREFIX_PATH:-$HOME/.}/"$prefix"
 	    else
-		return 1
+		exit 1
 	    fi
 	    
 	    runed_exe="$1"

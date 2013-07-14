@@ -22,7 +22,7 @@
 #  version vars:
 ############################################
 USE_VER=3.2
-USE_REV=3f6de729de
+USE_REV=731eb243ac
 
 appname=$(basename $0)
 detectDE() 
@@ -276,7 +276,7 @@ DMSG_ICON=wine  # icon for gui d_msg output
 DMSG_DIALOG_DISABLED=true # we dont need dialog for cli so disable it
 
 #!/bin/sh 
-USE_REV=3f6de729de
+USE_REV=731eb243ac
  
 prepare() { # init vars that will exported from wine to the shell
   userprofile=`${WINE:=wine} cmd.exe /c echo %userprofile%`
@@ -560,7 +560,7 @@ if [ ! $# = 0  ] ; then
 	    if check_prefix "$prefix" || u_create_prefix "$prefix"   ; then
 		prefix ${WINEPREFIX_PATH:-$HOME/.}/"$prefix"
 	    else
-		return 1
+		exit 1
 	    fi
 	    
 	    runed_exe="$1"

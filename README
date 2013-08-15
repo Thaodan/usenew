@@ -8,8 +8,14 @@ For more info see doc/
  - posix compilant /bin/sh and for some parts of the library bash
  - posix compilant: sed, grep, sort, cat, basename, dirname and file
  - wine 
+ - libsh [1]
+## BUILD DEPENCIES ## 
+ - shpp [2]
+ 
 ## BUILD AND INSTALL ## 
 
 See INSTALL.
 
 
+[1] https://github.com/Thaodan/shpp/tree/master/external/libsh
+[2] https://github.com/Thaodan/shpp

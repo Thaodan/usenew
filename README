@@ -16,6 +16,12 @@ For more info see doc/
 
 See INSTALL.
 
+## STATIC VERSION ##
+If you just want the cli tool and won't build everything use usenew_static in 
+src/.
+
+## DOC ## 
+See doc/
 
 [1] https://github.com/Thaodan/shpp/tree/master/external/libsh
 [2] https://github.com/Thaodan/shpp

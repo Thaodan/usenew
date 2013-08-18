@@ -87,7 +87,7 @@ general options:
   
 options:
   -b	--binpath <binpath>	define in wich path $appname will search for wine and CO
-  -r    -run-debug		don't set WINEDEBUG to ${default_w_db:='default $WINEDBUG not set'}  (\$default_w_db)
+  -r    -run-debug		don't set WINEDEBUG to ${WDEBUG:='default $WINEDBUG not set'}  (\$WDEBUG)
   -d 	--desktop    		start file/command in virtual desktop 
   -D 	--directory  		tell $appname to change directory to started file
   -p    --prefix     		replacement for prefix, $appname will ask for prefix is this option is given ( usefull to start Windows programms out of file manager)
@@ -269,7 +269,7 @@ if [ ! $# = 0  ] ; then
 			xdg-open "$WINEPREFIX"/"$1"  
 		    fi
 		    ;;
-		*) sh -c  "exec "$runed_exe" $@"  ;; #we use exec cause its safer cause "$runed_exe" cant be a internal function
+		*) sh -c  "exec $runed_exe $@"  ;; #we use exec cause its safer cause "$runed_exe" cant be a internal function
 	    esac
 	else
 	  false

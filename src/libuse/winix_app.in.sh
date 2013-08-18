@@ -18,24 +18,22 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 USE_REV=@git_rev@
-
-if [ -z "$libsh_ver" ] ; then
-  echo "libsh not imported"
-  exit 1
-fi
-
-import libuse.wine_misc
-
-find_wine () {
-  if [ ! -z "$WINEPATH" ] ; then 
-    set_wine_ver "$WINEPATH"
-  elif need 'wine' ; then
-	return $?
-  else 
-    return $?
-  fi
+prepare() { # init vars that will exported from wine to the shell
+  userprofile=`${WINE:=wine} cmd.exe /c echo %userprofile%`
+  appdata=` ${WINE:=wine} cmd.exe /c echo %APPDATA%`
+  system_drive=` ${WINE:=wine} cmd.exe /c echo %systemdrive%`
+  program_files=` ${WINE:=wine}  cmd.exe /c echo %programfiles%`
+  winsysdir=` ${WINE:=wine} cmd.exe /c echo %winsysdir%`
+  windir=` ${WINE:=wine} cmd.exe /c echo %windir%`
+  windir=`winepath  -u $windir`
+  winsysdir=`winepath -u $winsysdir`
+  userprofile=`winepath -u $userprofile`
+  appdata=`winepath -u $appdata`
+  system_drive=`winepath -u  $system_drive`
+  program_files=`winepath $program_files`
 }
 
+import libuse.wine_misc
 
 set_dll_override() # taken from winetricks
 {

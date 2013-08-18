@@ -1,10 +1,8 @@
 #\\ifndef STATIC
 #!/bin/sh
-# core functions of usenew
-# NOTE; libuse v3 for integration of win32 applications unix systems
-# functions for managing wine programs and their data
+# core functions of libuse
 #
-# Copyright (C) 2012  Björn Bidar
+# Copyright (C) 2013  Björn Bidar
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,12 +18,7 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
-# functions that were used from other sh-libs:
-# d_msg - display messages and ask for input
-#
-# variables
-# ver=3.0
-# shared_dir=/usr/share/libuse_v3/
+
 USE_REV=@git_rev@
 #\\endif
 #\\rem if we have NYI stuff  enable stub

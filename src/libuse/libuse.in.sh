@@ -1,9 +1,7 @@
 #!/bin/sh
-# core functions of usenew
-# NOTE; libuse v3 for integration of win32 applications unix systems
-# functions for managing wine programs and their data
+# libuseapp wrapper part of libuse
 #
-# Copyright (C) 2012  Björn Bidar
+# Copyright (C) 2013  Björn Bidar
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

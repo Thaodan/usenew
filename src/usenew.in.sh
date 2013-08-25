@@ -198,7 +198,7 @@ if [ ! $# = 0  ] ; then
 		-p|--prefix) 
 		  argument_p=$( echo eval echo \$$# )
 		  argument_p=$( $argument_p )
-		  file=${argument_p##*/}
+		  file="${argument_p##*/}"
 		  prefix="$(d_msg i 'enter prefix' "Please enter prefix to start $file")" \
 		      || exit 1
 		  shift

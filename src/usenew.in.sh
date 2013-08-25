@@ -3,7 +3,7 @@
 
 # wine prefix chooser and manager
 #
-# Copyright (C) 2012  Björn Bidar
+# Copyright (C) 2013  Björn Bidar
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -198,16 +198,9 @@ if [ ! $# = 0  ] ; then
 		-p|--prefix) 
 		  argument_p=$( echo eval echo \$$# )
 		  argument_p=$( $argument_p )
-		  file=`basename $argument_p`
-		  case $DMSG_GUI in
-		    1|true) prefix="`d_msg i 'enter prefix' "Please enter prefix to start $file"`" ;;
-		    *)
- 		      echo "Please enter prefix to start $file"
- 		      read prefix
- 		      test ! -z $prefix 
- 		      ;;
-		  esac  || exit 1 
-		  unset argument_p file
+		  file=${argument_p##*/}
+		  prefix="$(d_msg i 'enter prefix' "Please enter prefix to start $file")" \
+		      || exit 1
 		  shift
 		;;
 		--) shift; break ;; # if [ $1 =  -- ] ; then no more options in input  

@@ -22,7 +22,7 @@
 #  version vars:
 ############################################
 USE_VER=3.2
-USE_REV=9cf9dadc3d
+USE_REV=e8e3ad8e01
 
 appname=$(basename $0)
 detectDE() 
@@ -30,15 +30,15 @@ detectDE()
 # taken from xdg-email script 
 {
     if [ x"$KDE_FULL_SESSION" = x"true" ]; then 
-	DE=kde;
+	echo kde;
     elif [ x"$GNOME_DESKTOP_SESSION_ID" != x"" ]; then 
-	DE=gnome;
+       echo gnome;
     elif `dbus-send --print-reply --dest=org.freedesktop.DBus /org/freedesktop/DBus org.freedesktop.DBus.GetNameOwner string:org.gnome.SessionManager > /dev/null 2>&1` ; then 
-	DE=gnome;
+	echo gnome;
     elif xprop -root _DT_SAVE_MODE 2> /dev/null | grep ' = \"xfce4\"$' >/dev/null 2>&1; then 
-	DE=xfce;
+	echo xfce;
     else 
-	DE=generic 
+	echo generic
     fi
 }
 
@@ -78,25 +78,30 @@ d_msg() # display msgs and get input
 	unset dmsg_return_status
 	if [  "${DMSG_GUI}" = true ] || [ ! $DMSG_GUI = 0 ] ; then
 	    if [  -z "$DMSG_GUI_APP" ] ; then
-		detectDE
-		DMSG_GUI_APP=$DE
+		DMSG_DE=$(detectDE)
+	    fi
+	    case $DMSG_DE in
+		kde) DMSG_GUI_APP=kdialog ;; 
+		gnome|xfce) DMSG_GUI_APP=zenity ;;
+ generic) DMSG_GUI_APP=kdialog ;;
+	    esac	
+	    # FIXME or remove me
 	    case "$DMSG_GUI_APP" in 
-		kde)  
+		kdialog)  
 		    which  kdialog  > /dev/null  || \
-			{ which > /dev/null  zenity  && DMSG_GUI_APP=gnome  || DMSG_GUI_APP=generic; }
+			{ which > /dev/null  zenity  && DMSG_GUI_APP=zenity  || DMSG_GUI_APP=xmessage; }
 		    ;;
-		gnome|xfce) which zenity   > /dev/null   || \
-		   (  which  kdialog  > /dev/null  && DMSG_GUI_APP=kde || \
+		zenity) which zenity   > /dev/null   || \
+		    (  which  kdialog  > /dev/null  && DMSG_GUI_APP=kdialog || \
 		    DMSG_GUI_APP=generic );;
-		*)  which kdialog > /dev/null  && DMSG_GUI_APP=kde || { which zenity > /dev/null && DMSG_GUI_APP=zenity \
-		    || DMSG_GUI_APP=generic; }
+		*)  which kdialog > /dev/null  && DMSG_GUI_APP=kdialog || { which zenity > /dev/null && DMSG_GUI_APP=zenity \
+		    || DMSG_GUI_APP=xmessage; }
 		    ;; 
 	    esac 
-	fi
-	    
-	    case $DMSG_GUI_APP in 
-		kde)
-		    case $1 in 
+	
+	case $DMSG_GUI_APP in 
+	    kdialog)
+		case $1 in 
 		    !)  kdialog --icon ${DMSG_ICON:=xorg} --caption "${DMSG_APPNAME:=$appname}" --title "$2" --error "$3" 
 			dmsg_return_status=${DMSG_ERR_STAUS:=1}  
 			;;
@@ -112,7 +117,7 @@ d_msg() # display msgs and get input
 			dmsg_return_status=$? ;;
 		    esac
 		    ;;
-	    xfce|gnome) #nyi impleted
+	    zenity) 
 		    case $1 in 
 		    !) zenity --window-icon=${DMSG_ICON:=xorg}  --title="$2 - ${DMSG_APPNAME:=$appname}" --error --text="$3"
 			dmsg_return_status=${DMSG_ERR_STAUS:=1}   
@@ -131,7 +136,7 @@ d_msg() # display msgs and get input
 			dmsg_return_status=$? ;;
 		esac
 		;;
-	 *)
+	 xmessage)
 		    case $1 in
 		    !) xmessage -center -title "$2 - ${APPNAME:=$appname}" "err: "$3"" ;
 			dmsg_return_status=${DMSG_ERR_STAUS:=1} 
@@ -177,10 +182,12 @@ d_msg() # display msgs and get input
 			  fi
 			  ;;
 		      i) 
-			  echo "$3"
+			  echo "$3" >&2
 			  read  a 
 			  if [ -z "$a" ] ; then
 			      dmsg_return_status=1;
+			  else
+			      echo $a
 			  fi
 			  ;;
 		      *)  echo "$2"   ; dsmg_return_status=$? ;;
@@ -261,14 +268,14 @@ write_farray() {  # write fake array
 # settings
 ############################################ 
 test_input () { 
-  DMSG_test_input_N=$(( $# + 1 ))
-  DMSG_test_input_errmsg="$( read_farray "$err_input_messages" $DMSG_test_input_N)"
+  LIBSH_test_input_N=$(( $# + 1 ))
+  LIBSH__test_input_errmsg="$( read_farray "$err_input_messages" $DMSG_test_input_N)"
   if [ -n "$DMSG_test_input_errmsg" ] ; then
       d_msg ! 'wrong input' "$DMSG_test_input_errmsg"
       if [   $# = 0   ]; then
 	return 1
       else
-	  return 
+	  return $LIBSH_test_input_N
       fi
   fi
 }
@@ -294,7 +301,7 @@ DMSG_DIALOG_DISABLED=true # we dont need dialog for cli so disable it
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
-USE_REV=9cf9dadc3d
+USE_REV=e8e3ad8e01
  
 check_wineserver() {
    if ps ax | grep wineserver | grep -vq grep ; then

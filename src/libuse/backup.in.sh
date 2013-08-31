@@ -34,13 +34,8 @@ backup_data () { # backup application data
 # user_data     = path of user files for the  application
 # backup_option = sub-directory that is backupt by backup_data
 #########################################
-  lastdir="$PWD"
   dt=$(date +%d_%m_%Y_%H_%M)
-  mkdir -p "$user_data/backups/$dt"
-#   if [ -d "$user_data/$backup_option" ] ; then
-#     cd "$user_data/$backup_option" # remove /$backup_option
-#   else
-    
+  mkdir -p "$user_data/backups"
   if [ -d "$user_data/$backup_option" ] && [ ! -e "$user_data/$backup_option/*"  ] > /dev/null 2>&1 ; then # if dir is empty return without error
       return 0
   fi
@@ -50,10 +45,7 @@ copy_from='$user_data'
 backup_time=( `date +%d_%m` `date +%Y_%H_%M` )
 compressor=xz
 END
-  cp -a "$user_data/$backup_option" "$user_data/backups/$dt"
-  cd "$user_data/backups" && tar -caf "$appname.$dt.tar.xz" "$dt"
-  rm -r "$dt"
-  cd "$lastdir"
+  tar -caf "$appname.$dt.tar.xz" "$user_data/$backup_option"
 }
 
 restore_backup () { # restore backup archive that is made by backup_data

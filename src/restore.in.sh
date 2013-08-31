@@ -21,7 +21,7 @@
 # variables
 #  version vars:
 ############################################  
-U_VER=0.6
+U_VER=0.7
 U_REV=@git_rev@
 err_input_messages='No input given'
 DMSG_DIALOG_DISABLED=true 
@@ -29,7 +29,7 @@ DMSG_DIALOG_DISABLED=true
 . ${libdir:-@prefix@/lib}/libsh
 
 if test_input $@ ; then
-    while [ !  $# = 0 ]  ; do 
+    while [ !  $# = 1 ]  ; do 
 	case "$1" in 
 	    -g|--gui) DMSG_GUI=1 ; shift ;;
 	    --version|-V)  echo $U_VER:$U_REV; shift ;;

@@ -201,7 +201,7 @@ if [ ! $# = 0  ] ; then
 		  shift ;; 
 		-p|--prefix) 
 		  eval last_argument=\$$#
-		  file="${argument_p##*/}"
+		  file="${last_argument##*/}"
 		  prefix="$(d_msg i 'enter prefix' "Please enter prefix to start $file")" \
 		      || exit 1
 		  shift

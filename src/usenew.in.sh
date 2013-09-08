@@ -125,7 +125,7 @@ ENVIRONMENT
 u_create_prefix () {
   
     if d_msg f prefix "prefix $1 don't exist, create it?" ; then  # if prefix doesn't exist create one yes or no?
-      if [ `uname -m` = x86_64 ]; then
+      if [ $(uname -m) = x86_64 ]; then
 	 buttons='win32:1,win64:0'
 	 case $DMSG_GUI in
 	    1|true)	input=`d_msg i 'prefix select' "Which Windows architecture the prefix should support please enter win64(64bits) or win32(32bits), default $default_win_arch"`;;
@@ -148,7 +148,7 @@ u_create_prefix () {
 
 skip_run() {
   while [ ! $# -eq 0 ] ; do
-    run_int=`echo $run_int | sed "s/$1//"`
+    run_int=$(echo $run_int | sed "s/$1//")
     shift
   done
 }
@@ -194,10 +194,13 @@ if [ ! $# = 0  ] ; then
 	    -g|--gui) 	DMSG_GUI=1 ; shift ; continue ;; # display msg in gui	  	
 		-r|--run-debug) skip_run set_wine_db ; shift ;; 
 		-b|--binpath) 	import libuse/wine_misc ; set_wine_ver "$2" ; shift 2 ;;  # set which wine version usenew should use
-		-d|--desktop) 	argument_d=$(echo eval echo \$$#);  wine_args="explorer /desktop=$( basename $( $argument_d ) | sed 's/.exe//g'),800x600" ; unset argument_d ;shift ;; 
+		-d|--desktop) 
+		  eval last_argument=\$$#
+		  argument_d="${last_argument##*/}"
+		  wine_args="explorer /desktop=$(echo $argument_d | sed 's/.exe//g'),800x600"
+		  shift ;; 
 		-p|--prefix) 
-		  argument_p=$( echo eval echo \$$# )
-		  argument_p=$( $argument_p )
+		  eval last_argument=\$$#
 		  file="${argument_p##*/}"
 		  prefix="$(d_msg i 'enter prefix' "Please enter prefix to start $file")" \
 		      || exit 1

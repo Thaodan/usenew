@@ -1,7 +1,7 @@
 include ../rules.mk
 # app config
 APPNAME			= usenew
-USE_VER	     	 	= 3.2
+USE_VER	     	 	= 3.3
 USE_SHELL		= sh
 WSYSTEMRC		= 0
 SYSTEMRC		= /etc/$(APPNAME)rc

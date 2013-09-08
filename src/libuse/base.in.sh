@@ -20,6 +20,7 @@
 #
 
 USE_REV=@git_rev@
+LIBUSE_VER=@LIBUSE_VER@
 #\\endif
 #\\rem if we have NYI stuff  enable stub
 #\\ifdef NYI_STUFF_THERE 

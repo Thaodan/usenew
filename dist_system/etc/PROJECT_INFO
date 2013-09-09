@@ -1,7 +1,7 @@
 # for info see dist_system/doc/README
 
 PROJECT_NAME=usenew
-PROJECT_VER=3.2
+PROJECT_VER=3.3
 SOURCE_DIR=src
 SOURCE_DIST=dist/source
 DIST_DIR=dist

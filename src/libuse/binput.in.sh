@@ -55,7 +55,8 @@ input_check () { # builtin input test
 #  NINPUT_MSG 	sets message that input_check displays if $default_exe is not set and no input given
 ###########################################
 
-    DMSG_DIALOG_DISABLED=true
+    local run __runner
+    local DMSG_DIALOG_DISABLED=true
 
     if [ ! ${#commands_s[*]} = ${#commands_l[*]} ] ; then
 	echo "${#commands_s[*]} not = ${#commands_l[*]}"
@@ -113,17 +114,17 @@ input_check () { # builtin input test
 
 
 display_help () {
+    local run
     if [ ! -z "$HELP_MSG" ] ; then
 	cat << _EOF
 $HELP_MSG
 _EOF
     else
-	cat << _EOF # display an builtin help message if $help_mgs is empty
--$commands_s --$commands_l $exe
--${commands_s[1]} --${commands_l[1]} ${exe[1]}
--${commands_s[2]} --${commands_l[2]} ${exe[2]}
--${commands_s[3]} --${commands_l[3]} ${exe[3]}
+	for (( run=0; run < ${#commands_l[*]}; run++)) ; do
+	    cat << _EOF # display an builtin help message if $help_mgs is empty
+-${commands_s[$run]} --${commands_l[$run]} ${exe[$run]}
 _EOF
+	done
     fi
 }
 

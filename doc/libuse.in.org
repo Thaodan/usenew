@@ -1,75 +1,71 @@
-
-* SYNOPSIS
-      
-    . @libdir@libuse/libuse 
-
-
-  
-
+#+TITLE: libuse
+#+OPTIONS: ^:nil
 * DESCRIPTION
     This collection of functions has some functions that make it easy to work with win32 executables
     in shell scripts. It has several functions to parse input, backup data and handle some wine specific
     problems.
 
 * FILES
-       NOTE: Files with (b) need bash.
+       *NOTE*: Files with (b) need bash.
 
 **  libuse/libuse
 *** DESCRIPTION 
     Just a wrapper to to do what LIBUSE_APPLVL says.
 *** VARS 
-    LIBUSE_BACKUP if set we import libuse/backup
-    LIBUSEAPP_LVL set applevel to tell libuse what it has todo 
-    (1: just exec $exe,2: import libuse/binput and run input_check with$@
+    - LIBUSE_BACKUP :: if set we import libuse/backup
+    - LIBUSEAPP_LVL :: set applevel to tell libuse what it has todo (1: just exec *$exe*,2  import libuse/binput and run input_check with *$@*)
 *** FUNCTIONS
-    None
+    - None
 
 **  libuse/libuse.backup(b)
 *** DESCRIPRION
     Load to backup and restore data in $user_data/$backup_option 
 *** VARS
-    user_data set location of user data where we save (we save backup in $user_data/backup)
-    backup_option set subfolder in $user_data where we find our data to backup
+    - user_data :: set location of user data where we save (we save backup in $user_data/backup)
+    - backup_option :: set subfolder in $user_data where we find our data to backup
 *** FUNCTIONS
-    backup_data () { # backup application data
-    restore_backup () { # restore backup archive that is made by backup_data
+    - backup_data  ::  backup application data
+    - restore_backup :: restore backup archive that is made by backup_data
 			
 **  libuse/binput(b)
 *** DESCRIPTION
     Mostly an input parser with and its helper functions.
 *** VARS
-    U_TESTINPUT_MSGS inout msgs for test_input (array, one item, one msg)
-    commands_s[i] short option for item i 
-    commands_l[i] long option for item i
-    exe[i] executable for item i
-    default_exe set default executable to run
-    FORCE_RUN[i] force to input_check to use the  runner instead of detecting it
-    FORCE_RUN_default same for default_exe
-    NINPUT_MSG sets message that input_check displays if $default_exe is not set and no input given
+    - U_TESTINPUT_MSGS :: inout msgs for test_input (array, one item, one msg)
+    - commands_s[i] :: short option for item *i* 
+    - commands_l[i] :: long option for item *i*
+    - exe[i] :: executable for item *i*
+    - default_exe :: set default executable to run
+    - FORCE_RUN[i] :: force to input_check to use the  runner instead of detecting it
+    - FORCE_RUN_m_default :: same for *default_exe*
+    - NINPUT_MSG :: sets message that input_check displays if $default_exe is not set and no input given
 *** FUNCTIONS
-    test_input () { # test if input is greater the size of U_TESTINPUT_MSGS
-    input_check () { # builtin input test
-    kill_exe () { # kill first *.exe of $exe 
-    display_help () { # mostly just a wrapper for HELP_MSG or when its empty a displayer for test_input vars
+    - test_input :: test if input is greater the size of U_TESTINPUT_MSGS
+    - input_check :: builtin input test
+    - kill_exe :: kill first \star.exe of *$exe* 
+    - display_help ::  mostly just a wrapper for HELP_MSG or when its empty a displayer for test_input vars
   
 **  libuse/base
 *** DESCRIPTIONS
     Base part of libuse
 
-*** VARS
-    WINEPATH load wine_misc and run check_wineserver && set_wine_ver with it if set
-    WINEPREFIX_PATH path where check_prefix searches for wine prefixs else if not set it  will use $HOME/.
+*** VARSx
+    - WINEPATH :: load wine_misc and run check_wineserver && set_wine_ver with it if set
+    - WINEPREFIX_PATH :: path where check_prefix searches for wine prefixs else if not set it  will use $HOME/.
 *** FUNCTIONS
-    check_prefix () {  # check if  $1 is a prefix, else return 1
-    set_wine_db () { # set $WINEDEBUG
-    exec_exe () { # start wine with $exe
-    prefix () { # set $WINEPREFIX to var 
-    exec_cmd () { # run batch script
+    - check_prefix :: check if  $1 is a prefix, else return 1
+    - set_wine_db :: set *$WINEDEBUG*
+    - exec_exe :: start wine with *$exe*
+    - prefix   :: set *$WINEPREFIX* to var 
+    - exec_cmd :: run batch script
 **  libuse/wine_misc
 *** DESCRIPTION
     Some utility functions
 *** VARS
-    None
+    - None 
 *** FUNCTIONS
-    set_wine_ver # say wine to use the wine version in prefix is $1 
-    check_wineserver # check if wineserver is running and ask your user if we are allowed to kill it 
+    - set_wine_ver :: say wine to use the wine version in prefix is *$1* 
+    - check_wineserver :: check if wineserver is running and ask your user if we are allowed to kill it 
+
+* SEE ALSO
+  [[wine]](1)

@@ -129,5 +129,5 @@ _EOF
 
 
 kill_exe () { # kill first *.exe of $exe 
-  pkill "$( basename $exe)"
+  pkill ${exe##*/}
 }

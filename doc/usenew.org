@@ -9,7 +9,7 @@
   - -V    --version     ::    show version
   - --revision          ::    show revision
   - -v --verbose        ::    be more verbose
-  - --debug             ::    help us in debuging
+  - --debug             ::    help us in debugging
   
 ** options:
   - -b    --binpath <binpath>  ::   define in wich path usenew will search for wine and CO

@@ -1,5 +1,6 @@
 #+TITLE: libuse
 #+OPTIONS: ^:nil
+#+LANGUAGE: en
 * DESCRIPTION
     This collection of functions has some functions that make it easy to work with win32 executables
     in shell scripts. It has several functions to parse input, backup data and handle some wine specific
@@ -49,7 +50,7 @@
 *** DESCRIPTIONS
     Base part of libuse
 
-*** VARSx
+*** VARS
     - WINEPATH :: load wine_misc and run check_wineserver && set_wine_ver with it if set
     - WINEPREFIX_PATH :: path where check_prefix searches for wine prefixs else if not set it  will use $HOME/.
 *** FUNCTIONS

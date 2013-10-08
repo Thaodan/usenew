@@ -1,4 +1,6 @@
 #+TITLE: usenew
+#+LANGUAGE: en
+#+OPTIONS: ^:{}
 * SYNOPSIS
   *usenew* /[options]/ /[prefix]/ <command/file> /[start taget options]/ 
 * OPTIONS
@@ -30,15 +32,14 @@
 ***  *.bat/*.cmd file 
        - -w, --window :: open file in new window
 *** *.reg file 
-      - -i :: import regefile
+      - -i :: import regfile
       - -e :: export the given part of registry to file
-              syntax for export to regfile :
-              usenew [prefix] [regfilename.reg] -e [regpath]
+	- syntax for export to regfile :: usenew [prefix] [regfilename.reg] -e [regpath]
 	      
 * ENVIRONMENT
 
     - WINEPATH :: set path where usenew searchs for wine
-    - WINEPREFIX__PATH :: path where usenew searches for wineprefixs, default is $HOME
+    - WINEPREFIX_PATH :: path where usenew searches for wineprefixs, default is $HOME
     - WINEDEBUG :: we do nothing with it, will not overridden by *usenew* if set 
 * SEE ALSO
   [[wine]](1), [[libuse]](1)

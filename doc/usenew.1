@@ -70,18 +70,19 @@ open file in new window
 .SS "*.reg file"
 .TP
 \fB-i\fP
-import regefile
+import regfile
 .TP
 \fB-e\fP
 export the given part of registry to file
-syntax for export to regfile :
+.TP
+\fBsyntax for export to regfile\fP
 usenew [prefix] [regfilename.reg] -e [regpath]
 .SH "ENVIRONMENT"
 .TP
 \fBWINEPATH\fP
 set path where usenew searchs for wine
 .TP
-\fBWINEPREFIX_\d\s-2PATH\s+2\u\fP
+\fBWINEPREFIX_PATH\fP
 path where usenew searches for wineprefixs, default is $HOME
 .TP
 \fBWINEDEBUG\fP

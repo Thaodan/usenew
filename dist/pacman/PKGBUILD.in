@@ -3,11 +3,10 @@ pkgver=3.3
 pkgrel=1
 pkgdesc="wine prefix manager with some libs around it written for POSIX shells and in some parts for bash shell"
 arch=('any')
-#url="http://nadvsh.sourceforge.net/"
+url="https://github.com/Thaodan/usenew"
 license=('GPL2')
 depends=('sh' 'bash' 'coreutils' 'sed' 'wine' 'libsh')
 source=("${pkgname}-${pkgver}.tar.gz")
-md5sums=('0f0248c96b9ad464b1c9bc31ee27eb91')
 makedepends=('shpp')
 
 

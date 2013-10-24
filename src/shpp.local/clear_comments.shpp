@@ -1,0 +1,13 @@
+#!/bin/sh
+# desc: clear comments in all inclueded files, except of the mainfile
+# -*- sh -*-
+clear_comments() 
+{
+    local file
+    for file in $tmp_dir/self/include/files/* ; do
+	sed -ie "/^\s*#/d;s/\s*#[^\"']*$//" $file
+	rm ${file}e
+    done
+}
+
+register_external --runner clear_comments

@@ -1,4 +1,7 @@
 #\\include config.shh
+#\\ifdef STATIC 
+#\\macro <shpp.local/clear_comments.shpp>
+#\\endif
 #!/bin/@SHELL@
 
 # wine prefix chooser and manager

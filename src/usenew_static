@@ -1,4 +1,4 @@
-#!/bin/@SHELL@
+#!/bin/sh
 
 # wine prefix chooser and manager
 #
@@ -22,7 +22,7 @@
 #  version vars:
 ############################################
 USE_VER=3.3
-USE_REV=@git_rev@
+USE_REV=162b198bea
 
 appname=$(basename $0)
 detectDE() 
@@ -52,6 +52,7 @@ d_msg()
 	    case $DMSG_DE in
 		kde) DMSG_GUI_APP=kdialog ;; 
 		gnome|xfce) DMSG_GUI_APP=zenity ;;
+ generic) DMSG_GUI_APP=kdialog ;;
 	    esac	
 	    case "$DMSG_GUI_APP" in 
 		kdialog)  
@@ -233,7 +234,7 @@ test_input () {
 DMSG_ICON=wine  # icon for gui d_msg output
 DMSG_DIALOG_DISABLED=true # we dont need dialog for cli so disable it
 
-USE_REV=@git_rev@
+USE_REV=162b198bea
  
 check_wineserver() {
    if ps ax | grep wineserver | grep -vq grep ; then

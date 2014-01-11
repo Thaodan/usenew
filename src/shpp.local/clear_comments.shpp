@@ -5,7 +5,7 @@ clear_comments()
 {
     local file
     for file in $tmp_dir/self/include/files/* ; do
-	sed -ie "/^\s*#/d;s/\s*#[^\"']*$//" $file
+        sed -ie 's:^\s*#.*$::g' $file
 	rm ${file}e
     done
 }

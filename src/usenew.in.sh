@@ -268,7 +268,7 @@ if [ ! $# = 0  ] ; then
 			xdg-open "$WINEPREFIX"/"$1"  
 		    fi
 		    ;;
-		*) sh -c  "exec $runed_exe $@"  ;; #we use exec cause its safer cause "$runed_exe" cant be a internal function
+		*) command $runed_exe $@  ;; #we use exec cause its safer cause "$runed_exe" cant be a internal function
 	    esac
 	else
 	  false

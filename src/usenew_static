@@ -22,7 +22,7 @@
 #  version vars:
 ############################################
 USE_VER=3.3
-USE_REV=162b198bea
+USE_REV=cb4a8ca035
 
 appname=$(basename $0)
 detectDE() 
@@ -39,11 +39,9 @@ detectDE()
 	echo generic
     fi
 }
-
-
-d_msg()
+d_msg() # display msgs and get input 
 {
-    if [ ! $
+    if [ ! $# -lt 2 ] ; then
 	unset dmsg_return_status
 	if [  "${DMSG_GUI}" = true ] || [ ! $DMSG_GUI = 0 ] ; then
 	    if [  -z "$DMSG_GUI_APP" ] ; then
@@ -165,10 +163,8 @@ d_msg()
     fi
     return $dmsg_return_status
 }
-
-
-get_farray_lenght() {
-    if [ $
+get_farray_lenght() { # get lenght of fake array
+    if [ $# -ge 1 ] ; then 
         LIBUSE_getf_old_ifs=$IFS
 	IFS=:
 	for var in $1 ; do
@@ -181,9 +177,8 @@ get_farray_lenght() {
 	echo 0
     fi
 }
-
-read_farray() {
-    if [ $
+read_farray() { # read fake array
+    if [ $# = 2 ] ; then
 	LIBUSE_readf_old_ifs=$IFS
 	IFS=:
 	for var in  $1 ; do
@@ -198,9 +193,8 @@ read_farray() {
     fi
     unset _read_farry_count  var LIBUSE_readf_old_ifs
 }
-
-write_farray() {
-    if [ $
+write_farray() {  # write fake array   
+    if [ $# -eq 3 ] ; then
 	farry_content=$( eval echo \$$1)
 	if [ ! -z "$farry_content" ] ; then 
 		    if [ $( get_farray_lenght "$farry_content") = $(( $2 - 1 )) ] ; then
@@ -215,16 +209,14 @@ write_farray() {
 	fi
     fi
 }
-
-
 # settings
 ############################################ 
 test_input () { 
-  LIBSH_test_input_N=$(( $
+  LIBSH_test_input_N=$(( $# + 1 ))
   LIBSH__test_input_errmsg="$( read_farray "$err_input_messages" $DMSG_test_input_N)"
   if [ -n "$DMSG_test_input_errmsg" ] ; then
       d_msg ! 'wrong input' "$DMSG_test_input_errmsg"
-      if [   $
+      if [   $# = 0   ]; then
 	return 1
       else
 	  return $LIBSH_test_input_N
@@ -233,22 +225,19 @@ test_input () {
 }
 DMSG_ICON=wine  # icon for gui d_msg output
 DMSG_DIALOG_DISABLED=true # we dont need dialog for cli so disable it
-
-USE_REV=162b198bea
- 
+USE_REV=cb4a8ca035
 check_wineserver() {
    if ps ax | grep wineserver | grep -vq grep ; then
     if d_msg f 'other wineserver' "An other wineserver is running, kill him (any other procces that run on wineserver will killed too)?" ; then
-	  pkill wineserver
+	  pkill wineserver  #--uid $(id -ru)  
 	  return 0
     else
       return $?
     fi
   fi
 }
-set_wine_ver () {
-
-if [ -z "$1" ] ; then
+set_wine_ver () { # no comment
+if [ -z "$1" ] ; then # unset wine version
   export LD_LIBRARY_PATH=
   export WINESERVER=
   export WINELOADER=
@@ -261,31 +250,19 @@ else  # use wine version from path given by "$1"
   export WINEDLLPATH="$1"/lib/wine
   export BINPATH="$1"/bin/
 fi
-
 WINE=$BINPATH/wine
 }
-
-
-
-
-check_prefix () {
+check_prefix () {  # check if  $1 is a prefix
   if ! ( [ -d "${WINEPREFIX_PATH:-$HOME/.}/$1" ] && [ -e "${WINEPREFIX_PATH:-$HOME/.}/$1/system.reg" ] ); then
       return 1
   fi  
 } 
-
-
-
-
-set_wine_db () {
+set_wine_db () { # set wine debug
   if [ -z $WINEDEBUG ]; then 
     export WINEDEBUG=${WDEBUG:=fixme-all}
   fi
 }
-
-
-
-exec_exe () {
+exec_exe () { # start wine with $exe
   if [ ! -z "$1" ]; then
     runed_exe="$1"
     shift
@@ -299,21 +276,12 @@ exec_exe () {
     return $return_stat
   fi
 }
-
-prefix () {
+prefix () { # set prefix var
     export WINEPREFIX=${1:-${PREFIX:-$HOME/.wine}}
 }
-
-
-
-
-
 exec_cmd () {
   "${WINE:-wine}" cmd.exe /c "$1"
 }
-
-
-
 if [ ! -z "$WINEPATH" ]; then
     check_wineserver || exit 1
     set_wine_ver "$WINEPATH"	
@@ -532,7 +500,7 @@ if [ ! $# = 0  ] ; then
 			xdg-open "$WINEPREFIX"/"$1"  
 		    fi
 		    ;;
-		*) sh -c  "exec $runed_exe $@"  ;; #we use exec cause its safer cause "$runed_exe" cant be a internal function
+		*) command $runed_exe $@  ;; #we use exec cause its safer cause "$runed_exe" cant be a internal function
 	    esac
 	else
 	  false

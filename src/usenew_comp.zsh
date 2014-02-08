@@ -1,12 +1,12 @@
-#compdef usenew -P '*.(exe|EXE|bat|cmd|reg|dll)'
-_arguments -s \
+#compdef usenew
+_arguments -s -S \
     --debug'[help debugging]' \
     {-h,--help}'[show help message]' \
-    -V'[show version]' \
+    {-V,--version}'[show version]' \
     {-g,--gui}'[enable gui output]' \
     {-p,--prefix}'[ask for prefix]' \
-    {-d,--desktop}'[start file/command in virtual desktop]'
-
+    {-d,--desktop}'[start file/command in virtual desktop]' \
+    '*:file or directory:_files'
 # Local Variables:
 # mode: Shell-Script
 # sh-indentation: 2

@@ -12,6 +12,7 @@ sysconfdir    = $(PREFIX)/etc
 datarootdir   = ${PREFIX}/share
 datadir       = ${datarootdir}
 mandir        = ${datarootdir}/man
+zsh_compdir   = $(datarootdir)/zsh/site_functions
 
 SHPP	      = shpp
 BUILTIN_SHPP  = ${TOOLSDIR}/shpp

@@ -11,6 +11,7 @@ USERRC			= "$\{XDG_CONFIG_HOME\:-$HOME/.config}"
 SCRIPTS			= usenew\
 	 		  restore
 
+
 all: $(SCRIPTS) libuse
 
 $(SCRIPTS): ${SCRIPTS:=.in.sh} config.shh
@@ -35,7 +36,9 @@ usenew_static: usenew.in.sh libuse/base.in.sh libuse/wine_misc.in.sh config.shh
 libuse: 
 	$(MAKE) -C libuse
 
-install: $(SCRIPTS)
+install: install_bin usenew_comp.zsh
+	$(INSTALL) -m644 usenew_comp.zsh $(zsh_compdir)/_usenew
+install_bin: $(SCRIPTS)
 	$(INSTALL) -dm755 $(bindir)
 	$(INSTALL) -m755 $(^) $(bindir) 
 	$(MAKE) -C libuse install

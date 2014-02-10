@@ -32,7 +32,7 @@ USE_REV=@git_rev@
 . ${LIBSH:-@prefix@/lib/libsh} 
 
 #\\else
-appname=$(basename $0)
+appname=${0##*/}
 #\\   include ../sh-make-tools/external/libsh/src/d_msg.in.sh
 #\\   include ../sh-make-tools/external/libsh/src/farray.in.sh
 #\\   include ../sh-make-tools/external/libsh/src/test_input.in.sh

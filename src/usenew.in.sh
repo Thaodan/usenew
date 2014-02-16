@@ -221,10 +221,11 @@ if [ ! $# = 0  ] ; then
 	    usenew_old_ifs=$IFS
 	    IFS=:
 	    for run_i in $run_int ; do
-		IFS=$old_ifs
+		IFS=$usenew_old_ifs
 		$run_i
 		IFS=:
 	    done
+	    IFS=$usenew_old_ifs
 	    if [ -z $prefix ] ; then
 		prefix="$1"
 		shift

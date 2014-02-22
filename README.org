@@ -14,7 +14,7 @@ For more info see doc/
  
 * BUILD AND INSTALL 
 
-See INSTALL
+See [[./INSTALL.org]]
 
 * STATIC VERSION 
 If you just want the cli tool and won't build everything use [[./src/usenew_static]]

@@ -61,14 +61,14 @@ export WINE_PREFIXES="$WINEPREFIX_PATH" # for winetricks
 
 
 u_help () { # display short help
-d_msg 'help' "`cat <<_HELP
+d_msg 'help' <<_HELP
 Usage: $appname wineprefix command/file options
 supported files: *.exe;*.bat;*.cmd;*.reg;*.dll
 
   syntax: $appname [prefix] [command/file] [options]
 
 type $appname -H for long-help
-_HELP`"
+_HELP
 }
 
 u_long_help () { # display long help
@@ -130,13 +130,8 @@ u_create_prefix () {
     if d_msg f prefix "prefix $1 don't exist, create it?" ; then  # if prefix doesn't exist create one yes or no?
       if [ $(uname -m) = x86_64 ]; then
 	 buttons='win32:1,win64:0'
-	 case $DMSG_GUI in
-	    1|true)	input=`d_msg i 'prefix select' "Which Windows architecture the prefix should support please enter win64(64bits) or win32(32bits), default $default_win_arch"`;;
-	    *)
-	      echo "Which Windows architecture the prefix should support please enter win64(64bits) or win32(32bits), default $default_win_arch"
-	      read input
-	      ;;
-	 esac
+	 input=$(d_msg i 'prefix select' "Which Windows architecture the prefix should support please enter win64(64bits) or win32(32bits), default $default_win_arch")
+	 
 	 case  "$input" in
 	   win32) export WINEARCH=win32 ;;
 	   win64) export WINEARCH=win64 ;;
@@ -177,7 +172,7 @@ if [ ! $# = 0  ] ; then
 	u_optspec=rb:dphHvVg #-: # short options
 	u_optspec_long=run-debug,binpath:,desktop,prefix,help,long-help,verbose,debug,revision,gui,version # long options
 	PROCESSED_OPTSPEC=$( getopt -o $u_optspec --long $u_optspec_long \
-	-n $appname  -- "$@")  || d_msg ! error  "$( read_farray "$err_input_messages" 2 )" || exit 1 # parsed optspec
+	-n "$appname"  -- "$@")  || d_msg ! error  "$( read_farray "$err_input_messages" 2 )" || exit 1 # parsed optspec
 	eval set -- "$PROCESSED_OPTSPEC"
 	export POSIXLY_CORRECT=$posixly
 	unset posixly
@@ -226,7 +221,7 @@ if [ ! $# = 0  ] ; then
 		IFS=:
 	    done
 	    IFS=$usenew_old_ifs
-	    if [ -z $prefix ] ; then
+	    if [ -z "$prefix" ] ; then
 		prefix="$1"
 		shift
 	    fi
@@ -245,13 +240,13 @@ if [ ! $# = 0  ] ; then
 		*.dll|*.ax) "$BINPATH"regsvr32 $@ ;;
 		*.bat|*.BAT]|*.cmd|*.CMD) # exec bat/cmd file
 		    case $runed_exe in
-			-w|--window)  "$BINPATH"wineconsole --backend=user cmd.exe $1 $2  $3 ;; # if option -w (--window) start file in new window
+			-w|--window)  "$BINPATH"wineconsole --backend=user cmd.exe "$1" "$2"  "$3" ;; # if option -w (--window) start file in new window
 			*)  "${WINE:-wine}" cmd.exe /c "$runed_exe $@" ;;
 		    esac
 		    ;;
 		*.reg) # import regfile into prefix
 		    case $1 in
-			-e)  "$BINPATH"regedit /e "$runed_exe" $2 ;;
+			-e)  "$BINPATH"regedit /e "$runed_exe" "$2" ;;
 			-i)  "$BINPATH"regedit "$runed_exe"    ;;
 			*)  d_msg ! faile 'no option for import(-i) or export (-e) given' ;;
 		    esac
@@ -269,7 +264,7 @@ if [ ! $# = 0  ] ; then
 			xdg-open "$WINEPREFIX"/"$1"  
 		    fi
 		    ;;
-		*) command $runed_exe $@  ;; #we use exec cause its safer cause "$runed_exe" cant be a internal function
+		*) command "${runed_exe}" $*  ;; #we use exec cause its safer cause "$runed_exe" cant be a internal function
 	    esac
 	else
 	  false
@@ -278,7 +273,7 @@ if [ ! $# = 0  ] ; then
     ext=
   done
 else
-  echo $(read_farray "$err_input_messages" 1) 
+  read_farray "$err_input_messages" 1
   false
 fi
 exit $error_status

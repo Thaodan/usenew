@@ -1,26 +1,25 @@
-### INTRO ###
+*  INTRO 
 
 This a wrapper script that handles wine prefixes when running programms in/on them and inclues a library to write scripts that start wine programms. 
 For more info see doc/ 
 
-## DEPENCIES ##
+*  DEPENCIES 
 
- - posix compilant /bin/sh and for some parts of the library bash
- - posix compilant: sed, grep, sort, cat, basename, dirname and file
+ - posix compilant :: /bin/sh and for some parts of the library bash
+ - posix compilant ::  sed, grep, sort, cat, basename, dirname and file
  - wine 
  - libsh [1]
-## BUILD DEPENCIES ## 
+* BUILD DEPENCIES
  - shpp [2] (you can use WBUILTIN_SHPP=1 if don't want to install shpp)
  
-## BUILD AND INSTALL ## 
+* BUILD AND INSTALL 
 
-See INSTALL.
+See INSTALL
 
-## STATIC VERSION ##
-If you just want the cli tool and won't build everything use usenew_static in 
-src/.
+* STATIC VERSION 
+If you just want the cli tool and won't build everything use [[./src/usenew_static]]
 
-## DOC ## 
+*  DOC 
 See doc/
 
 [1] https://github.com/Thaodan/shpp/tree/master/external/libsh

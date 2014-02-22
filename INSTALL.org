@@ -1,10 +1,9 @@
- 
 NOTE: To set install prefix add PREFIX=<your install prefix> as option when running make
-### BUILDING ###
-
+*  BUILDING 
+#+BEGIN_SRC sh
 make
-
-
-### INSTALLING ###
-
+#+END_SRC
+* INSTALLING 
+#+BEGIN_SRC sh
 make install
+#+END_SRC

@@ -130,8 +130,7 @@ u_create_prefix () {
     if d_msg f prefix "prefix $1 don't exist, create it?" ; then  # if prefix doesn't exist create one yes or no?
       if [ $(uname -m) = x86_64 ]; then
 	 buttons='win32:1,win64:0'
-	 input=$(d_msg i 'prefix select' "Which Windows architecture the prefix should support please enter win64(64bits) or win32(32bits), default $default_win_arch")
-	 
+	 input=$(d_msg i 'prefix select' "Which Windows architecture the prefix should support please enter win64(64bits) or win32(32bits), default $default_win_arch")	 
 	 case  "$input" in
 	   win32) export WINEARCH=win32 ;;
 	   win64) export WINEARCH=win64 ;;
@@ -273,7 +272,7 @@ if [ ! $# = 0  ] ; then
     ext=
   done
 else
-  read_farray "$err_input_messages" 1
+  read_farray "$err_input_messages" 1 >&2
   false
 fi
 exit $error_status

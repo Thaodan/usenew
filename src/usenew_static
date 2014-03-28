@@ -22,9 +22,9 @@
 #  version vars:
 ############################################
 USE_VER=3.3
-USE_REV=cb4a8ca035
+USE_REV=2739eb7547
 
-appname=$(basename $0)
+appname=${0##*/}
 detectDE() 
 {
     if [ x"$KDE_FULL_SESSION" = x"true" ]; then 
@@ -39,6 +39,8 @@ detectDE()
 	echo generic
     fi
 }
+
+
 d_msg() # display msgs and get input 
 {
     if [ ! $# -lt 2 ] ; then
@@ -52,6 +54,7 @@ d_msg() # display msgs and get input
 		gnome|xfce) DMSG_GUI_APP=zenity ;;
  generic) DMSG_GUI_APP=kdialog ;;
 	    esac	
+
 	    case "$DMSG_GUI_APP" in 
 		kdialog)  
 		    which  kdialog  > /dev/null  || \
@@ -127,6 +130,7 @@ d_msg() # display msgs and get input
 	      dialog)
 		  case "$1" in 
 	              !) dialog --title "$2 -${APPNAME:=$appname}" --infobox "error:$3" 0 0 ; dmsg_return_status=${DMSG_ERR_STAUS:=1};;
+
 		      f) dialog --title "$2 - ${APPNAME:=$appname}" --yesno "$3"   0 0 
 			  dmsg_return_status=$?
 			  ;;
@@ -134,6 +138,7 @@ d_msg() # display msgs and get input
 			  dmsg_return_status=$?		 
 			  ;;
 		      *) dialog --title "$1 -${APPNAME:=$appname}" --infobox "$2" 0 0  ;;
+
 		  esac
 		  ;;
 	      native)
@@ -163,6 +168,8 @@ d_msg() # display msgs and get input
     fi
     return $dmsg_return_status
 }
+
+
 get_farray_lenght() { # get lenght of fake array
     if [ $# -ge 1 ] ; then 
         LIBUSE_getf_old_ifs=$IFS
@@ -177,6 +184,7 @@ get_farray_lenght() { # get lenght of fake array
 	echo 0
     fi
 }
+
 read_farray() { # read fake array
     if [ $# = 2 ] ; then
 	LIBUSE_readf_old_ifs=$IFS
@@ -193,6 +201,7 @@ read_farray() { # read fake array
     fi
     unset _read_farry_count  var LIBUSE_readf_old_ifs
 }
+
 write_farray() {  # write fake array   
     if [ $# -eq 3 ] ; then
 	farry_content=$( eval echo \$$1)
@@ -209,6 +218,8 @@ write_farray() {  # write fake array
 	fi
     fi
 }
+
+
 # settings
 ############################################ 
 test_input () { 
@@ -225,7 +236,9 @@ test_input () {
 }
 DMSG_ICON=wine  # icon for gui d_msg output
 DMSG_DIALOG_DISABLED=true # we dont need dialog for cli so disable it
-USE_REV=cb4a8ca035
+
+USE_REV=2739eb7547
+ 
 check_wineserver() {
    if ps ax | grep wineserver | grep -vq grep ; then
     if d_msg f 'other wineserver' "An other wineserver is running, kill him (any other procces that run on wineserver will killed too)?" ; then
@@ -237,6 +250,7 @@ check_wineserver() {
   fi
 }
 set_wine_ver () { # no comment
+
 if [ -z "$1" ] ; then # unset wine version
   export LD_LIBRARY_PATH=
   export WINESERVER=
@@ -250,18 +264,30 @@ else  # use wine version from path given by "$1"
   export WINEDLLPATH="$1"/lib/wine
   export BINPATH="$1"/bin/
 fi
+
 WINE=$BINPATH/wine
 }
+
+
+
+
 check_prefix () {  # check if  $1 is a prefix
   if ! ( [ -d "${WINEPREFIX_PATH:-$HOME/.}/$1" ] && [ -e "${WINEPREFIX_PATH:-$HOME/.}/$1/system.reg" ] ); then
       return 1
   fi  
 } 
+
+
+
+
 set_wine_db () { # set wine debug
   if [ -z $WINEDEBUG ]; then 
     export WINEDEBUG=${WDEBUG:=fixme-all}
   fi
 }
+
+
+
 exec_exe () { # start wine with $exe
   if [ ! -z "$1" ]; then
     runed_exe="$1"
@@ -270,18 +296,27 @@ exec_exe () { # start wine with $exe
     while test "$ext" != ""
       do
 	"${WINE:-wine}" $wine_args "$runed_exe" $@ ; return_stat=$?
-	LIBUSE_CHILD_PID=$$
 	ext=
     done
     return $return_stat
   fi
 }
+
 prefix () { # set prefix var
     export WINEPREFIX=${1:-${PREFIX:-$HOME/.wine}}
 }
+
+
+
+
+
 exec_cmd () {
+
   "${WINE:-wine}" cmd.exe /c "$1"
 }
+
+
+
 if [ ! -z "$WINEPATH" ]; then
     check_wineserver || exit 1
     set_wine_ver "$WINEPATH"	
@@ -296,14 +331,14 @@ export WINE_PREFIXES="$WINEPREFIX_PATH" # for winetricks
 
 
 u_help () { # display short help
-d_msg 'help' "`cat <<_HELP
+d_msg 'help' <<_HELP
 Usage: $appname wineprefix command/file options
 supported files: *.exe;*.bat;*.cmd;*.reg;*.dll
 
   syntax: $appname [prefix] [command/file] [options]
 
 type $appname -H for long-help
-_HELP`"
+_HELP
 }
 
 u_long_help () { # display long help
@@ -365,13 +400,7 @@ u_create_prefix () {
     if d_msg f prefix "prefix $1 don't exist, create it?" ; then  # if prefix doesn't exist create one yes or no?
       if [ $(uname -m) = x86_64 ]; then
 	 buttons='win32:1,win64:0'
-	 case $DMSG_GUI in
-	    1|true)	input=`d_msg i 'prefix select' "Which Windows architecture the prefix should support please enter win64(64bits) or win32(32bits), default $default_win_arch"`;;
-	    *)
-	      echo "Which Windows architecture the prefix should support please enter win64(64bits) or win32(32bits), default $default_win_arch"
-	      read input
-	      ;;
-	 esac
+	 input=$(d_msg i 'prefix select' "Which Windows architecture the prefix should support please enter win64(64bits) or win32(32bits), default $default_win_arch")	 
 	 case  "$input" in
 	   win32) export WINEARCH=win32 ;;
 	   win64) export WINEARCH=win64 ;;
@@ -412,7 +441,7 @@ if [ ! $# = 0  ] ; then
 	u_optspec=rb:dphHvVg #-: # short options
 	u_optspec_long=run-debug,binpath:,desktop,prefix,help,long-help,verbose,debug,revision,gui,version # long options
 	PROCESSED_OPTSPEC=$( getopt -o $u_optspec --long $u_optspec_long \
-	-n $appname  -- "$@")  || d_msg ! error  "$( read_farray "$err_input_messages" 2 )" || exit 1 # parsed optspec
+	-n "$appname"  -- "$@")  || d_msg ! error  "$( read_farray "$err_input_messages" 2 )" || exit 1 # parsed optspec
 	eval set -- "$PROCESSED_OPTSPEC"
 	export POSIXLY_CORRECT=$posixly
 	unset posixly
@@ -453,11 +482,12 @@ if [ ! $# = 0  ] ; then
 	    usenew_old_ifs=$IFS
 	    IFS=:
 	    for run_i in $run_int ; do
-		IFS=$old_ifs
+		IFS=$usenew_old_ifs
 		$run_i
 		IFS=:
 	    done
-	    if [ -z $prefix ] ; then
+	    IFS=$usenew_old_ifs
+	    if [ -z "$prefix" ] ; then
 		prefix="$1"
 		shift
 	    fi
@@ -476,13 +506,13 @@ if [ ! $# = 0  ] ; then
 		*.dll|*.ax) "$BINPATH"regsvr32 $@ ;;
 		*.bat|*.BAT]|*.cmd|*.CMD) # exec bat/cmd file
 		    case $runed_exe in
-			-w|--window)  "$BINPATH"wineconsole --backend=user cmd.exe $1 $2  $3 ;; # if option -w (--window) start file in new window
+			-w|--window)  "$BINPATH"wineconsole --backend=user cmd.exe "$1" "$2"  "$3" ;; # if option -w (--window) start file in new window
 			*)  "${WINE:-wine}" cmd.exe /c "$runed_exe $@" ;;
 		    esac
 		    ;;
 		*.reg) # import regfile into prefix
 		    case $1 in
-			-e)  "$BINPATH"regedit /e "$runed_exe" $2 ;;
+			-e)  "$BINPATH"regedit /e "$runed_exe" "$2" ;;
 			-i)  "$BINPATH"regedit "$runed_exe"    ;;
 			*)  d_msg ! faile 'no option for import(-i) or export (-e) given' ;;
 		    esac
@@ -500,7 +530,7 @@ if [ ! $# = 0  ] ; then
 			xdg-open "$WINEPREFIX"/"$1"  
 		    fi
 		    ;;
-		*) command $runed_exe $@  ;; #we use exec cause its safer cause "$runed_exe" cant be a internal function
+		*) command "${runed_exe}" $*  ;; #we use exec cause its safer cause "$runed_exe" cant be a internal function
 	    esac
 	else
 	  false
@@ -509,7 +539,7 @@ if [ ! $# = 0  ] ; then
     ext=
   done
 else
-  echo $(read_farray "$err_input_messages" 1) 
+  read_farray "$err_input_messages" 1 >&2
   false
 fi
 exit $error_status

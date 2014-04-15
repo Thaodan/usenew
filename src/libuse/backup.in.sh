@@ -53,22 +53,23 @@ END
 
 restore_backup () { # restore backup archive that is made by backup_data
   if [ ! -z $# ] && [ -e "$1" -a -f "$1" ] ; then
-    temp=$( mktemp -d)
-    tar --directory=$temp -xaf "$1" "$(tar -taf "$1" | grep source)"  && \ 
-    . $temp/$(ls $temp)/source.info # search for source.info in  "$1", if no source.info found ; then display error 
-    if [ ! $? = 0 ]; then
-      d_msg ! 'Corupt file' "input file has no source.info (no restore backup archive or file broken?)" 
-      rm -rf $temp
-      return 1
-    fi
-    if [ -z $BACKUP_APPVER ] ; then
-	d_msg ! 'Incompatible File' 'File is incompatible with this version of libuse/backup($LIBUSE_VER)'
-    # ask before overite target with backup if answer is no return with 1 ( d_msg returns 1 if answer is no)
-    d_msg f overrwrite  "Realy overrwrite ${BACKUPED_APPNAME=`basename "$1"`} data from `echo ${backup_time[0]} at ${backup_time[1]:=(not set)} | sed 's/_/./g'` with $copy_from?" &&  \
-	tar --directory="$copy_from" -axf "$1"
-    rm -rf $temp
-  else
-      d_msg ! faile  'Input not exist  or is no file' 
+      temp=$( mktemp -d)
+      tar --directory=$temp -xaf "$1" "$(tar -taf "$1" | grep source)"  && \ 
+      . $temp/$(ls $temp)/source.info # search for source.info in  "$1", if no source.info found ; then display error 
+      if [ ! $? = 0 ]; then
+	  d_msg ! 'Corupt file' "input file has no source.info (no restore backup archive or file broken?)" 
+	  rm -rf $temp
+	  return 1
+      fi
+      if [ -z $BACKUP_APPVER ] ; then
+	  d_msg ! 'Incompatible File' 'File is incompatible with this version of libuse/backup($LIBUSE_VER)'
+	  # ask before overite target with backup if answer is no return with 1 ( d_msg returns 1 if answer is no)
+	  d_msg f overrwrite  "Realy overrwrite ${BACKUPED_APPNAME=`basename "$1"`} data from `echo ${backup_time[0]} at ${backup_time[1]:=(not set)} | sed 's/_/./g'` with $copy_from?" &&  \
+	      tar --directory="$copy_from" -axf "$1"
+	  rm -rf $temp
+      else
+	  d_msg ! faile  'Input not exist  or is no file' 
+      fi
   fi
   return $?
 }

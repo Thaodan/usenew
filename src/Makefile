@@ -15,7 +15,7 @@ SCRIPTS			= usenew\
 all: $(SCRIPTS) libuse
 
 $(SCRIPTS): ${SCRIPTS:=.in.sh} config.shh
-	$(SHPP) $(@).in.sh  -o $@
+	$(SHPP) $(SHPPFLAGS) $(@).in.sh  -o $@
 
 config.shh: 
 	@echo $@: generating 
@@ -31,7 +31,7 @@ ifneq ($(WUSERRC),0)
 endif
 
 usenew_static: usenew.in.sh libuse/base.in.sh libuse/wine_misc.in.sh config.shh
-	$(SHPP) -DSTATIC -I./libuse $(<) -o $(@) 
+	$(SHPP) $(SHPPFLAGS) -DSTATIC -I./libuse $(<) -o $(@) 
 
 libuse: 
 	$(MAKE) -C libuse

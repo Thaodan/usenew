@@ -15,6 +15,7 @@ mandir        = ${datarootdir}/man
 zsh_compdir   = $(datarootdir)/zsh/site-functions
 
 SHPP	      = shpp
+override SHPPFLAGS+=
 BUILTIN_SHPP  = ${TOOLSDIR}/shpp
 WBUILTIN_SHPP = 0
 

@@ -1,12 +1,11 @@
 include ../../rules.mk
 
 SCRIPTS 	= backup winix_app wine_misc base libuse binput
-GIT_REV      	= $(shell ./../../tools/git_revgen)
 LIBUSE_VER	= 3.3
 all: $(SCRIPTS) 
 
 $(SCRIPTS): ${SCRIPTS:=.in.sh} ../config.shh
-	$(SHPP) -Dgit_rev=$(GIT_REV) -Dprefix=$(PREFIX) -DLIBUSE_VER=$(LIBUSE_VER) $(@).in.sh -o $(@)
+	$(SHPP) $(SHPPFLAGS) -DLIBUSE_VER=$(LIBUSE_VER) $(@).in.sh -o $(@)
 
 
 ../config.shh:

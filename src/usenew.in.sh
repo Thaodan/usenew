@@ -21,7 +21,7 @@
 # You should have received a copy of the GNU General Public License along
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-#
+# FIXME sdsd
 # variables
 #  version vars:
 ############################################
@@ -61,14 +61,12 @@ export WINE_PREFIXES="$WINEPREFIX_PATH" # for winetricks
 
 
 u_help () { # display short help
-d_msg 'help' <<_HELP
-Usage: $appname wineprefix command/file options
+d_msg 'help' "Usage: $appname wineprefix command/file options
 supported files: *.exe;*.bat;*.cmd;*.reg;*.dll
 
   syntax: $appname [prefix] [command/file] [options]
 
-type $appname -H for long-help
-_HELP
+type $appname -H for long-help"
 }
 
 u_long_help () { # display long help

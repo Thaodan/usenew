@@ -9,6 +9,7 @@ For more info see doc/
  - posix compilant ::  sed, grep, sort, cat, basename, dirname and file
  - wine 
  - libsh [1]
+ -  
 * BUILD DEPENCIES
  - shpp [2] (you can use WBUILTIN_SHPP=1 if don't want to install shpp)
  
@@ -22,5 +23,5 @@ If you just want the cli tool and won't build everything use [[./src/usenew_stat
 *  DOC 
 See doc/
 
-[1] https://github.com/Thaodan/shpp/tree/master/external/libsh
+[1] https://github.com/Thaodan/libsh
 [2] https://github.com/Thaodan/shpp

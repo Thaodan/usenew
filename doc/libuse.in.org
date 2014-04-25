@@ -55,9 +55,9 @@
     - WINEPREFIX_PATH :: path where check_prefix searches for wine prefixs else if not set it  will use $HOME/.
 *** FUNCTIONS
     - check_prefix :: check if  $1 is a prefix, else return 1
-    - set_wine_db :: set *$WINEDEBUG*
+    - set_wine_db :: set *$WINEDEBUG* to *$WDEBUG* if not set
     - exec_exe :: start wine with *$exe*
-    - prefix   :: set *$WINEPREFIX* to var 
+    - prefix   :: set *$WINEPREFIX* to var or to *$PREFIX* if no input given
     - exec_cmd :: run batch script
 **  libuse/wine_misc
 *** DESCRIPTION

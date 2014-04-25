@@ -1,5 +1,12 @@
 NOTE: To set install prefix add PREFIX=<your install prefix> as option when running make
-*  BUILDING 
+* Build from dists  
+#+BEGIN_SRC sh
+./build_src
+cd dists/$yourdist
+./update_pkg_ressources
+./build_pkg
+#+END_SRC 
+* BUILDING 
 #+BEGIN_SRC sh
 make
 #+END_SRC

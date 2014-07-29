@@ -80,7 +80,7 @@ input_check () { # builtin input test
 		else
 		    __runner=${FORCE_RUN_default}		    
 		fi
-		( sleep 2 && pid_init )& # wait til process is started
+#		( sleep 2 && pid_init )& # wait til process is started
 		case "${default_exe}" in  
 			*\ * )  $__runner ${default_exe%\ *} ${default_exe#*\ } ;;
 			    *)  $__runner ${default_exe%\ *} ;;
@@ -102,7 +102,7 @@ input_check () { # builtin input test
 		    else
 			__runner=${FORCE_RUN[$run]}
 		    fi		 
-		    ( sleep 2 && pid_init )& 
+#		    ( sleep 2 && pid_init )& 
 		    case "${exe[$run]}" in  
 			*\ * ) $__runner ${exe[$run]%\ *} ${exe[$run]#*\ }  ;;
 			    *) $__runner ${exe[$run]%\ *} ;;
@@ -137,7 +137,7 @@ kill_exe () { # kill first *.exe of $exe
   pkill -u $UID ${exe##*/}
 }
 
-pid_clean() 
-{
-    rm ${LIBSH_PID_DIR:-/run}/${LIBSH_PID_NAME:-$appname}.pid
-}
+#pid_clean() 
+#{
+#    rm ${LIBSH_PID_DIR:-/run}/${LIBSH_PID_NAME:-$appname}.pid
+#}

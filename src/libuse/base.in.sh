@@ -1,3 +1,4 @@
+#\\include ../config.shh
 #\\ifndef STATIC
 #!/bin/sh
 # core functions of libuse
@@ -66,7 +67,7 @@ exec_exe () { # start wine with $exe
     ext=1
     while test "$ext" != ""
       do
-	"${WINE:-wine}" $wine_args "$runed_exe" $@ ; return_stat=$?
+	"${WINE:-wine}" $wine_args "$runed_exe" $@ 
 	ext=
     done
     return $return_stat

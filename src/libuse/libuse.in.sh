@@ -1,3 +1,4 @@
+#\\include ../config.shh
 #!/bin/sh
 # libuseapp wrapper part of libuse
 #

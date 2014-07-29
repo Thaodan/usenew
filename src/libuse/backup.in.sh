@@ -1,3 +1,4 @@
+#\\include ../config.shh
 #!/bin/sh
 # backup functions of libuse
 #
@@ -42,8 +43,8 @@ backup_data () { # backup application data
   cat > "$user_data/backups/$dt"/source.info <<END
 BACKUPED_APPNAME="$APPNAME"
 copy_from='$user_data' 
-backup_time_date=$(date +%Y_%H_%M)
-backup_time=$(date +%d_%)
+backup_time_date=$(date +%Y.%H.%M)
+backup_time=$(date +%d:%)
 compressor=${backup_compressor:-xz}
 BACKUP_APPVER=$LIBUSE_BACKUP_VER
 BACKUP_APPNAME=libuse_back
@@ -61,15 +62,24 @@ restore_backup () { # restore backup archive that is made by backup_data
 	  rm -rf $temp
 	  return 1
       fi
+#\\ifndef wOLDBACKUP 
+#\\warning "wOLDBACKUP is depreacted"
       if [ -z $BACKUP_APPVER ] ; then
-	  d_msg ! 'Incompatible File' 'File is incompatible with this version of libuse/backup($LIBUSE_VER)'
+	  #FIXME put this in a seperate file
+	 # d_msg ! 'Incompatible File' 'File is incompatible with this version of libuse/backup($LIBUSE_VER)'
 	  # ask before overite target with backup if answer is no return with 1 ( d_msg returns 1 if answer is no)
-	  d_msg f overrwrite  "Realy overrwrite ${BACKUPED_APPNAME=`basename "$1"`} data from `echo ${backup_time[0]} at ${backup_time[1]:=(not set)} | sed 's/_/./g'` with $copy_from?" &&  \
+	  d_msg f overrwrite  "Realy overrwrite  ${BACKUPED_APPNAME:-${1##*/}} data from $(echo ${backup_time[0]} at ${backup_time[1]:-"not set"} | sed 's/_/./g') with $copy_from?" &&  \
 	      tar --directory="$copy_from" -axf "$1"
 	  rm -rf $temp
       else
-	  d_msg ! faile  'Input not exist  or is no file' 
+#\\endif
+	  d_msg f Overwrite Realy overite "${BACKUPED_APPNAME:-${1##*/}}  data from $backup_time at $backup_time_date"
+#\\ifndef wOLDBACKUP
       fi
+#\\endif
+  else
+	  d_msg ! faile  'Input not exist  or is no file' 
+      
   fi
   return $?
 }

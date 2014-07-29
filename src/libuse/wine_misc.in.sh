@@ -1,3 +1,4 @@
+#\\include ../config.shh
 #!/bin/sh 
 # part of libuse to bring the functionality to use an other wine version than the system installed 
 #

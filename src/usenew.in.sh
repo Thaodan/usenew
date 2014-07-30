@@ -33,9 +33,9 @@ USE_REV=@git_rev@
 
 #\\else
 appname=${0##*/}
-#\\   include ../sh-make-tools/external/libsh/src/d_msg.in.sh
-#\\   include ../sh-make-tools/external/libsh/src/farray.in.sh
-#\\   include ../sh-make-tools/external/libsh/src/test_input.in.sh
+#\\   include ../libsh/src/d_msg.in.sh
+#\\   include ../libsh/src/farray.in.sh
+#\\   include ../libsh/src/test_input.in.sh
 #\\   include libuse/base.in.sh
 #\\endif
 
@@ -256,7 +256,12 @@ if [ ! $# = 0  ] ; then
 		control)  "${WINE:-wine}" $wine_args control.exe $@ ;;
 		open)  
 		    if echo  "$1" | grep -q '[Aa-Zz]:' ; then
-			xdg-open "$( winepath -u "$1" )"
+			windir="$( winepath -u "$1" )"
+			if [ $windir ]  ; then
+			    xdg-open "$windir"
+			else
+			    d_msg 'Not Found' 'No such directory'
+			fi    
 		    else
 			xdg-open "$WINEPREFIX"/"$1"  
 		    fi

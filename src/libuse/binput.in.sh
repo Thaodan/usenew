@@ -70,7 +70,7 @@ input_check () { # builtin input test
 		#       d_msg ! input "${WINPUT_MSG:=Wrong input given}" || return 1
 		#     fi
 		if [ -z ${FORCE_RUN_default} ] ; then 
-		    case "`file -b "${default_exe}"`" in
+		    case "$(file -b "${default_exe%\ *}")" in
 			"PE32 executable for MS Windows (GUI) Intel 80386 32-bit"| PE32\ executable\ *) __runner=exec_exe;;
 			"PE32 executable for MS Windows (GUI) Intel 80386 32-bit Mono/.Net assembly") __runner=mono;; 
 	  		"POSIX shell script text executable") __runner=sh ;;
@@ -93,7 +93,7 @@ input_check () { # builtin input test
 		if [ "$1" = --${commands_l[$run]} ] || [ $1 = -${commands_s[$run]} ] 
 		then	
 		    if [ -z ${FORCE_RUN[$run]} ] ; then 
-			case "`file -b "${exe[$run]%\ *}"`" in
+			case "$(file -b "${exe[$run]%\ *}")" in
 			    "PE32 executable for MS Windows (GUI) Intel 80386 32-bit"| PE32\ executable\ *) __runner=exec_exe;;
 			    "PE32 executable for MS Windows (GUI) Intel 80386 32-bit Mono/.Net assembly") __runner=mono;; 
 	  		    "POSIX shell script text executable") __runner=sh ;;

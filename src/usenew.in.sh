@@ -127,7 +127,7 @@ u_create_prefix () {
   
     if d_msg f prefix "prefix $1 don't exist, create it?" ; then  # if prefix doesn't exist create one yes or no?
       if [ $(uname -m) = x86_64 ]; then
-	 buttons='win32:1,win64:0'
+	 DMSG_XBUTTONS='win32:1,win64:0'
 	 input=$(d_msg i 'prefix select' "Which Windows architecture the prefix should support please enter win64(64bits) or win32(32bits), default $default_win_arch")	 
 	 case  "$input" in
 	   win32) export WINEARCH=win32 ;;

@@ -65,7 +65,7 @@ input_check () { # builtin input test
 	return $(( ${#commands_s[*]} + ${#commands_l[*]} ))
     else
 	if [ $# = 0 ] ; then
-	    if [ ! -z ${default_exe} ] ; then
+	    if [ ! -z "${default_exe}" ] ; then
 		#     if [ "$1" = - ] ; then 
 		#       d_msg ! input "${WINPUT_MSG:=Wrong input given}" || return 1
 		#     fi

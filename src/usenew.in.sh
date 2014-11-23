@@ -192,7 +192,7 @@ if [ ! $# = 0  ] ; then
 		-d|--desktop) 
 		  eval last_argument=\$$#
 		  argument_d="${last_argument##*/}"
-		  wine_args="explorer /desktop=$(echo $argument_d | sed 's/.exe//g'),800x600"
+		  wine_args="explorer /desktop=$(echo $argument_d | sed -e 's/.exe//g' -e 's/ //g'),800x600"
 		  shift ;; 
 		-p|--prefix) 
 		  eval last_argument=\$$#

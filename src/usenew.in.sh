@@ -257,7 +257,7 @@ if [ ! $# = 0  ] ; then
 		open)  
 		    if echo  "$1" | grep -q '[Aa-Zz]:' ; then
 			windir="$( winepath -u "$1" )"
-			if [ $windir ]  ; then
+			if [ "$windir" ]  ; then
 			    xdg-open "$windir"
 			else
 			    d_msg 'Not Found' 'No such directory'

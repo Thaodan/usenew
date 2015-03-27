@@ -1,0 +1,4 @@
+# ignore backups and directory files
+\#*\#
+*~
+*.directory

@@ -187,8 +187,15 @@ if [ ! $# = 0  ] ; then
 	    --revision)	d_msg revision "$USE_REV" ; shift ;;
 	    -V|--version) 	d_msg version "$USE_VER" ; shift ;;
 	    -g|--gui) 	DMSG_GUI=1 ; shift ; continue ;; # display msg in gui
-	    -b|--binpath)   import libuse/wine_misc ; set_wine_ver "$2" ; shift 2 ;;  # set which wine version usenew should use
-		-d|--desktop) 
+	    -b|--binpath)
+		# set which wine version usenew should use
+#\\ifndef STATIC 		    
+	        import libuse/wine_misc ;
+#\\endif
+	        set_wine_ver "$2" ;
+                shift 2 ;;
+
+            -d|--desktop) 
 		  eval last_argument=\$$#
 		  argument_d="${last_argument##*/}"
 		  wine_args="explorer /desktop=$(echo $argument_d | sed -e 's/.exe//g' -e 's/ //g'),800x600"

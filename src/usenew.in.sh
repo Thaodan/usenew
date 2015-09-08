@@ -186,9 +186,8 @@ if [ ! $# = 0  ] ; then
 	    -v|--verbose) set -o verbose  ; shift ; continue ;;
 	    --revision)	d_msg revision "$USE_REV" ; shift ;;
 	    -V|--version) 	d_msg version "$USE_VER" ; shift ;;
-	    -g|--gui) 	DMSG_GUI=1 ; shift ; continue ;; # display msg in gui	  	
-		-r|--run-debug) skip_run set_wine_db ; shift ;; 
-		-b|--binpath) 	import libuse/wine_misc ; set_wine_ver "$2" ; shift 2 ;;  # set which wine version usenew should use
+	    -g|--gui) 	DMSG_GUI=1 ; shift ; continue ;; # display msg in gui
+	    -b|--binpath)   import libuse/wine_misc ; set_wine_ver "$2" ; shift 2 ;;  # set which wine version usenew should use
 		-d|--desktop) 
 		  eval last_argument=\$$#
 		  argument_d="${last_argument##*/}"
@@ -234,27 +233,27 @@ if [ ! $# = 0  ] ; then
 	    shift  # shift $+1 to remove $1 from $@ that arguments go collected to started program # maybe replace file type detection by extension with detection through mime-type
 	    case "$runed_exe" in # detect wich file or options given
 		*.EXE|*.exe|*.bin)	"${WINE:-wine}"$cmd $wine_args "$runed_exe" $@ ;; # exec executable file
-		*.dll|*.ax) "$BINPATH"regsvr32 $@ ;;
+		*.dll|*.ax)  "${WINE:-wine}" regsvr32.exe $@ ;;
 		*.bat|*.BAT]|*.cmd|*.CMD) # exec bat/cmd file
 		    case $runed_exe in
-			-w|--window)  "$BINPATH"wineconsole --backend=user cmd.exe "$1" "$2"  "$3" ;; # if option -w (--window) start file in new window
+			-w|--window)  "${WINE:-wine}" wineconsole.exe --backend=user cmd.exe "$1" "$2"  "$3" ;; # if option -w (--window) start file in new window
 			*)  "${WINE:-wine}" cmd.exe /c "$runed_exe $@" ;;
 		    esac
 		    ;;
 		*.reg) # import regfile into prefix
 		    case $1 in
-			-e)  "$BINPATH"regedit /e "$runed_exe" "$2" ;;
-			-i)  "$BINPATH"regedit "$runed_exe"    ;;
+			-e) "${WINE:-wine}" regedit.exe /e "$runed_exe" "$2" ;;
+			-i) "${WINE:-wine}" regedit.exe "$runed_exe"    ;;
 			*)  d_msg ! faile 'no option for import(-i) or export (-e) given' ;;
 		    esac
 		    ;;
-		*.msi) wine "$BINPATH"msiexec.exe /i "$runed_exe" "$@" ;;
+		*.msi) "${WINE:-wine}" msiexec.exe /i "$runed_exe" "$@" ;;
 		# built in commands
 		##############
-		appconf|uninstaller)  "$BINPATH"wine $wine_args uninstaller.exe $@ ;;
+		appconf|uninstaller)  "${WINE:-wine}" $wine_args uninstaller.exe $@ ;;
 		cmd)      "${WINE:-wine}" $wine_args cmd.exe "$@" ;; #console --backend=curses
 		control)  "${WINE:-wine}" $wine_args control.exe $@ ;;
-		open)  
+                open)  
 		    if echo  "$1" | grep -q '[Aa-Zz]:' ; then
 			windir="$( winepath -u "$1" )"
 			if [ "$windir" ]  ; then

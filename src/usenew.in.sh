@@ -266,7 +266,7 @@ if [ ! $# = 0  ] ; then
 			if [ "$windir" ]  ; then
 			    xdg-open "$windir"
 			else
-			    d_msg 'Not Found' 'No such directory'
+			    d_msg ! 'Not Found' 'No such directory'
 			fi    
 		    else
 			xdg-open "$WINEPREFIX"/"$1"  

@@ -53,7 +53,7 @@ END
 }
 
 restore_backup () { # restore backup archive that is made by backup_data
-  if [ ! -z $# ] && [ -e "$1" -a -f "$1" ] ; then
+  if [ ! -z $# ] && [ -f "$1" ] ; then
       temp=$( mktemp -d)
       tar --directory=$temp -xaf "$1" "$(tar -taf "$1" | grep source)"  && \ 
       . $temp/$(ls $temp)/source.info # search for source.info in  "$1", if no source.info found ; then display error 

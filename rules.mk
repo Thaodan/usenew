@@ -22,3 +22,5 @@ WBUILTIN_SHPP = 0
 ifneq ($(WBUILTIN_SHPP),0)
 SHPP          = $(BUILTIN_SHPP)
 endif
+
+GITREVGEN     = $(shell $(TOOLSDIR)/git_revgen)

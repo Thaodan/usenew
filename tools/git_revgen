@@ -1,2 +1,2 @@
 #!/bin/sh
-git log --name-status HEAD^..HEAD | head -1  | sed -e 's/commit//' -e 's/ //' -re 's/^.{30}//'
+git describe --always --long | sed -E 's/([^-]*-g)/r\1/;s/-/./g;'

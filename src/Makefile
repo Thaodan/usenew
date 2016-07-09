@@ -1,12 +1,11 @@
 include ../rules.mk
 # app config
 APPNAME			= usenew
-USE_VER	     	 	= 3.3
+USE_VER	     	 	= $(shell ./../tools/git_revgen)
 USE_SHELL		= sh
 WSYSTEMRC		= 0
 SYSTEMRC		= /etc/$(APPNAME)rc
 WUSERRC			= 0
-GIT_REV    		= $(shell ./../tools/git_revgen)
 USERRC			= '$$\{XDG_CONFIG_HOME:-\$$HOME/.config\}'
 SCRIPTS			= usenew\
 	 		  restore
@@ -21,7 +20,6 @@ config.shh:
 	@echo $@: generating 
 	@echo '#\\define use_ver=$(USE_VER)' > $@
 	@echo '#\\define prefix=$(PREFIX)' >> $@
-	@echo '#\\define git_rev=$(GIT_REV)' >> $@
 	@echo '#\\define SHELL=${USE_SHELL}' >> $@
 ifneq ($(WSYSTEMRC),0)
 	@echo '#\\\\define SYSTEMRC$(SYSTEMRC)' >> $@

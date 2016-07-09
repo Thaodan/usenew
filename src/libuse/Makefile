@@ -1,7 +1,7 @@
 include ../../rules.mk
 
 SCRIPTS 	= backup winix_app wine_misc base libuse binput
-LIBUSE_VER	= 3.3
+LIBUSE_VER	= $(GITREVGEN)
 all: $(SCRIPTS) 
 
 $(SCRIPTS): ${SCRIPTS:=.in.sh} ../config.shh

@@ -26,11 +26,9 @@
 #  version vars:
 ############################################
 USE_VER=@use_ver@
-USE_REV=@git_rev@
 
 #\\ifndef STATIC
 . ${LIBSH:-@prefix@/lib/libsh} 
-
 #\\else
 appname=${0##*/}
 #\\   include ../libsh/src/d_msg.in.sh
@@ -184,7 +182,6 @@ if [ ! $# = 0  ] ; then
 	      continue
 	      ;;
 	    -v|--verbose) set -o verbose  ; shift ; continue ;;
-	    --revision)	d_msg revision "$USE_REV" ; shift ;;
 	    -V|--version) 	d_msg version "$USE_VER" ; shift ;;
 	    -g|--gui) 	DMSG_GUI=1 ; shift ; continue ;; # display msg in gui
 	    -b|--binpath)

@@ -20,7 +20,7 @@
 ####################################
 # version, rev config
 SHPP_VER=1.8
-SHPP_REV=c02e19f80a
+SHPP_REV=b1ab294c7e
 #####################################
 # base config 
 
@@ -82,7 +82,7 @@ verbose() {
 die() {
     verbose 'got signal to die, dieing'
     IID=1 cleanup
-    exit ${1:-1}
+    exit $1
 }
 
 cleanup() {
@@ -114,10 +114,7 @@ var() {
 	    ;;	
 	*) 
 	    if [ -d $tmp_dir/$1 ] ; then
-		local __var_dir_content=$(echo $tmp_dir/$1/*)
-		for __var_dir in $__var_dir_content ; do
-		    echo ${__var_dir##*/}
-		done
+		ls $tmp_dir/$1
 	    elif [ -e $tmp_dir/$1 ] ; then 
 		cat $tmp_dir/$1
 	    else

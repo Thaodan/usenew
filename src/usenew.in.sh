@@ -209,7 +209,7 @@ if [ ! $# = 0  ] ; then
 	done
 	if [ $# = 0 ] ; then 
 	  true
-	elif test_input $@ $prefix  ; then 
+	elif test_input "$@" "$prefix"  ; then 
 #\\ifndef STATIC
 	    shload libuse/base
 #\\endif
@@ -236,12 +236,12 @@ if [ ! $# = 0  ] ; then
 	    runed_exe="$1"
 	    shift  # shift $+1 to remove $1 from $@ that arguments go collected to started program # maybe replace file type detection by extension with detection through mime-type
 	    case "$runed_exe" in # detect wich file or options given
-		*.EXE|*.exe|*.bin)	"${WINE:-wine}"$cmd $wine_args "$runed_exe" $@ ;; # exec executable file
-		*.dll|*.ax)  "${WINE:-wine}" regsvr32.exe $@ ;;
+		*.EXE|*.exe|*.bin)	"${WINE:-wine}"$cmd $wine_args "$runed_exe" "$@" ;; # exec executable file
+		*.dll|*.ax)  "${WINE:-wine}" regsvr32.exe "$@" ;;
 		*.bat|*.BAT]|*.cmd|*.CMD) # exec bat/cmd file
 		    case $runed_exe in
 			-w|--window)  "${WINE:-wine}" wineconsole.exe --backend=user cmd.exe "$1" "$2"  "$3" ;; # if option -w (--window) start file in new window
-			*)  "${WINE:-wine}" cmd.exe /c "$runed_exe $@" ;;
+			*)  "${WINE:-wine}" cmd.exe /c "$runed_exe" "$@" ;;
 		    esac
 		    ;;
 		*.reg) # import regfile into prefix
@@ -254,9 +254,9 @@ if [ ! $# = 0  ] ; then
 		*.msi) "${WINE:-wine}" msiexec.exe /i "$runed_exe" "$@" ;;
 		# built in commands
 		##############
-		appconf|uninstaller)  "${WINE:-wine}" $wine_args uninstaller.exe $@ ;;
+		appconf|uninstaller)  "${WINE:-wine}" $wine_args uninstaller.exe "$@" ;;
 		cmd)      "${WINE:-wine}" $wine_args cmd.exe "$@" ;; #console --backend=curses
-		control)  "${WINE:-wine}" $wine_args control.exe $@ ;;
+		control)  "${WINE:-wine}" $wine_args control.exe "$@" ;;
                 open)  
 		    if echo  "$1" | grep -q '[Aa-Zz]:' ; then
 			windir="$( winepath -u "$1" )"
@@ -274,7 +274,7 @@ if [ ! $# = 0  ] ; then
                         rm -rf "$WINEPREFIX";
                     fi
                     ;;
-		*) command "${runed_exe}" $*  ;; #we use exec cause its safer cause "$runed_exe" cant be a internal function
+		*) command "${runed_exe}" "$@"  ;; #we use exec cause its safer cause "$runed_exe" cant be a internal function
 	    esac
 	else
 	  false

@@ -94,6 +94,6 @@ if [ ! -z "$WINEPATH" ]; then
 #\\ifndef STATIC
     import libuse/wine_misc
 #\\endif
-    check_wineserver || exit 1
-    set_wine_ver "$WINEPATH"	
+    set_wine_ver "$WINEPATH"
+    check_wineserver || exit 1	
 fi

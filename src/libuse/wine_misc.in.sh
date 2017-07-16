@@ -21,14 +21,18 @@
 USE_REV=@git_rev@
  
 check_wineserver() {
-   if ps ax | grep wineserver | grep -vq grep ; then
-    if d_msg f 'other wineserver' "An other wineserver is running, kill him (any other procces that run on wineserver will killed too)?" ; then
-	  pkill wineserver  #--uid $(id -ru)  
-	  return 0
-    else
-      return $?
+    wineserver_pid=$(pgrep wineserver)
+    if [ ! $wineserver_pid = "" ] ; then
+        # first check if wineserver is our wineserver
+        if [ ! $(cat /proc/$wineserver_pid/cmdline ) = $BINPATH/wineserver ] ; then
+           if d_msg f 'other wineserver' "An other wineserver is running, kill him (any other procces that run on wineserver will killed too)?" ; then
+	       pkill wineserver  #--uid $(id -ru)  
+	       return 0
+           else
+               return $?
+           fi
+        fi
     fi
-  fi
 }
 set_wine_ver () { # no comment
 
@@ -43,7 +47,7 @@ else  # use wine version from path given by "$1"
   export WINSERVER="$1"/bin/wineserver
   export WINELOADER="$1"/bin/wine
   export WINEDLLPATH="$1"/lib/wine
-  export BINPATH="$1"/bin/
+  export BINPATH="$1"/bin
 fi
 
 WINE=$BINPATH/wine

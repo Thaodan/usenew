@@ -269,6 +269,11 @@ if [ ! $# = 0  ] ; then
 			xdg-open "$WINEPREFIX"/"$1"  
 		    fi
 		    ;;
+                delete)
+                    if d_msg ! "Delete Prefix" "Really delete this prefix?" || [ "$1" = "-f" ] ; then
+                        rm -rf "$WINEPREFIX";
+                    fi
+                    ;;
 		*) command "${runed_exe}" $*  ;; #we use exec cause its safer cause "$runed_exe" cant be a internal function
 	    esac
 	else

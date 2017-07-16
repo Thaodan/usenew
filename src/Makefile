@@ -3,9 +3,9 @@ include ../rules.mk
 APPNAME			= usenew
 USE_VER	     	 	= $(shell ./../tools/git_revgen)
 USE_SHELL		= sh
-WSYSTEMRC		= 0
+WSYSTEMRC		= 1
 SYSTEMRC		= /etc/$(APPNAME)rc
-WUSERRC			= 0
+WUSERRC			= 1
 USERRC			= '$$\{XDG_CONFIG_HOME:-\$$HOME/.config\}/$(appname)rc'
 SCRIPTS			= usenew\
 	 		  restore

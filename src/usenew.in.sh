@@ -186,10 +186,8 @@ if [ ! $# = 0  ] ; then
 	    -g|--gui) 	DMSG_GUI=1 ; shift ; continue ;; # display msg in gui
 	    -b|--binpath)
 		# set which wine version usenew should use
-#\\ifndef STATIC 		    
-	        import libuse/wine_misc ;
-#\\endif
-	        set_wine_ver "$2" ;
+                # just set WINEPATH, libuse wil do the job afterwards
+                WINEPATH="$2"
                 shift 2 ;;
 
             -d|--desktop) 

@@ -22,7 +22,7 @@ config.shh:
 	@echo '#\\define prefix=$(PREFIX)' >> $@
 	@echo '#\\define SHELL=${USE_SHELL}' >> $@
 ifneq ($(WSYSTEMRC),0)
-	@echo '#\\define SYSTEMRC$(SYSTEMRC)' >> $@
+	@echo '#\\define SYSTEMRC=$(SYSTEMRC)' >> $@
 endif
 ifneq ($(WUSERRC),0)
 	@echo '#\\define USERRC=$(USERRC)' >> $@

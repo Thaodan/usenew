@@ -6,7 +6,7 @@ USE_SHELL		= sh
 WSYSTEMRC		= 1
 SYSTEMRC		= /etc/$(APPNAME)rc
 WUSERRC			= 1
-USERRC			= '$$\{XDG_CONFIG_HOME:-\$$HOME/.config\}/$(appname)rc'
+USERRC			= '$$\{XDG_CONFIG_HOME:-\$$HOME/.config\}/$(APPNAME)rc'
 SCRIPTS			= usenew\
 	 		  restore
 

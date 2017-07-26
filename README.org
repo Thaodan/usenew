@@ -9,7 +9,6 @@ For more info see doc/
  - posix compilant ::  sed, grep, sort, cat, basename, dirname and file
  - wine 
  - libsh [1]
- -  
 * BUILD DEPENCIES
  - shpp [2] (you can use WBUILTIN_SHPP=1 if don't want to install shpp)
  

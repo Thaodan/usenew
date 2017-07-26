@@ -36,7 +36,7 @@ if test_input $@ ; then
 	    --revision) echo $U_REV ; shift ;;
 	    --help|-h|-*) d_msg help "$appname usage: $appname [backup file]" ; shift ;;
 	    --) shift; break ;;
-	    *) 
+	    *) ;;
 	esac
     done
     if [ $# !=  0 ] ; then

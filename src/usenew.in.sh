@@ -28,6 +28,7 @@
 USE_VER=@use_ver@
 
 #\\ifndef STATIC
+# shellcheck source=/usr/lib/libsh disable=SC1091
 . ${LIBSH:-@prefix@/lib/libsh} 
 #\\else
 appname=${0##*/}
@@ -47,12 +48,16 @@ default_win_arch=win32 # define the default wine architecture
 err_input_messages="no options given run $appname -h for help, or -H for long help:wrong options or only prefix given run $appname -h for help, or -H for long help" # err messages for test_input
 export WINE_PREFIXES="$WINEPREFIX_PATH" # for winetricks
 
-#\\ifdef USERRC 
-. @USERRC@
+#\\ifdef USERRC
+if [ -e "@USERRC@" ] ; then
+    . "@USERRC@"
+fi
 #\\endif
 
 #\\ifdef SYSTEMRC
-. @SYSTEMRC@
+if [ -e "@SYSTEMRC@" ] ; then
+    . "@SYSTEMRC@"
+fi
 #\\endif 
 #############################################
 

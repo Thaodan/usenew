@@ -1,3 +1,6 @@
+[submodule "sh-make-tools"]
+	path = sh-make-tools
+	url = https://github.com/Thaodan/libsh.git
 [submodule "libsh"]
-	path = libs/libsh
+	path = libsh
 	url = https://github.com/Thaodan/libsh.git

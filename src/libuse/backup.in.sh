@@ -42,7 +42,7 @@ backup_data () { # backup application data
   fi
   cat > "$user_data/backups/$dt"/source.info <<END
 BACKUPED_APPNAME="$APPNAME"
-copy_from='$user_data' 
+ecopy_from='$user_data' 
 backup_time_date=$(date +%Y.%H.%M)
 backup_time=$(date +%d:%)
 compressor=${backup_compressor:-xz}
@@ -53,14 +53,16 @@ END
 }
 
 restore_backup () { # restore backup archive that is made by backup_data
-  if [ ! -z $# ] && [ -f "$1" ] ; then
+    if [ ! -z $# ] && [ -f "$1" ] ; then
+        if ! tar -tf "$1" source.info ; then    
+            d_msg ! 'Corupt file' "input file has no source.info (no restore backup archive or file broken?)"
+            return 1
+        fi
       temp=$( mktemp -d)
-      tar --directory=$temp -xaf "$1" "$(tar -taf "$1" | grep source)"  && \ 
-      . $temp/$(ls $temp)/source.info # search for source.info in  "$1", if no source.info found ; then display error 
-      if [ ! $? = 0 ]; then
-	  d_msg ! 'Corupt file' "input file has no source.info (no restore backup archive or file broken?)" 
-	  rm -rf $temp
-	  return 1
+      tar --directory=$temp -xaf "$1" && \ 
+      local source_file=$temp/*/source.info # search for source.info in  "$1", if no source.info found ; then display error. $temp/$( $temp)/source.infayyaY
+      if bash -n $source_file ; then
+	  source $source_file
       fi
 #\\ifndef wOLDBACKUP 
 #\\warning "wOLDBACKUP is depreacted"

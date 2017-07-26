@@ -22,24 +22,25 @@
 #  version vars:
 ############################################
 USE_VER=3.3
-USE_REV=2739eb7547
+USE_REV=3fbd93ceac
 
 appname=${0##*/}
 detectDE() 
 {
     if [ x"$KDE_FULL_SESSION" = x"true" ]; then 
-	echo kde;
+	echo kde
     elif [ x"$GNOME_DESKTOP_SESSION_ID" != x"" ]; then 
-       echo gnome;
-    elif `dbus-send --print-reply --dest=org.freedesktop.DBus /org/freedesktop/DBus org.freedesktop.DBus.GetNameOwner string:org.gnome.SessionManager > /dev/null 2>&1` ; then 
-	echo gnome;
+       echo gnome
+    elif $(dbus-send --print-reply --dest=org.freedesktop.DBus /org/freedesktop/DBus \
+	org.freedesktop.DBus.GetNameOwner \
+	string:org.gnome.SessionManager > /dev/null 2>&1) ; then 
+	echo gnome
     elif xprop -root _DT_SAVE_MODE 2> /dev/null | grep ' = \"xfce4\"$' >/dev/null 2>&1; then 
-	echo xfce;
+	echo xfce
     else 
 	echo generic
     fi
 }
-
 
 d_msg() # display msgs and get input 
 {
@@ -55,115 +56,122 @@ d_msg() # display msgs and get input
  generic) DMSG_GUI_APP=kdialog ;;
 	    esac	
 
-	    case "$DMSG_GUI_APP" in 
-		kdialog)  
-		    which  kdialog  > /dev/null  || \
-			{ which > /dev/null  zenity  && DMSG_GUI_APP=zenity  || DMSG_GUI_APP=xmessage; }
-		    ;;
-		zenity) which zenity   > /dev/null   || \
-		    (  which  kdialog  > /dev/null  && DMSG_GUI_APP=kdialog || \
-		    DMSG_GUI_APP=generic );;
-		*)  which kdialog > /dev/null  && DMSG_GUI_APP=kdialog || { which zenity > /dev/null && DMSG_GUI_APP=zenity \
-		    || DMSG_GUI_APP=xmessage; }
-		    ;; 
-	    esac 
-	
-	case $DMSG_GUI_APP in 
-	    kdialog)
-		case $1 in 
-		    !)  kdialog --icon ${DMSG_ICON:=xorg} --caption "${DMSG_APPNAME:=$appname}" --title "$2" --error "$3" 
-			dmsg_return_status=${DMSG_ERR_STAUS:=1}  
+	    if  ! which $DMSG_GUI_APP > /dev/null; then
+		for dmsg_gdialog_app in kdialog zenity xmessage ; do
+		    if  which $dmsg_gdialog_app > /dev/null; then
+			DMSG_GUI_APP=$dmsg_gdialog_app
+		    else
+			dmsg_gdialog_app=false
+		    fi
+		done
+		if [ $dmsg_gdialog_app = false ] ; then
+		    DMSG_GUI=0 
+		    d_msg ! 'Warning' "No gui dialog tool found"
+		fi
+	    fi 
+	    case $DMSG_GUI_APP in 
+		kdialog)
+		    case $1 in 
+			!)  kdialog --icon ${DMSG_ICON:=xorg} --caption "${DMSG_APPNAME:=$appname}" --title "$2" --error "$3" 
+			    dmsg_return_status=${DMSG_ERR_STAUS:=1}  
+			    ;;
+			i) kdialog --icon ${DMSG_ICON:=xorg} --caption "${DMSG_APPNAME:=$appname}" -title "$2" --inputbox "$3" 
+			    dmsg_return_status=$?
 			;;
-		    i) kdialog --icon ${DMSG_ICON:=xorg} --caption "${DMSG_APPNAME:=$appname}" --title "$2" --inputbox "$3" 
-			dmsg_return_status=$?
-			;;
-		    l)  kdialog --icon ${DMSG_ICON:=xorg} --caption "${DMSG_APPNAME:=$appname}" --title "$2" --menu \
-			"$3" "$4" "$5" "$6" "$7" "$8" "$9" 
-			shift ; dmsg_return_status=$? ;;
-		    f)  kdialog --icon ${DMSG_ICON:=xorg} --caption "${DMSG_APPNAME:=$appname}"  --title "$2" --yesno "$3" 
-			dmsg_return_status=$? ;;
-		    *)  kdialog --icon ${DMSG_ICON:=xorg} --caption "${DMSG_APPNAME:=$appname}"  --title "$1" --msgbox "$2" 
-			dmsg_return_status=$? ;;
+			l)  kdialog --icon ${DMSG_ICON:=xorg} --caption "${DMSG_APPNAME:=$appname}"
+			    --title "$2" --menu \
+			    "$3" "$4" "$5" "$6" "$7" "$8" "$9" 4
+			    shift ; dmsg_return_status=$? ;;
+			f)  kdialog --icon ${DMSG_ICON:=xorg} --caption "${DMSG_APPNAME:=$appname}"  --title "$2" --yesno "$3" 
+			    dmsg_return_status=$? ;;
+			*)  kdialog --icon ${DMSG_ICON:=xorg} --caption "${DMSG_APPNAME:=$appname}" -title "$1" --msgbox "$2" 
+			    dmsg_return_status=$? ;;
 		    esac
 		    ;;
-	    zenity) 
+		zenity) 
 		    case $1 in 
-		    !) zenity --window-icon=${DMSG_ICON:=xorg}  --title="$2 - ${DMSG_APPNAME:=$appname}" --error --text="$3"
-			dmsg_return_status=${DMSG_ERR_STAUS:=1}   
-			;;
-		    i) zenity --window-icon=${DMSG_ICON:=xorg}  --title="$2 - ${DMSG_APPNAME:=$appname}" --entry --text="$3"
-			dmsg_return_status=$? 
-			;;
-		    l) zenity --window-icon=${DMSG_ICON:=xorg}  --title="$2  -${APPNAME:=$appname}" --column='' --text="$3"\
+			!) zenity --window-icon=${DMSG_ICON:=xorg}  --title="$2 - ${DMSG_APPNAME:=$appname}" \
+			    --error --text="$3"
+			    dmsg_return_status=${DMSG_ERR_STAUS:=1}   
+			    ;;
+			i) zenity --window-icon=${DMSG_ICON:=xorg}  --title="$2 - ${DMSG_APPNAME:=$appname}" \
+			    --entry --text="$3"
+			    dmsg_return_status=$? 
+			    ;;
+			l) zenity --window-icon=${DMSG_ICON:=xorg}  --title="$2  -${DMSG_APPNAME:=$appname}" \
+			    --column='' --text="$3"\
                         --list 
-		       dmsg_return_status=$? 
-		       ;;
-		    f) zenity --window-icon=${DMSG_ICON:=xorg}  --title="$2  -${APPNAME:=$appname}" --question --text="$3" 
-			dmsg_return_status=$? 
-			;;
-		    *) zenity --window-icon=${DMSG_ICON:=xorg}  --title="$1  -${APPNAME:=$appname}" --info --text="$2" 
-			dmsg_return_status=$? ;;
-		esac
-		;;
-	 xmessage)
+			    dmsg_return_status=$? 
+			    ;;
+			f) zenity --window-icon=${DMSG_ICON:=xorg}  --title="$2  -${DMSG_APPNAME:=$appname}" \
+			    --question --text="$3" 
+			    dmsg_return_status=$? 
+			    ;;
+			*) zenity --window-icon=${DMSG_ICON:=xorg}  --title="$1  -${DMSG_APPNAME:=$appname}" \
+			    --info --text="$2" 
+			    dmsg_return_status=$? ;;
+		    esac
+		    ;;
+		xmessage)
 		    case $1 in
-		    !) xmessage -center -title "$2 - ${APPNAME:=$appname}" "err: "$3"" ;
-			dmsg_return_status=${DMSG_ERR_STAUS:=1} 
-			;;
-		    f) xmessage -center -title "$2  -${APPNAME:=$appname}" -buttons no:1,yes:0 "$3" 
-			dmsg_return_status=$? 
-			;;	
-		    i) 
-			if [ -z $buttons ] ; then
-			    DMSG_XBUTTONS='not:1,set:2'
-			fi
-			xmessage -center -title "$appname - "$2"" -print -buttons $buttons "$3"
-			dmsg_return_status=$?
-			;;
-		    l) xmessage -center -title "$2 - ${APPNAME:=$appname}" -print -buttons "$3","$4","$5","$6","$7","$8","$9" ; dmsg_return_status=$? ;;
-		    *) xmessage -center -title "$1 - ${APPNAME:=$appname}" "$2" ; dmsg_return_status=$? ;;
+			!) xmessage -center -title "$2 - ${DMSG_APPNAME:=$appname}" "err: "$3"" ;
+			    dmsg_return_status=${DMSG_ERR_STAUS:=1} 
+			    ;;
+			f) xmessage -center -title "$2  -${DMSG_APPNAME:=$appname}" -buttons no:1,yes:0 "$3" 
+			    dmsg_return_status=$? 
+			    ;;	
+			i) 
+			    if [ -z $DMSG_XBUTTONS ] ; then
+				DMSG_XBUTTONS='not:1,set:2'
+			    fi
+			    xmessage -center -title "$appname - "$2"" -print -buttons $DMSG_XBUTTONS "$3"
+			    dmsg_return_status=$?
+			    ;;
+			l) xmessage -center -title "$2 - ${DMSG_APPNAME:=$appname}" -print \
+			    -buttons "$3","$4","$5","$6","$7","$8","$9" ; dmsg_return_status=$? ;;
+			*) xmessage -center -title "$1 - ${DMSG_APPNAME:=$appname}" "$2" ; dmsg_return_status=$? ;;
 		    esac
 		    ;;
 	    esac
 	else
-	      case ${DMSG_APP:-native} in
-	      dialog)
-		  case "$1" in 
-	              !) dialog --title "$2 -${APPNAME:=$appname}" --infobox "error:$3" 0 0 ; dmsg_return_status=${DMSG_ERR_STAUS:=1};;
+	    case ${DMSG_APP:-native} in
+		dialog)
+		    case "$1" in 
+			!) dialog --title "$2 -${DMSG_APPNAME:=$appname}" --infobox "error:$3" 0 0 ; dmsg_return_status=${DMSG_ERR_STAUS:=1};;
 
-		      f) dialog --title "$2 - ${APPNAME:=$appname}" --yesno "$3"   0 0 
-			  dmsg_return_status=$?
-			  ;;
-		      i) dialog --title "$2 - ${APPNAME:=$appname}" --inputbox "$3" 0 0
-			  dmsg_return_status=$?		 
-			  ;;
-		      *) dialog --title "$1 -${APPNAME:=$appname}" --infobox "$2" 0 0  ;;
+			f) dialog --title "$2 - ${DMSG_APPNAME:=$appname}" --yesno "$3"   0 0 
+			    dmsg_return_status=$?
+			    ;;
+			i) dialog --title "$2 - ${DMSG_APPNAME:=$appname}" --inputbox "$3" 0 0
+			    dmsg_return_status=$?		 
+			    ;;
+			*) dialog --title "$1 -${DMSG_APPNAME:=$appname}" --infobox "$2" 0 0  ;;
 
-		  esac
-		  ;;
-	      native)
-		  case "$1" in
-		      !) echo  "$3" ; dmsg_return_status=${DMSG_ERR_STAUS:=1} ;;
-		      f)  echo ""$3" y|n"
-			  read a 
-			  if [ ! $a = y ] ; then
-			      dmsg_return_status=1;
-			  fi
-			  ;;
-		      i) 
-			  echo "$3" >&2
-			  read  a 
-			  if [ -z "$a" ] ; then
-			      dmsg_return_status=1;
-			  else
-			      echo $a
-			  fi
-			  ;;
-		      *)  echo "$2"   ; dsmg_return_status=$? ;;
-		  esac
-		  ;;
-	      esac
-	      
+		    esac
+		    ;;
+		native)
+		    case "$1" in
+			!) echo  "$3" >&2; dmsg_return_status=${DMSG_ERR_STAUS:=1} ;;
+			f)  echo ""$3" y|n"
+			    read a 
+			    if [ ! $a = y ] ; then
+				dmsg_return_status=1;
+			    fi
+			    ;;
+			i) 
+			    echo "$3" >&2
+			    read  a 
+			    if [ -z "$a" ] ; then
+				dmsg_return_status=1;
+			    else
+				echo $a
+			    fi
+			    ;;
+			*)  echo "$2"   ; dmsg_return_status=$? ;;
+		    esac
+		    ;;
+	    esac
+	    
 	fi
     fi
     return $dmsg_return_status
@@ -220,13 +228,11 @@ write_farray() {  # write fake array
 }
 
 
-# settings
-############################################ 
 test_input () { 
   LIBSH_test_input_N=$(( $# + 1 ))
-  LIBSH__test_input_errmsg="$( read_farray "$err_input_messages" $DMSG_test_input_N)"
-  if [ -n "$DMSG_test_input_errmsg" ] ; then
-      d_msg ! 'wrong input' "$DMSG_test_input_errmsg"
+  LIBSH_test_input_errmsg="$( read_farray "$err_input_messages" $LIBSH_test_input_N)"
+  if [ -n "$LIBSH_test_input_errmsg" ] ; then
+      d_msg ! 'wrong input' "$LIBSH_test_input_errmsg"
       if [   $# = 0   ]; then
 	return 1
       else
@@ -234,10 +240,9 @@ test_input () {
       fi
   fi
 }
-DMSG_ICON=wine  # icon for gui d_msg output
-DMSG_DIALOG_DISABLED=true # we dont need dialog for cli so disable it
+# settings
 
-USE_REV=2739eb7547
+USE_REV=3fbd93ceac
  
 check_wineserver() {
    if ps ax | grep wineserver | grep -vq grep ; then
@@ -270,7 +275,6 @@ WINE=$BINPATH/wine
 
 
 
-
 check_prefix () {  # check if  $1 is a prefix
   if ! ( [ -d "${WINEPREFIX_PATH:-$HOME/.}/$1" ] && [ -e "${WINEPREFIX_PATH:-$HOME/.}/$1/system.reg" ] ); then
       return 1
@@ -295,7 +299,7 @@ exec_exe () { # start wine with $exe
     ext=1
     while test "$ext" != ""
       do
-	"${WINE:-wine}" $wine_args "$runed_exe" $@ ; return_stat=$?
+	"${WINE:-wine}" $wine_args "$runed_exe" $@ 
 	ext=
     done
     return $return_stat
@@ -321,6 +325,10 @@ if [ ! -z "$WINEPATH" ]; then
     check_wineserver || exit 1
     set_wine_ver "$WINEPATH"	
 fi
+
+DMSG_ICON=wine  # icon for gui d_msg output
+DMSG_DIALOG_DISABLED=true # we dont need dialog for cli so disable it
+WDEBUG=fixme-all  # define wich wine debug out will shown in if $WINEDEBUG is not set
 default_win_arch=win32 # define the default wine architecture
 err_input_messages="no options given run $appname -h for help, or -H for long help:wrong options or only prefix given run $appname -h for help, or -H for long help" # err messages for test_input
 export WINE_PREFIXES="$WINEPREFIX_PATH" # for winetricks
@@ -331,14 +339,12 @@ export WINE_PREFIXES="$WINEPREFIX_PATH" # for winetricks
 
 
 u_help () { # display short help
-d_msg 'help' <<_HELP
-Usage: $appname wineprefix command/file options
+d_msg 'help' "Usage: $appname wineprefix command/file options
 supported files: *.exe;*.bat;*.cmd;*.reg;*.dll
 
   syntax: $appname [prefix] [command/file] [options]
 
-type $appname -H for long-help
-_HELP
+type $appname -H for long-help"
 }
 
 u_long_help () { # display long help
@@ -397,9 +403,9 @@ ENVIRONMENT
 
 u_create_prefix () {
   
-    if d_msg f prefix "prefix $1 don't exist, create it?" ; then  # if prefix doesn't exist create one yes or no?
+    if d_msg f prefix "prefix $1 don\'t exist, create it?" ; then  # if prefix doesn't exist create one yes or no?
       if [ $(uname -m) = x86_64 ]; then
-	 buttons='win32:1,win64:0'
+	 DMSG_XBUTTONS='win32:1,win64:0'
 	 input=$(d_msg i 'prefix select' "Which Windows architecture the prefix should support please enter win64(64bits) or win32(32bits), default $default_win_arch")	 
 	 case  "$input" in
 	   win32) export WINEARCH=win32 ;;
@@ -460,11 +466,14 @@ if [ ! $# = 0  ] ; then
 	    -V|--version) 	d_msg version "$USE_VER" ; shift ;;
 	    -g|--gui) 	DMSG_GUI=1 ; shift ; continue ;; # display msg in gui	  	
 		-r|--run-debug) skip_run set_wine_db ; shift ;; 
-		-b|--binpath) 	import libuse/wine_misc ; set_wine_ver "$2" ; shift 2 ;;  # set which wine version usenew should use
+		-b|--binpath)
+		    # set which wine version usenew should use
+		    set_wine_ver "$2" ;
+		    shift 2 ;;  
 		-d|--desktop) 
 		  eval last_argument=\$$#
 		  argument_d="${last_argument##*/}"
-		  wine_args="explorer /desktop=$(echo $argument_d | sed 's/.exe//g'),800x600"
+		  wine_args="explorer /desktop=$(echo $argument_d | sed -e 's/.exe//g' -e 's/ //g'),800x600"
 		  shift ;; 
 		-p|--prefix) 
 		  eval last_argument=\$$#
@@ -525,7 +534,12 @@ if [ ! $# = 0  ] ; then
 		control)  "${WINE:-wine}" $wine_args control.exe $@ ;;
 		open)  
 		    if echo  "$1" | grep -q '[Aa-Zz]:' ; then
-			xdg-open "$( winepath -u "$1" )"
+			windir="$( winepath -u "$1" )"
+			if [ "$windir" ]  ; then
+			    xdg-open "$windir"
+			else
+			    d_msg 'Not Found' 'No such directory'
+			fi    
 		    else
 			xdg-open "$WINEPREFIX"/"$1"  
 		    fi

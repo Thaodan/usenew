@@ -48,17 +48,19 @@ default_win_arch=win32 # define the default wine architecture
 err_input_messages="no options given run $appname -h for help, or -H for long help:wrong options or only prefix given run $appname -h for help, or -H for long help" # err messages for test_input
 export WINE_PREFIXES="$WINEPREFIX_PATH" # for winetricks
 
+
+#\\ifdef SYSTEMRC
+if [ -e "@SYSTEMRC@" ] ; then
+    . "@SYSTEMRC@"
+fi
+#\\endif
+
 #\\ifdef USERRC
 if [ -e "@USERRC@" ] ; then
     . "@USERRC@"
 fi
 #\\endif
 
-#\\ifdef SYSTEMRC
-if [ -e "@SYSTEMRC@" ] ; then
-    . "@SYSTEMRC@"
-fi
-#\\endif 
 #############################################
 
 

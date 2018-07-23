@@ -42,7 +42,7 @@ appname=${0##*/}
 ############################################ 
 
 DMSG_ICON=wine  # icon for gui d_msg output
-DMSG_DIALOG_DISABLED=true # we dont need dialog for cli so disable it
+DMSG_APP=native # we dont need dialog for cli so use native instead
 WDEBUG=fixme-all  # define wich wine debug out will shown in if $WINEDEBUG is not set
 default_win_arch=win32 # define the default wine architecture
 err_input_messages="no options given run $appname -h for help, or -H for long help:wrong options or only prefix given run $appname -h for help, or -H for long help" # err messages for test_input

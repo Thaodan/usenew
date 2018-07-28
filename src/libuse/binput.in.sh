@@ -1,5 +1,5 @@
-#\\include ../config.shh
 #!/bin/bash
+#\\include ../config.shh
 # input parse functions of libuse
 #
 # Copyright (C) 2013  Björn Bidar

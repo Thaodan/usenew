@@ -275,7 +275,7 @@ if [ ! $# = 0  ] ; then
 		    fi
 		    ;;
                 delete)
-                    if d_msg ! "Delete Prefix" "Really delete this prefix?" || [ "$1" = "-f" ] ; then
+                    if d_msg f "Delete Prefix" "Really delete this prefix?" || [ "$1" = "-f" ] ; then
                         rm -rf "$WINEPREFIX";
                     fi
                     ;;

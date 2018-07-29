@@ -35,21 +35,21 @@ check_wineserver() {
         fi
     fi
 }
-set_wine_ver () { # no comment
+set_wine_ver () {
 
-if [ -z "$1" ] ; then # unset wine version
-  export LD_LIBRARY_PATH=
-  export WINESERVER=
-  export WINELOADER=
-  export WINEDLLPATH=
-  export BINPATH=
-else  # use wine version from path given by "$1"
-  export LD_LIBRARY_PATH="$1"/lib:$LD_LIBRARY_PATH
-  export WINSERVER="$1"/bin/wineserver
-  export WINELOADER="$1"/bin/wine
-  export WINEDLLPATH="$1"/lib/wine
-  export BINPATH="$1"/bin
-fi
-
-WINE=$BINPATH/wine
+    if [ -z "$1" ] ; then # unset wine version
+        export LD_LIBRARY_PATH=
+        export WINESERVER=
+        export WINELOADER=
+        export WINEDLLPATH=
+        export BINPATH=
+    else  # use wine version from path given by "$1"
+        export LD_LIBRARY_PATH="$1"/lib:$LD_LIBRARY_PATH
+        export WINSERVER="$1"/bin/wineserver
+        export WINELOADER="$1"/bin/wine
+        export WINEDLLPATH="$1"/lib/wine
+        export BINPATH="$1"/bin
+    fi
+    
+    WINE=$BINPATH/wine
 }

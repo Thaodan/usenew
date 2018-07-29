@@ -28,9 +28,8 @@ check_wineserver() {
             if d_msg f 'other wineserver' \
                      "An other wineserver is running, kill him (any other procces that run on wineserver will killed too)?"
             then
-	       pkill wineserver  #--uid $(id -ru)  
-	       return 0
-           else
+                wineboot --end-session
+            else
                return $?
            fi
         fi

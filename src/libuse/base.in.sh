@@ -44,9 +44,9 @@ fi
 ### functions for that are only in use with wine
 
 check_prefix () {  # check if  $1 is a prefix
-  if ! ( [ -d "${WINEPREFIX_PATH:-$HOME/.}/$1" ] && [ -e "${WINEPREFIX_PATH:-$HOME/.}/$1/system.reg" ] ); then
+    if [ ! -e "${WINEPREFIX_PATH:-$HOME/.}/$1/system.reg" ] ; then
       return 1
-  fi  
+    fi  
 } 
 
 

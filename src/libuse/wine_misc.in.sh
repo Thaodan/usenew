@@ -22,10 +22,12 @@ USE_REV=@git_rev@
  
 check_wineserver() {
     wineserver_pid=$(pgrep wineserver)
-    if [ ! $wineserver_pid = "" ] ; then
+    if [ ! "$wineserver_pid" = "" ] ; then
         # first check if wineserver is our wineserver
-        if [ ! $(cat /proc/$wineserver_pid/cmdline ) = $BINPATH/wineserver ] ; then
-           if d_msg f 'other wineserver' "An other wineserver is running, kill him (any other procces that run on wineserver will killed too)?" ; then
+        if [ ! "$(cat "/proc/$wineserver_pid/cmdline" )" = "$BINPATH"/wineserver ] ; then
+            if d_msg f 'other wineserver' \
+                     "An other wineserver is running, kill him (any other procces that run on wineserver will killed too)?"
+            then
 	       pkill wineserver  #--uid $(id -ru)  
 	       return 0
            else

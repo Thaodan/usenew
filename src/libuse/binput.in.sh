@@ -33,8 +33,8 @@ LIBUSE_INPUT_REV=135
 test_input () { # test if input is right 
   if [ -n "${U_TESTINPUT_MSGS[$#]}" ] ; then
     d_msg ! 'wrong input' "${U_TESTINPUT_MSGS[$#]}"
-    if [ ! -n $# ]; then
-      return ${#:=1}
+    if [ $# = 0 ]; then
+      return 1
     else
       return 
     fi

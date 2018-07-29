@@ -71,8 +71,8 @@ input_check () { # builtin input test
 		#     fi
 		if [ -z ${FORCE_RUN_default} ] ; then 
 		    case "$(file -b "${default_exe%\ *}")" in
-			"PE32 executable for MS Windows (GUI) Intel 80386 32-bit"| PE32\ executable\ *) __runner=exec_exe;;
-			"PE32 executable for MS Windows (GUI) Intel 80386 32-bit Mono/.Net assembly") __runner=mono;; 
+			"PE32 executable for MS Windows (GUI) Intel 80386 32-bit Mono/.Net assembly") __runner=mono;;
+                        "PE32 executable for MS Windows (GUI) Intel 80386 32-bit"| PE32\ executable\ *) __runner=exec_exe;;
 	  		"POSIX shell script text executable") __runner=sh ;;
 			"Bourne-Again shell script text executable") __runner=bash;; 
 		    esac
@@ -94,8 +94,8 @@ input_check () { # builtin input test
 		then	
 		    if [ -z ${FORCE_RUN[$run]} ] ; then 
 			case "$(file -b "${exe[$run]%\ *}")" in
+                            "PE32 executable for MS Windows (GUI) Intel 80386 32-bit Mono/.Net assembly") __runner=mono;; 
 			    "PE32 executable for MS Windows (GUI) Intel 80386 32-bit"| PE32\ executable\ *) __runner=exec_exe;;
-			    "PE32 executable for MS Windows (GUI) Intel 80386 32-bit Mono/.Net assembly") __runner=mono;; 
 	  		    "POSIX shell script text executable") __runner=sh ;;
 			    "Bourne-Again shell script text executable") __runner=bash;; 
 			esac

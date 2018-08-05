@@ -35,13 +35,21 @@ backup_data () { # backup application data
 # backup_option     = sub-directory that is backupt by backup_data
 # backup_compressor = set compressor to tar archive with backup (default @LIBUSE_BACKUP_DCOMPRESSOR@)
 #########################################
-  dt=$(date +%d_%m_%Y_%H_%M)
-  mkdir -p "$user_data/backups"
-  if [ ! -e "$user_data/$backup_option/*"  ]
-  then
+
+  local dir
+  # look if there's any file inside "$user_data/$backup_option"
+  for file in "$user_data/$backup_option/"* ; do
+      break
+  done
+
+  if [ ! -e "$file" ]; then
       # if dir is empty return without error
       return 0
   fi
+
+  dt=$(date +%d_%m_%Y_%H_%M)
+  mkdir -p "$user_data/backups"
+
   cat > "$user_data/backups/$dt"/source.info <<END
 BACKUPED_APPNAME="$APPNAME"
 ecopy_from='$user_data' 

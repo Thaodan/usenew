@@ -37,7 +37,9 @@ backup_data () { # backup application data
 #########################################
   dt=$(date +%d_%m_%Y_%H_%M)
   mkdir -p "$user_data/backups"
-  if [ -d "$user_data/$backup_option" ] && [ ! -e "$user_data/$backup_option/*"  ] > /dev/null 2>&1 ; then # if dir is empty return without error
+  if [ ! -e "$user_data/$backup_option/*"  ]
+  then
+      # if dir is empty return without error
       return 0
   fi
   cat > "$user_data/backups/$dt"/source.info <<END

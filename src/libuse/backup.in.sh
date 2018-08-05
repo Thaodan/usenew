@@ -50,16 +50,17 @@ backup_data () { # backup application data
   dt=$(date +%d_%m_%Y_%H_%M)
   mkdir -p "$user_data/backups"
   
-  cat > "$user_data/backups/$dt"/source.info <<END
+  cat > "$user_data/$backup_option"/source.info <<END
 BACKUPED_APPNAME="$APPNAME"
-ecopy_from='$user_data' 
+copy_from='$user_data/$backup_option' 
 backup_time_date=$(date +%Y.%H.%M)
 backup_time=$(date +%d:%)
 compressor=${backup_compressor:-xz}
 BACKUP_APPVER=$LIBUSE_BACKUP_VER
 BACKUP_APPNAME=libuse_back
 END
-  tar -caf "$appname.$dt.tar.xz" "$user_data/$backup_option"
+  
+  tar -caf "$user_data/backups/$appname.$dt.tar.xz" -C "$user_data/$backup_option" .
 }
 
 restore_backup () { # restore backup archive that is made by backup_data
@@ -69,10 +70,9 @@ restore_backup () { # restore backup archive that is made by backup_data
             return 1
         fi
       temp=$( mktemp -d)
-      tar --directory=$temp -xaf "$1" && \ 
-      local source_file=$temp/*/source.info # search for source.info in  "$1", if no source.info found ; then display error. $temp/$( $temp)/source.infayyaY
-      if bash -n $source_file ; then
-	  source $source_file
+      tar --directory=$temp -xaf "$1"
+      if bash -n $temp/source.info ; then
+	  source $temp/source.info
       fi
 #\\ifndef wOLDBACKUP 
 #\\warning "wOLDBACKUP is depreacted"

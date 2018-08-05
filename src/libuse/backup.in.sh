@@ -1,5 +1,5 @@
-#\\include ../config.shh
 #!/bin/sh
+#\\include ../config.shh
 # backup functions of libuse
 #
 # Copyright (C) 2013  Björn Bidar

@@ -64,15 +64,15 @@ END
 }
 
 restore_backup () { # restore backup archive that is made by backup_data
-    if [ ! -z $# ] && [ -f "$1" ] ; then
+    if [ -f "$1" ] ; then
         if ! tar -tf "$1" source.info ; then    
             d_msg ! 'Corupt file' "input file has no source.info (no restore backup archive or file broken?)"
             return 1
         fi
       temp=$( mktemp -d)
-      tar --directory=$temp -xaf "$1"
-      if bash -n $temp/source.info ; then
-	  source $temp/source.info
+      tar --directory="$temp" -xaf "$1"
+      if bash -n "$temp"/source.info ; then
+	  source "$temp"/source.info
       fi
 #\\ifndef wOLDBACKUP 
 #\\warning "wOLDBACKUP is depreacted"
@@ -82,7 +82,7 @@ restore_backup () { # restore backup archive that is made by backup_data
 	  # ask before overite target with backup if answer is no return with 1 ( d_msg returns 1 if answer is no)
 	  d_msg f overrwrite  "Realy overrwrite  ${BACKUPED_APPNAME:-${1##*/}} data from $(echo ${backup_time[0]} at ${backup_time[1]:-"not set"} | sed 's/_/./g') with $copy_from?" &&  \
 	      tar --directory="$copy_from" -axf "$1"
-	  rm -rf $temp
+	  rm -rf "$temp"
       else
 #\\endif
 	  d_msg f Overwrite Realy overite "${BACKUPED_APPNAME:-${1##*/}}  data from $backup_time at $backup_time_date"

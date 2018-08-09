@@ -6,6 +6,8 @@ SHELL_OPTS 	=
 PREFIX		:= $(TEST_ENV)
  #FIXME?
 LIBUSE_VER	= $(GITREVGEN)
+INSPECT         =
+
 all: $(SCRIPTS)
 
 test_env_env: test_env_env.in.sh

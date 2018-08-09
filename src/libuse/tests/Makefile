@@ -13,7 +13,7 @@ test_env_env: test_env_env.in.sh
 
 $(SCRIPTS): ${SCRIPTS:=.in.sh} test_env_env test_env
 	$(SHPP) $(SHPPFLAGS) -DLIBUSE_VER=$(LIBUSE_VER) -Dlibdir=$(libdir) $(@).in.sh -o $(@)
-	sh $(SHEL_OPTS) $@
+	$(SHELL) $(SHELL_OPTS) $@
 
 test_env:
 	make -C .. install PREFIX=$(PREFIX)

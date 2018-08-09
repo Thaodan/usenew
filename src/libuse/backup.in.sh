@@ -65,7 +65,7 @@ END
 
 restore_backup () { # restore backup archive that is made by backup_data
     if [ -f "$1" ] ; then
-        if ! tar -tf "$1" source.info ; then    
+        if ! tar -tf "$1" ./source.info > /dev/null ; then
             d_msg ! 'Corupt file' "input file has no source.info (no restore backup archive or file broken?)"
             return 1
         fi
@@ -80,14 +80,15 @@ restore_backup () { # restore backup archive that is made by backup_data
 	  #FIXME put this in a seperate file
 	 # d_msg ! 'Incompatible File' 'File is incompatible with this version of libuse/backup($LIBUSE_VER)'
 	  # ask before overite target with backup if answer is no return with 1 ( d_msg returns 1 if answer is no)
-	  d_msg f overrwrite  "Realy overrwrite  ${BACKUPED_APPNAME:-${1##*/}} data from $(echo ${backup_time[0]} at ${backup_time[1]:-"not set"} | sed 's/_/./g') with $copy_from?" &&  \
-	      tar --directory="$copy_from" -axf "$1"
-	  rm -rf "$temp"
+	  d_msg f overrwrite  "Realy overrwrite  ${BACKUPED_APPNAME:-${1##*/}} data from $(echo ${backup_time[0]} at ${backup_time[1]:-"not set"} | sed 's/_/./g') with $copy_from?"
       else
 #\\endif
 	  d_msg f Overwrite Realy overite "${BACKUPED_APPNAME:-${1##*/}}  data from $backup_time at $backup_time_date"
 #\\ifndef wOLDBACKUP
       fi
+      mkdir -p "$copy_from"
+      tar --directory="$copy_from" -axf "$1"
+      rm -rf "$temp"
 #\\endif
   else
 	  d_msg ! faile  'Input not exist  or is no file' 

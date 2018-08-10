@@ -70,8 +70,8 @@ restore_backup () { # restore backup archive that is made by backup_data
         fi
       temp=$( mktemp -d)
       tar --directory="$temp" -xaf "$1"
-      if bash -n "$temp"/source.info ; then
-	  source "$temp"/source.info
+      if sh -n "$temp"/source.info ; then
+	 . "$temp"/source.info
       fi
 #\\ifndef wOLDBACKUP 
 #\\warning "wOLDBACKUP is depreacted"

@@ -74,21 +74,16 @@ restore_backup () { # restore backup archive that is made by backup_data
 	 . "$temp"/source.info
       fi
 #\\ifndef wOLDBACKUP 
-#\\warning "wOLDBACKUP is depreacted"
-      if [ -z $BACKUP_APPVER ] ; then
-	  #FIXME put this in a seperate file
-	 # d_msg ! 'Incompatible File' 'File is incompatible with this version of libuse/backup($LIBUSE_VER)'
-	  # ask before overite target with backup if answer is no return with 1 ( d_msg returns 1 if answer is no)
-	  d_msg f overrwrite  "Realy overrwrite  ${BACKUPED_APPNAME:-${1##*/}} data from $(echo ${backup_time[0]} at ${backup_time[1]:-"not set"} | sed 's/_/./g') with $copy_from?"
-      else
+#\\error "wOLDBACKUP is removed"
 #\\endif
-	  d_msg f Overwrite Realy overite "${BACKUPED_APPNAME:-${1##*/}}  data from $backup_time at $(date -d@"$backup_date")?"
-#\\ifndef wOLDBACKUP
+      if [ -z $BACKUP_APPVER ] ; then
+          d_msg ! 'Incompatible Archive' "This archive is compatible with this version of $appname, please extract this archive by hand"
+          return 1
       fi
+      d_msg f Override "Overwrite Realy overite ${BACKUPED_APPNAME:-${1##*/}}  data from $backup_time at $(date -d@"$backup_date")?"
       mkdir -p "$copy_from"
       tar --directory="$copy_from" -axf "$1"
       rm -rf "$temp"
-#\\endif
   else
 	  d_msg ! faile  'Input not exist  or is no file' 
       

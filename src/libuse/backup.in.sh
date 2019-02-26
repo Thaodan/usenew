@@ -53,8 +53,7 @@ backup_data () { # backup application data
   cat > "$user_data/$backup_option"/source.info <<END
 BACKUPED_APPNAME="$APPNAME"
 copy_from='$user_data/$backup_option'
-backup_time_date=$(date +%Y.%H.%M)
-backup_time=$(date +%d:%)
+backup_date=$(date +%s)
 compressor=${backup_compressor:-xz}
 BACKUP_APPVER=$LIBUSE_BACKUP_VER
 BACKUP_APPNAME=libuse_back
@@ -83,7 +82,7 @@ restore_backup () { # restore backup archive that is made by backup_data
 	  d_msg f overrwrite  "Realy overrwrite  ${BACKUPED_APPNAME:-${1##*/}} data from $(echo ${backup_time[0]} at ${backup_time[1]:-"not set"} | sed 's/_/./g') with $copy_from?"
       else
 #\\endif
-	  d_msg f Overwrite Realy overite "${BACKUPED_APPNAME:-${1##*/}}  data from $backup_time at $backup_time_date"
+	  d_msg f Overwrite Realy overite "${BACKUPED_APPNAME:-${1##*/}}  data from $backup_time at $(date -d@"$backup_date")?"
 #\\ifndef wOLDBACKUP
       fi
       mkdir -p "$copy_from"

@@ -1,4 +1,4 @@
-(add-to-list 'load-path "~/.emacs.d/elpa/org-20130624")
+(package-initialize)
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
-(require 'org-install)
+(require 'org)
 (require 'ox-man)
